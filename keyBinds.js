@@ -1,7 +1,7 @@
 var KEYBIND_GUI
 var keybindMode = false
 var rebindingID
-var rebindingFunction
+
 
 var defaultKeyBinds = {
         "key_nightvision":78,
@@ -61,13 +61,16 @@ function customGuiButton(e){
     }
 }
 
+function customGuiClosed(e){
+    keybindMode = false
+}
+
 
 function editKeyBind(e){
     KEYBIND_GUI.getComponent(e.buttonId).setLabel('')
     KEYBIND_GUI.update(e.player)
     keybindMode = true
     rebindingID = e.buttonId
-    e.player.message("Changing keybinds")
 }
 
 

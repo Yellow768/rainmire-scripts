@@ -1,16 +1,4 @@
 //This script goes onto the NPC
-
-
-var TRADER_GUI
-var LINE_EDITOR
-var thisNPC
-var lineCategory
-var randomLines
-
-var tradeLinesArray
-var failedLinesArray
-var closeLinesArray
-
 "use strict";
 //Runon's Stuff
 var _GUI_IDS = {
@@ -49,15 +37,25 @@ function removeid(name) {
 ;
 
 
+var KEYBIND_GUI
+var LINE_EDITOR
+var thisNPC
+var lineCategory
+var randomLines
+
+var tradeLinesArray
+var failedLinesArray
+var closeLinesArray
+
+
 function init(e) {
     randomLines = e.npc.storeddata.get("randomLines")
     e.npc.storeddata.put("tradeLineCounter", -1)
     e.npc.storeddata.put("failedLineCounter", -1)
     e.npc.storeddata.put("closeLineCounter", -1)
-    if (randomLines != "Yes" && randomLines != "No") {
-        randomLines = "Yes"
+    if (e.npc.storeddata.get("randomLines")==undefined){
+        randomLines = true
         e.npc.storeddata.put("randomLines", randomLines)
-
     }
 }
 
@@ -85,21 +83,21 @@ function openTraderDialogGUI(e) {
 
 
 
-    TRADER_GUI = e.API.createCustomGui(id("TRADER_GUI"), 256, 256, false)
-    TRADER_GUI.setBackgroundTexture("minecraft:textures/gui/demo_background.png")
-    TRADER_GUI.addButton(10, "Trade Lines", horizontalPos, verticalPos, horizontalSize, verticalSize)
-    TRADER_GUI.addButton(20, "Failed Lines", horizontalPos, verticalPos + 30, horizontalSize, verticalSize)
-    TRADER_GUI.addButton(30, "Close Lines", horizontalPos, verticalPos + 60, horizontalSize, verticalSize)
-    TRADER_GUI.addButton(40, randomLines, 130, verticalPos + 90, 40, 20)
-    TRADER_GUI.addButton(50, "Exit", 200, 140, 40, 20)
+    KEYBIND_GUI = e.API.createCustomGui(id("TRADER_GUI"), 256, 256, false)
+    KEYBIND_GUI.setBackgroundTexture("minecraft:textures/gui/demo_background.png")
+    KEYBIND_GUI.addButton(10, "Trade Lines", horizontalPos, verticalPos, horizontalSize, verticalSize)
+    KEYBIND_GUI.addButton(20, "Failed Lines", horizontalPos, verticalPos + 30, horizontalSize, verticalSize)
+    KEYBIND_GUI.addButton(30, "Close Lines", horizontalPos, verticalPos + 60, horizontalSize, verticalSize)
+    KEYBIND_GUI.addButton(40, randomLines, 130, verticalPos + 90, 40, 20)
+    KEYBIND_GUI.addButton(50, "Exit", 200, 140, 40, 20)
 
-    TRADER_GUI.addLabel(5, "More Trader Lines", 75, -5, 1, 1)
-    TRADER_GUI.addLabel(41, "Random Lines:", horizontalPos, verticalPos + 100, 1, 1)
-
-
+    KEYBIND_GUI.addLabel(5, "More Trader Lines", 75, -5, 1, 1)
+    KEYBIND_GUI.addLabel(41, "Random Lines:", horizontalPos, verticalPos + 100, 1, 1)
 
 
-    e.player.showCustomGui(TRADER_GUI)
+
+
+    e.player.showCustomGui(KEYBIND_GUI)
 
 }
 
@@ -137,15 +135,7 @@ function customGuiButton(e) {
             openLineEditor(e, "closed")
             break;
         case 40:
-            switch (randomLines) {
-                case "Yes":
-                    randomLines = "No"
-                    break;
-                case "No":
-                    randomLines = "Yes"
-                    break;
-            }
-
+            randomLines = !randomLines
             thisNPC.storeddata.put("randomLines", randomLines)
             e.player.getCustomGui().getComponent(40).setLabel(randomLines)
             e.player.getCustomGui().update(e.player)
@@ -172,22 +162,34 @@ function customGuiClosed(e) {
 
 
 function updateArrays(e) {
-    tradeLinesArray = []
-    failedLinesArray = []
-    closeLinesArray = []
+    var editedArrayIndex = 0
+    switch (lineCategory) {
+        case "trade":
+            tradeLinesArray = []
+            break;
+        case "failed":
+            failedLinesArray = []
+            editedArrayIndex = 1
+            break;
+        case "closed":
+            closeLinesArray = []
+            editedArrayIndex = 2
+            break;
+        default:
 
-    var loopArrayIndex = [{ category: "trade", array: tradeLinesArray }, { category: "failed", array: failedLinesArray }, { category: "closed", array: closeLinesArray }]
-    for (var i = 0; i < 3; i++) {
-        for (var j = 0; j < 8; j++) {
+    }
+
+    var lineArrays = [tradeLinesArray, failedLinesArray, closeLinesArray]
+    for (var j = 0; j < 8; j++) {
+        if (thisNPC.storeddata.get(lineCategory + "Line" + j) != '') {
             var lineObject = { line: "", sound: "" };
-            if (thisNPC.storeddata.get(loopArrayIndex[i].category + "Line" + j) != '') {
-                lineObject.line = thisNPC.storeddata.get(loopArrayIndex[i].category + "Line" + j)
-                lineObject.sound = thisNPC.storeddata.get(loopArrayIndex[i].category + "Sound" + j)
-                loopArrayIndex[i].array.push(lineObject)
-            }
+            lineObject.line = thisNPC.storeddata.get(lineCategory + "Line" + j)
+            lineObject.sound = thisNPC.storeddata.get(lineCategory + "Sound" + j)
+            lineArrays[editedArrayIndex].push(lineObject)
         }
     }
 }
+
 
 
 
@@ -197,12 +199,12 @@ function chooseLine(e, category) {
     var counterIndex = ["tradeLineCounter", "failedLineCounter"]
     var lineIndex
     if (arrayIndex[category].length > 0) {
-        if (randomLines == "Yes") {
+        if (randomLines) {
             lineIndex = Math.floor(Math.random() * arrayIndex[category].length)
         }
         else {
             lineIndex = e.npc.storeddata.get(counterIndex[category])
-            lineIndex = lineIndex+1 % arrayIndex[category].length
+            lineIndex = lineIndex + 1 % arrayIndex[category].length
             e.npc.storeddata.put(counterIndex[category], lineIndex)
         }
         e.npc.say(arrayIndex[category][lineIndex].line)
