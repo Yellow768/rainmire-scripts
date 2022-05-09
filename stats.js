@@ -7,7 +7,7 @@ function levelUp(e) {
 	if (e.player.hasTag("LevelUp")) {
 		e.player.removeTag("LevelUp")
 		addToScore("AttrPoints", 1)
-		executeCommand("/playsound minecraft:ui.toast.challenge_complete player " + e.player.name + " ~ ~ ~")
+		e.player.playSound("minecraft:ui.toast.challenge_complete player",1,1)
 		executeCommand("/particle minecraft:end_rod ~ ~ ~ .5 .5 .5 .5 100")
 		executeCommand('/title ' + e.player.name + ' actionbar {"text":"You have leveled up!","bold":true,"color":"yellow"}')
 		executeCommand('/title '+e.player.name+' times 0 40 20')
@@ -23,8 +23,8 @@ function levelUp(e) {
 
 
 function keyPressed(e){
-	
-	if(e.key==88 && e.openGui == ''){
+	var keyBinds = JSON.parse(e.player.storeddata.get("keyBindsJSON"))
+	if(e.key==keyBinds.key_stats && e.openGui == ''){
 		createStatsScreen(e)
 		}
 }

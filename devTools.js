@@ -1,6 +1,6 @@
 //Developer Tools
 var keyMode = false
-
+var keyBinds
 
 function init(e) {
     if (e.player.getGamemode() == 1) {
@@ -19,21 +19,22 @@ function init(e) {
 
 
 function keyPressed(e) {
+    var keyBinds = JSON.parse(e.player.storeddata.get("keyBindsJSON"))
     if (e.openGui == '') {
         if (keyMode) {
             e.player.message(e.key)
         }
         switch (e.key) {
-            case 71:
+            case keyBinds.key_gamemode:
                 switchGamemode()
                 break;
-            case 78:
+            case keyBinds.key_nightvision:
                 toggleNightVision()
                 break;
-            case 72:
+            case keyBinds.key_heal:
                 fullyHeal();
                 break;
-            case 77:
+            case keyBinds.key_command:
                 toggleCommandFeedback()
                 break;
         }
@@ -80,6 +81,7 @@ function chat(e) {
 function displayHelpMessage() {
     player.message("&a===Dev Help===")
     player.message("&6!devhelp: &rBrings this list up")
+    player.message("&6!keyBinds: &rBrings up GUI to edit key bindings")
     player.message("&6!showKey : &rToggles show key mode. When on, key presses will return their key ID in chat (for scripting uses)")
     player.message("&6!toggleChime : &rToggles if the chime plays whenever the dev tools are reloaded")
     player.message("&6!resetStats: &rReset your level and attributes to base level")
