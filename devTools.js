@@ -92,7 +92,7 @@ function chat(e) {
         e.setCanceled(true)
         runBrushCommand(e.message)
     }
-    if (e.message.indexOf("!br") != -1) {
+    if (e.message.indexOf("!br ") != -1) {
         e.setCanceled(true)
         runBrushCommand(e.message)
     }
@@ -271,6 +271,7 @@ function listBrushPresets() {
     var singleTellRawElement
     var fullTellRaw = ""
     for (var i = 0; i < brushes.length; i++) {
+        player.message("Brush name is: " + brushes[i].name + " && Brush command is: " + brushes[i].command)
         singleTellRawElement = '{"text":"\\n[' + i + '.","color":"light_purple"},{"text":" ","bold":true,"color":"light_purple"},{"text":"' + brushes[i].name + '","color":"light_purple","clickEvent":{"action":"run_command","value":"' + brushes[i].command + '"},"hoverEvent":{"action":"show_text","contents":"Click to apply brush"}},{"text":" ","color":"light_purple"},{"text":"(?)","color":"yellow","clickEvent":{"action":"suggest_command","value":"' + brushes[i].command + '"},"hoverEvent":{"action":"show_text","contents":"' + brushes[i].command + '"}},{"text":"(T)","color":"yellow","clickEvent":{"action":"run_command","value":"/give ' + player.name + ' ' + brushes[i].tool + '"},"hoverEvent":{"action":"show_text","contents":"' + brushes[i].tool + '"}},{"text":"]","color":"light_purple"},{"text":" "}'
         //'{"text":"[' + i + ': ' + brushes[i].name + '","color":"light_purple","clickEvent":{"action":"run_command","value":"' + brushes[i].command + '"}},{"text":" "},{"text":"(?)","color":"yellow","clickEvent":{"action":"suggest_command","value":"' + brushes[i].command + '"},"hoverEvent":{"action":"show_text","contents":"' + brushes[i].command + '"}},{"text":"]","color":"light_purple"},{"text":" "}'
         fullTellRaw = fullTellRaw + ',' + singleTellRawElement
@@ -296,6 +297,9 @@ function saveBrushPreset(commandString) {
     if (splitCommandString[2] == undefined) {
         player.message("&cUsage: !br save [name] args...")
     }
+    else if (splitCommandString[2].indexOf('\\') != -1) {
+        player.message("&cSorry, you are not allowed to use \\ in the brush name")
+    }
     else if (splitCommandString[3] == undefined) {
         player.message("&cYou must define a command")
     }
@@ -304,7 +308,7 @@ function saveBrushPreset(commandString) {
         if (command[0] != "/") {
             command = "/" + command
         }
-        brushes.push({ "name": splitCommandString[2], "command": command, "tool": player.getMainhandItem().getName() })
+        brushes.push({ "name": escapeRegex(splitCommandString[2]), "command": escapeRegex(command), "tool": player.getMainhandItem().getName() })
         player.storeddata.put("brushArray", JSON.stringify(brushes))
         player.message("&aNew Brush saved as " + splitCommandString[2] + " [" + command + "]")
     }
@@ -314,7 +318,7 @@ function editBrushPreset(commandString) {
     var splitCommandString = commandString.split(' ')
     var brushes = JSON.parse(player.storeddata.get("brushArray"))
     var brushIndex = splitCommandString[2]
-    if (brushIndex == undefined || isNaN(brushIndex) || brushIndex > brushes.length) {
+    if (brushIndex == undefined || isNaN(brushIndex) || brushIndex > brushes.length || brushes[0] == undefined) {
         player.message("&cSyntax Error: A valid number must be selected")
     }
     else if (splitCommandString[3] == undefined) {
@@ -325,9 +329,9 @@ function editBrushPreset(commandString) {
         if (newCommand[0] != "/") {
             newCommand = "/" + newCommand
         }
-        brushes[brushIndex].command = newCommand
+        brushes[brushIndex].command = escapeRegex(newCommand)
         player.storeddata.put("brushArray", JSON.stringify(brushes))
-        player.message("&eBrush " + brushIndex + " [" + brushes[brushIndex].name + "] has been updated")
+        player.message("&eBrush " + brushIndex + " [" + brushes[brushIndex].name + "] has been updated. NOTE! You need to run !br list again")
     }
 }
 
@@ -345,10 +349,13 @@ function deleteBrushPreset(commandString) {
         player.storeddata.put("brushArray", JSON.stringify(brushes))
         player.message("&eAll brushes deleted")
     }
-    else {
+    else if (!isNaN(deletionIndex)) {
         player.message("&eBrush " + deletionIndex + " [" + brushes[deletionIndex].name + "] deleted")
         brushes.splice(deletionIndex, 1)
         player.storeddata.put("brushArray", JSON.stringify(brushes))
+    }
+    else {
+        player.message("&cSyntax Error: You need to type either a number or 'all'")
     }
 }
 

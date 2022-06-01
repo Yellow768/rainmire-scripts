@@ -42,40 +42,43 @@ function removeid(name) {
 
 
 
-function init(e){
-	setUpVals(e)
+function init(e) {
+    setUpVals(e)
 }
 
-function setUpVals(e){
-	scoreboard = e.player.world.getScoreboard()
-	player = e.player
-	playerName = e.player.name
+function setUpVals(e) {
+    scoreboard = e.player.world.getScoreboard()
+    player = e.player
+    playerName = e.player.name
 }
 
-function getScore(scoreBoardName){
-	if(scoreboard.hasPlayerObjective(playerName, scoreBoardName)){
-		return scoreboard.getPlayerScore(playerName, scoreBoardName)
-	}		
+function getScore(scoreBoardName) {
+    if (scoreboard.hasPlayerObjective(playerName, scoreBoardName)) {
+        return scoreboard.getPlayerScore(playerName, scoreBoardName)
+    }
 }
 
-function setScore(scoreBoardName,val){
-	if(scoreboard.hasPlayerObjective(playerName, scoreBoardName)){
-			scoreboard.setPlayerScore(playerName,scoreBoardName,val)
-	}		
+function setScore(scoreBoardName, val) {
+    if (scoreboard.hasPlayerObjective(playerName, scoreBoardName)) {
+        scoreboard.setPlayerScore(playerName, scoreBoardName, val)
+    }
 }
 
-function addToScore(scoreBoardName,val){
-		if(scoreboard.hasPlayerObjective(playerName, scoreBoardName)){
-			scoreboard.setPlayerScore(playerName,scoreBoardName,getScore(scoreBoardName)+val)
-	}		
+function addToScore(scoreBoardName, val) {
+    if (scoreboard.hasPlayerObjective(playerName, scoreBoardName)) {
+        scoreboard.setPlayerScore(playerName, scoreBoardName, getScore(scoreBoardName) + val)
+    }
 }
 
-function executeCommand(command){
-	return API.executeCommand(API.getIWorld("overworld"), command)
+function executeCommand(command) {
+    return API.executeCommand(API.getIWorld("overworld"), command)
 }
 
-function doesStringContainPhrase(string,phrase){
-    if(string.indexOf(phrase) == -1){ return false}
-    else{return true}
+function doesStringContainPhrase(string, phrase) {
+    if (string.indexOf(phrase) == -1) { return false }
+    else { return true }
 }
 
+function escapeRegex(string) {
+    return string.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&');
+}
