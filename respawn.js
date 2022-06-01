@@ -17,6 +17,8 @@ function died(e) {
     e.player.removeItem(golden_coin,gcCount/4)
     e.player.removeItem(diamond_coin,dcCount/4)
     e.player.removeItem(emerald_coin,ecCount/4)
+
+    
 }
 
 function respawn(e) {

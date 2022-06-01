@@ -8,6 +8,9 @@ function init(e) {
         if (e.player.storeddata.get("uiPlayChime") == undefined) {
             e.player.storeddata.put("uiPlayChime", 1)
         }
+        if (e.player.storeddata.get("brushArray") == undefined) {
+            e.player.storeddata.put("brushArray", "[]")
+        }
         e.player.playSound("minecraft:block.note_block.chime", e.player.storeddata.get("uiPlayChime"), 1)
 
 
@@ -37,6 +40,10 @@ function keyPressed(e) {
             case keyBinds.key_command:
                 toggleCommandFeedback()
                 break;
+            case keyBinds.key_reload:
+                executeCommand('/tellraw @a {"text":"CUSTOMNPCS: Reloading Scripts (This may take a bit! Expect lag!)","color":"yellow"}')
+                executeCommand("noppes script reload")
+                break;
         }
     }
 }
@@ -45,6 +52,9 @@ function chat(e) {
     e.setCanceled(true)
     switch (e.message) {
         case "!devhelp":
+            displayHelpMessage()
+            break;
+        case "!help":
             displayHelpMessage()
             break;
         case "!toggleChime":
@@ -59,17 +69,35 @@ function chat(e) {
         case "!levelUp":
             forceLevelUp()
             break;
-        case "!giveAttrPoints":
-            giveAttributePoints(e, e.message.substr(16, 19))
-            break;
         case "!toggleCommandFeedback":
             toggleCommandFeedback(e)
+            break;
+        case "!giveAttrPoints":
+            e.player.message("&cUsage: !giveAttrPoints [amount]")
+            break;
+        case "!brushes":
+            listBrushPresets(e)
+            break;
+        case "!br":
+            listBrushPresets(e)
             break;
         default:
             e.setCanceled(false)
     }
-
+    if (e.message.indexOf("!giveAttrPoints ") != -1) {
+        giveAttributePoints(e.message.split(' ')[1])
+        e.setCanceled(true)
+    }
+    if (e.message.indexOf("!brushes") != -1) {
+        e.setCanceled(true)
+        runBrushCommand(e.message)
+    }
+    if (e.message.indexOf("!br") != -1) {
+        e.setCanceled(true)
+        runBrushCommand(e.message)
+    }
 }
+
 
 
 
@@ -88,11 +116,13 @@ function displayHelpMessage() {
     player.message("&6!levelUp: &rLevel up!")
     player.message("&6!giveAttrPoints [number]: &rGive yourself an amount of attribute points")
     player.message("&6!toggleCommandFeedback: &rToggles the gamerule 'sendCommandFeedback'")
+    player.message("&6!brushes &rOR &6!br: &rDisplays saved brushes. Type &6!br help&r for more commands")
     player.message(" ")
     player.message("&6N: &rToggles Nightvision")
     player.message("&6G: &rSwitched between Adventure Mode and Creative Mode")
     player.message("&6H: &rFully heals you")
     player.message("&6M: &rToggles the gamerule 'sendCommandFeedback")
+    player.message("&6O: &rReloads CustomNPCs scripts")
 }
 
 function toggleChime() {
@@ -191,6 +221,7 @@ function resetStats() {
 }
 
 function giveAttributePoints(amount) {
+    player.message(amount)
     if (!isNaN(amount)) {
         addToScore("AttrPoints", parseInt(amount))
         player.message("Gave " + amount + " attribute points")
@@ -200,3 +231,124 @@ function giveAttributePoints(amount) {
     }
 
 }
+
+
+function runBrushCommand(message) {
+    var splitMessage = message.split(' ')
+    if (splitMessage[1] != undefined) {
+        switch (splitMessage[1]) {
+            case "save":
+                saveBrushPreset(message)
+                break;
+            case "list":
+                listBrushPresets()
+                break;
+            case "edit":
+                editBrushPreset(message)
+                break;
+            case "delete":
+                deleteBrushPreset(message)
+                break;
+            case "help":
+
+                player.message("&a==Brushes Commands==")
+                player.message("&6!br list &eOR &6!br: &rDisplays the list of saved brushes, which can be clicked on to apply")
+                player.message("&6!br save [name] [brush] : &r Saves a new brush preset")
+                player.message("&6!br edit [number] [brush] : &rReplaces the command of a saved brush")
+                player.message("&6!br delete [number] : &rDeletes a certain brush OR deletes all brushes if you use 'all' as the number")
+                break;
+            default:
+                player.message("&cUnrecognized command. Type &6!br help &cfor a list of commands")
+        }
+    }
+}
+
+
+
+function listBrushPresets() {
+    var brushes = JSON.parse(player.storeddata.get("brushArray"))
+
+    var singleTellRawElement
+    var fullTellRaw = ""
+    for (var i = 0; i < brushes.length; i++) {
+        singleTellRawElement = '{"text":"\\n[' + i + '.","color":"light_purple"},{"text":" ","bold":true,"color":"light_purple"},{"text":"' + brushes[i].name + '","color":"light_purple","clickEvent":{"action":"run_command","value":"' + brushes[i].command + '"},"hoverEvent":{"action":"show_text","contents":"Click to apply brush"}},{"text":" ","color":"light_purple"},{"text":"(?)","color":"yellow","clickEvent":{"action":"suggest_command","value":"' + brushes[i].command + '"},"hoverEvent":{"action":"show_text","contents":"' + brushes[i].command + '"}},{"text":"(T)","color":"yellow","clickEvent":{"action":"run_command","value":"/give ' + player.name + ' ' + brushes[i].tool + '"},"hoverEvent":{"action":"show_text","contents":"' + brushes[i].tool + '"}},{"text":"]","color":"light_purple"},{"text":" "}'
+        //'{"text":"[' + i + ': ' + brushes[i].name + '","color":"light_purple","clickEvent":{"action":"run_command","value":"' + brushes[i].command + '"}},{"text":" "},{"text":"(?)","color":"yellow","clickEvent":{"action":"suggest_command","value":"' + brushes[i].command + '"},"hoverEvent":{"action":"show_text","contents":"' + brushes[i].command + '"}},{"text":"]","color":"light_purple"},{"text":" "}'
+        fullTellRaw = fullTellRaw + ',' + singleTellRawElement
+    }
+    player.message("&e&nSaved Brushes:")
+    player.message(" ")
+
+    executeCommand('/tellraw ' + player.name + ' [""' + fullTellRaw + ']')
+
+
+
+}
+
+
+
+
+
+
+function saveBrushPreset(commandString) {
+    var splitCommandString = commandString.split(' ')
+    var brushes = JSON.parse(player.storeddata.get("brushArray"))
+
+    if (splitCommandString[2] == undefined) {
+        player.message("&cUsage: !br save [name] args...")
+    }
+    else if (splitCommandString[3] == undefined) {
+        player.message("&cYou must define a command")
+    }
+    else {
+        var command = commandString.slice(commandString.indexOf(splitCommandString[2]) + splitCommandString[2].length + 1)
+        if (command[0] != "/") {
+            command = "/" + command
+        }
+        brushes.push({ "name": splitCommandString[2], "command": command, "tool": player.getMainhandItem().getName() })
+        player.storeddata.put("brushArray", JSON.stringify(brushes))
+        player.message("&aNew Brush saved as " + splitCommandString[2] + " [" + command + "]")
+    }
+}
+
+function editBrushPreset(commandString) {
+    var splitCommandString = commandString.split(' ')
+    var brushes = JSON.parse(player.storeddata.get("brushArray"))
+    var brushIndex = splitCommandString[2]
+    if (brushIndex == undefined || isNaN(brushIndex) || brushIndex > brushes.length) {
+        player.message("&cSyntax Error: A valid number must be selected")
+    }
+    else if (splitCommandString[3] == undefined) {
+        player.message("&cBrush was not updated. You must define the command to replace.")
+    }
+    else {
+        var newCommand = commandString.slice(commandString.indexOf(brushIndex) + brushIndex.length + 1)
+        if (newCommand[0] != "/") {
+            newCommand = "/" + newCommand
+        }
+        brushes[brushIndex].command = newCommand
+        player.storeddata.put("brushArray", JSON.stringify(brushes))
+        player.message("&eBrush " + brushIndex + " [" + brushes[brushIndex].name + "] has been updated")
+    }
+}
+
+
+
+function deleteBrushPreset(commandString) {
+    var splitCommandString = commandString.split(' ')
+    var brushes = JSON.parse(player.storeddata.get("brushArray"))
+    var deletionIndex = splitCommandString[2]
+    if (deletionIndex == undefined) {
+        player.message("&cYou must select a number to delete")
+    }
+    else if (deletionIndex == "all") {
+        brushes = []
+        player.storeddata.put("brushArray", JSON.stringify(brushes))
+        player.message("&eAll brushes deleted")
+    }
+    else {
+        player.message("&eBrush " + deletionIndex + " [" + brushes[deletionIndex].name + "] deleted")
+        brushes.splice(deletionIndex, 1)
+        player.storeddata.put("brushArray", JSON.stringify(brushes))
+    }
+}
+

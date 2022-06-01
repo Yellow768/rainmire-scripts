@@ -1,6 +1,6 @@
 function interact(e) {
     if (e.type == 2 && e.target.hasTileEntity()) {
-        if (e.player.getMainhandItem().getDisplayName() == "Dev Locker") { changeLockStrength(e) }
+        if (e.player.getMainhandItem().getDisplayName() == "Dev Locker") { changeContainerLockStrength(e) }
         if (e.target.storeddata.get("LockDifficulty") != undefined && e.target.storeddata.get("LockDifficulty") > 0) {
 
             switch (e.player.getMainhandItem().getDisplayName()) {
@@ -19,7 +19,7 @@ function interact(e) {
                 case "Dev Locker":
                     break;
                 case "Lock Destroyer":
-                    pickLock(e,1000,768005)
+                    pickLock(e, 1000, 768005)
                 default:
                     e.setCanceled(true)
                     executeCommand('/title ' + e.player.name + ' actionbar {"text":"Locked! Lock Strength: ' + e.target.storeddata.get("LockDifficulty") + '%","bold":true,"color":"red"}')
@@ -28,13 +28,13 @@ function interact(e) {
             }
         }
     }
-    if (e.type == 0 && e.player.getMainhandItem().getDisplayName() == "Dev Locker") { changeLockModifier(e) }
+    if (e.type == 0 && e.player.getMainhandItem().getDisplayName() == "Dev Locker") { changePlayerLockModifier(e) }
 
 
 }
 
 
-function changeLockStrength(e) {
+function changeContainerLockStrength(e) {
     e.setCanceled(true)
     var lockDifficultySetter
     var sound
@@ -62,7 +62,7 @@ function changeLockStrength(e) {
     executeCommand("/playsound " + sound + " player @a[distance=..5] ~ ~ ~")
 }
 
-function changeLockModifier(e) {
+function changePlayerLockModifier(e) {
     if (e.player.storeddata.get("LockModifier") == undefined) { e.player.storeddata.put("LockModifier", 10) }
 
     if (e.player.isSneaking()) { e.player.storeddata.put("LockModifier", e.player.storeddata.get("LockModifier") - 10) }
