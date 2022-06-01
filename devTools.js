@@ -5,11 +5,11 @@ var keyBinds
 function init(e) {
     if (e.player.getGamemode() == 1) {
         e.player.message("&dDeveloper Tools On. Type &6!devhelp &dfor a list of functions")
-        if (e.player.storeddata.get("uiPlayChime") == undefined) {
-            e.player.storeddata.put("uiPlayChime", 1)
+        if (e.player.world.storeddata.get(e.player.name + "uiPlayChime") == undefined) {
+            e.player.world.storeddata.put(e.player.name + "uiPlayChime", 1)
         }
-        if (e.player.storeddata.get("brushArray") == undefined) {
-            e.player.storeddata.put("brushArray", "[]")
+        if (e.player.world.storeddata.get(e.player.name + "brushArray") == undefined) {
+            e.player.world.storeddata.put(e.player.name + "brushArray", "[]")
         }
         e.player.playSound("minecraft:block.note_block.chime", e.player.storeddata.get("uiPlayChime"), 1)
 
@@ -22,7 +22,7 @@ function init(e) {
 
 
 function keyPressed(e) {
-    var keyBinds = JSON.parse(e.player.storeddata.get("keyBindsJSON"))
+    var keyBinds = JSON.parse(e.player.world.storeddata.get(e.player.name + "keyBindsJSON"))
     if (e.openGui == '') {
         if (keyMode) {
             e.player.message(e.key)
@@ -197,7 +197,7 @@ function forceLevelUp() {
     for (var i = 0; i < player.getExpLevel(); i++) {
         xpThreshold += 50 + ((i) * 50)
     }
-    player.storeddata.put("totalExperiencePoints", xpThreshold)
+    player.world.storeddata.put("totalExperiencePoints", xpThreshold)
     executeCommand("tag " + player.name + " add LevelUp")
     player.setExpLevel(player.getExpLevel() + 1)
 }
@@ -209,7 +209,7 @@ function resetStats() {
         setScore(statsStringArray[i] + "Mod", 0)
         setScore(statsStringArray[i], 1)
     }
-    e.player.storeddata.put("totalExperiencePoints", 0)
+
     executeCommand("xp set " + player.name + " 1 levels")
     executeCommand("xp set " + player.name + " 0 points")
     setScore("AttrPoints", 0)
@@ -218,6 +218,7 @@ function resetStats() {
     setScore("breath", 0)
     executeCommand("tag " + player.name + " remove LevelUp")
     player.message("&dYour level and attributes have been reset")
+    player.world.storeddata.put(player.name + "totalExperiencePoints", 0)
 }
 
 function giveAttributePoints(amount) {
@@ -266,7 +267,7 @@ function runBrushCommand(message) {
 
 
 function listBrushPresets() {
-    var brushes = JSON.parse(player.storeddata.get("brushArray"))
+    var brushes = JSON.parse(player.world.storeddata.get(player.name + "brushArray"))
 
     var singleTellRawElement
     var fullTellRaw = ""
@@ -291,7 +292,7 @@ function listBrushPresets() {
 
 function saveBrushPreset(commandString) {
     var splitCommandString = commandString.split(' ')
-    var brushes = JSON.parse(player.storeddata.get("brushArray"))
+    var brushes = JSON.parse(player.world.storeddata.get(player.name + "brushArray"))
 
     if (splitCommandString[2] == undefined) {
         player.message("&cUsage: !br save [name] args...")
@@ -308,14 +309,14 @@ function saveBrushPreset(commandString) {
             command = "/" + command
         }
         brushes.push({ "name": escapeRegex(splitCommandString[2]), "command": escapeRegex(command), "tool": player.getMainhandItem().getName() })
-        player.storeddata.put("brushArray", JSON.stringify(brushes))
+        player.world.storeddata.put(player.name + "brushArray", JSON.stringify(brushes))
         player.message("&aNew Brush saved as " + splitCommandString[2] + " [" + command + "]")
     }
 }
 
 function editBrushPreset(commandString) {
     var splitCommandString = commandString.split(' ')
-    var brushes = JSON.parse(player.storeddata.get("brushArray"))
+    var brushes = JSON.parse(player.world.storeddata.get(player.name + "brushArray"))
     var brushIndex = splitCommandString[2]
     if (brushIndex == undefined || isNaN(brushIndex) || brushIndex > brushes.length || brushes[0] == undefined) {
         player.message("&cSyntax Error: A valid number must be selected")
@@ -329,7 +330,7 @@ function editBrushPreset(commandString) {
             newCommand = "/" + newCommand
         }
         brushes[brushIndex].command = escapeRegex(newCommand)
-        player.storeddata.put("brushArray", JSON.stringify(brushes))
+        player.world.storeddata.put(player.name + "brushArray", JSON.stringify(brushes))
         player.message("&eBrush " + brushIndex + " [" + brushes[brushIndex].name + "] has been updated. NOTE! You need to run !br list again")
     }
 }
@@ -338,20 +339,20 @@ function editBrushPreset(commandString) {
 
 function deleteBrushPreset(commandString) {
     var splitCommandString = commandString.split(' ')
-    var brushes = JSON.parse(player.storeddata.get("brushArray"))
+    var brushes = JSON.parse(player.world.storeddata.get(player.name + "brushArray"))
     var deletionIndex = splitCommandString[2]
     if (deletionIndex == undefined) {
         player.message("&cYou must select a number to delete")
     }
     else if (deletionIndex == "all") {
         brushes = []
-        player.storeddata.put("brushArray", JSON.stringify(brushes))
+        player.world.storeddata.put(player.name + "brushArray", JSON.stringify(brushes))
         player.message("&eAll brushes deleted")
     }
     else if (!isNaN(deletionIndex)) {
         player.message("&eBrush " + deletionIndex + " [" + brushes[deletionIndex].name + "] deleted")
         brushes.splice(deletionIndex, 1)
-        player.storeddata.put("brushArray", JSON.stringify(brushes))
+        player.world.storeddata.put(player.name + "brushArray", JSON.stringify(brushes))
     }
     else {
         player.message("&cSyntax Error: You need to type either a number or 'all'")

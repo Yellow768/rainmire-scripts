@@ -70,7 +70,7 @@ function playerXpEventPickupXp(e) {
 
 function addCustomXpValue(forgePlayer, xpToAdd) {
 	var noppesPlayer = API.getIEntity(forgePlayer)
-	noppesPlayer.getStoreddata().put("totalExperiencePoints", noppesPlayer.getStoreddata().get("totalExperiencePoints") + xpToAdd)
+	noppesPlayer.getWorld().getStoreddata().put(noppesPlayer.name + "totalExperiencePoints", noppesPlayer.getWorld().getStoreddata().get(noppesPlayer.name + "totalExperiencePoints") + xpToAdd)
 	if (getPlayerScore(noppesPlayer, "PERK_Educated") == 1) {
 		xpToAdd = Math.ceil(xpToAdd * 1.1)
 	}

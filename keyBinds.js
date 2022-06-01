@@ -13,8 +13,8 @@ var defaultKeyBinds = {
 }
 
 function init(e) {
-    if (e.player.storeddata.get("keyBindsJSON") == undefined) {
-        e.player.storeddata.put("keyBindsJSON", JSON.stringify(defaultKeyBinds))
+    if (e.player.world.storeddata.get(e.player.name + "keyBindsJSON") == undefined) {
+        e.player.world.storeddata.put(e.player.name + "keyBindsJSON", JSON.stringify(defaultKeyBinds))
     }
 }
 
@@ -26,7 +26,7 @@ function chat(e) {
 }
 
 function showKeybindGUI(e) {
-    var keyBinds = JSON.parse(e.player.storeddata.get("keyBindsJSON"))
+    var keyBinds = JSON.parse(e.player.world.storeddata.get(e.player.name + "keyBindsJSON"))
     var keyBindsKeys = Object.keys(keyBinds)
 
     var horizontalPos = 120
@@ -59,7 +59,7 @@ function customGuiButton(e) {
         editKeyBind(e)
     }
     else {
-        e.player.storeddata.put("keyBindsJSON", JSON.stringify(defaultKeyBinds))
+        e.player.world.storeddata.put(e.player.name + "keyBindsJSON", JSON.stringify(defaultKeyBinds))
         showKeybindGUI(e)
     }
 }
@@ -79,12 +79,12 @@ function editKeyBind(e) {
 
 function keyPressed(e) {
     if (keybindMode) {
-        var keyBinds = JSON.parse(e.player.storeddata.get("keyBindsJSON"))
+        var keyBinds = JSON.parse(e.player.world.storeddata.get(e.player.name + "keyBindsJSON"))
         keyBinds[idname(rebindingID)] = e.key
         keybindMode = false
         KEYBIND_GUI.getComponent(rebindingID).setLabel(GLFWKeys[e.key])
         KEYBIND_GUI.update(e.player)
-        e.player.storeddata.put("keyBindsJSON", JSON.stringify(keyBinds))
+        e.player.world.storeddata.put(e.player.name + "keyBindsJSON", JSON.stringify(keyBinds))
     }
 }
 
