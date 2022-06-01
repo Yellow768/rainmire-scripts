@@ -271,7 +271,6 @@ function listBrushPresets() {
     var singleTellRawElement
     var fullTellRaw = ""
     for (var i = 0; i < brushes.length; i++) {
-        player.message("Brush name is: " + brushes[i].name + " && Brush command is: " + brushes[i].command)
         singleTellRawElement = '{"text":"\\n[' + i + '.","color":"light_purple"},{"text":" ","bold":true,"color":"light_purple"},{"text":"' + brushes[i].name + '","color":"light_purple","clickEvent":{"action":"run_command","value":"' + brushes[i].command + '"},"hoverEvent":{"action":"show_text","contents":"Click to apply brush"}},{"text":" ","color":"light_purple"},{"text":"(?)","color":"yellow","clickEvent":{"action":"suggest_command","value":"' + brushes[i].command + '"},"hoverEvent":{"action":"show_text","contents":"' + brushes[i].command + '"}},{"text":"(T)","color":"yellow","clickEvent":{"action":"run_command","value":"/give ' + player.name + ' ' + brushes[i].tool + '"},"hoverEvent":{"action":"show_text","contents":"' + brushes[i].tool + '"}},{"text":"]","color":"light_purple"},{"text":" "}'
         //'{"text":"[' + i + ': ' + brushes[i].name + '","color":"light_purple","clickEvent":{"action":"run_command","value":"' + brushes[i].command + '"}},{"text":" "},{"text":"(?)","color":"yellow","clickEvent":{"action":"suggest_command","value":"' + brushes[i].command + '"},"hoverEvent":{"action":"show_text","contents":"' + brushes[i].command + '"}},{"text":"]","color":"light_purple"},{"text":" "}'
         fullTellRaw = fullTellRaw + ',' + singleTellRawElement
