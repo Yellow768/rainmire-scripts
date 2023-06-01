@@ -45,8 +45,9 @@ var p_hurricane = { id: "hurricane", type: 0, name: "Hurricane", cost: 10, descr
 var d_extra_fall_damage = { id: "extra_fall_damage", name: "Fragile Feet", description: "You take additional damage when you fall" }
 var d_bow_malfunction = { id: "bow_malfunction", name: "Frail Fingers", description: "Your grip on the bow string occasionally falters." }
 var d_social_anxiety = { id: "social_anxiety", name: "Social Anxiety", description: "-1 to all attributes while in dialog" }
-var d_winded = { id: "winded", name: "Winded", description: "You are unable to sprint" }
+var d_winded = { id: "winded", name: "Winded", description: "Your sprint is slower" }
 var d_pescetarian = { id: "pescetarian", name: "Pescetarian", description: "Fish is the only food that restores health and hydration" }
+var d_
 
 var all_good_perks
 var all_bad_perks = [d_extra_fall_damage, d_bow_malfunction, d_social_anxiety, d_winded]

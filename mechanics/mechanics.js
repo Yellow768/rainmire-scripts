@@ -90,7 +90,24 @@ function interact(e) {
 		summonThrowableBomb(e)
 	}
 	else if (e.player.getMainhandItem().getFoodLevel() > 0) {
+		e.setCanceled(true)
 		var foodLevel = e.player.getMainhandItem().getFoodLevel()
+		if (e.player.hasTag("pescetarian")) {
+			var isFish = false
+			var fish_food = [""]
+			for (var i = 0; i < fish_food.length; i++) {
+				if (e.player.getMainhandItem().name == fish_food[i]) {
+					isFish = true
+				}
+
+			}
+			if (!isFish) {
+				executeCommand('/title ' + e.player.name + ' actionbar {"text":"You can\'t eat that!","color":"purple"}')
+				return
+			}
+
+		}
+
 		addToScore("perk_power", Math.floor(foodLevel / 2))
 		if (getScore("perk_power") > getScore("max_perk_power")) {
 			setScore("perk_power", getScore("max_perk_power"))

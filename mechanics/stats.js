@@ -91,7 +91,7 @@ function updateStats(e) {
 
 function tick(e) {
 	var sprint = .08 + (0.04 * (getScore("Deftness") - 1))
-	if (e.player.hasTag("d_tiredOut")) {
+	if (e.player.hasTag("winded")) {
 		sprint = 0.05
 	}
 	var walk = .08 + (0.01 * (getScore("Deftness") - 1))
@@ -102,12 +102,9 @@ function tick(e) {
 	else {
 		executeCommand("attribute " + e.player.name + " minecraft:generic.movement_speed base set " + walk)
 	}
-	if (e.player.hasTag("winded")) {
-		e.player.setHunger(1)
-	}
-	else {
-		e.player.setHunger(10)
-	}
+
+	e.player.setHunger(10)
+
 
 }
 
