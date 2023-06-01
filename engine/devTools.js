@@ -536,6 +536,28 @@ function copyCoordinates() {
 
 function interact(e) {
     if (e.type == 2) {
+        if (e.player.hasTag("displayMode")) {
+            e.setCanceled(true)
+            var block = e.player.rayTraceBlock(10, true, false)
+            var position = block.pos.offset(block.sideHit, 1)
+            if (e.player.getMainhandItem().name != "minecraft:air") {
+
+                executeCommand("/summon item " + position.x + " " + position.y + " " + position.z + " {Item:{id:\"" + e.player.getMainhandItem().name + "\",Count:1},PickupDelay:32767,Age:-32768,CustomModelData:" + e.player.getMainhandItem().getItemNbt().getInteger("customModelData") + ",Tags:[\"DISPLAY\"]}")
+                e.player.message("&eItem display placed at " + position.x + " " + position.y + " " + position.z)
+
+            }
+            else {
+                if (executeCommand('/kill @e[type=minecraft:item,x=' + position.x + ',y=' + position.y + ',z=' + position.z + ',distance=..1.5,tag=DISPLAY]') == "No entity was found") {
+                    e.player.message("&cThere is no display item there")
+                }
+                else {
+                    e.player.message("&aDisplay Item deleted")
+                }
+
+
+            }
+            return
+        }
         if (e.player.getMainhandItem().getDisplayName().indexOf("Breakable") != -1) {
             var sidePlaced = e.player.rayTraceBlock(8, false, false).getSideHit()
             var place_pos = e.target.pos.offset(sidePlaced)
@@ -590,8 +612,18 @@ function convertToBreakableWall(e) {
 }
 
 function setItemDisplay(e) {
-    var keys = e.player.getMainhandItem().getNbt().getKeys()
-    for (var i = 0; i < keys.length; i++) {
-        e.player.message(keys[i])
+    switch (e.player.hasTag("displayMode")) {
+        case true:
+            e.player.removeTag("displayMode")
+            break;
+        case false:
+            e.player.addTag("displayMode")
+            break;
+    }
+}
+
+function tick(e) {
+    if (e.player.hasTag("displayMode")) {
+        executeCommand('/title ' + e.player.name + ' actionbar {"text":"Display Mode Active. type !display to disable.","color":"yellow"}')
     }
 }
