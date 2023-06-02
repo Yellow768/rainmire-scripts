@@ -84,13 +84,13 @@ function createPerkGui(e) {
     }
     for (var i = 0; i < selected_bad_perk_array.length; i++) {
         var newButton = perkGUI.addButton(100 + i, "", base_x + 146, 14 + base_y + (36 * i), 16, 16)
-        newButton.setHoverText("§d" + selected_bad_perk_array[i].name + " | §cCost :" + selected_bad_perk_array[i].cost + " §r " + selected_bad_perk_array[i].description)
+        newButton.setHoverText("§d" + selected_bad_perk_array[i].name + " | §cCost: " + selected_bad_perk_array[i].cost + " §r " + selected_bad_perk_array[i].description)
         var texture = perkGUI.addTexturedRect(900 + i, "iob:textures/customgui/perks/bad/heart.png", base_x + 142, 10 + base_y + (36 * i), 256, 256)
         texture.setScale(.10)
     }
     for (var i = 0; i < collected_bad_perk_array.length; i++) {
         var newButton = perkGUI.addButton(50 + i, "", base_x + 189, 4 + base_y + (27 * i), 15, 15)
-        newButton.setHoverText("§d" + collected_bad_perk_array[i].name + " | §cCost : " + collected_bad_perk_array[i].cost + " §r " + collected_bad_perk_array[i].description)
+        newButton.setHoverText("§d" + collected_bad_perk_array[i].name + " | §cCost: " + collected_bad_perk_array[i].cost + " §r " + collected_bad_perk_array[i].description)
         if (JSON.stringify(collected_bad_perk_array).indexOf(JSON.stringify(selected_bad_perk_array[i])) != -1) {
             newButton.setEnabled(false)
         }

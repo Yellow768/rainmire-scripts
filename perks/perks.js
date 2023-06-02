@@ -296,6 +296,7 @@ function executePerk(e, index) {
     }
     if (getScore("good_perk_debt") > getScore("bad_perk_debt")) {
         executeCommand('/title ' + e.player.name + ' actionbar {"text":"Remnants imbalanced. Add a dampening perk, or remove a power perk","color":"red"}')
+        e.player.world.playSoundAt(e.player.pos, "minecraft:entity.guardian.hurt", .4, 1)
         return
     }
     var cost = selected_perk_array[index].cost
@@ -414,6 +415,7 @@ function damaged(e) {
     }
     if (e.player.hasTag("extra_fall_damage") && !groundPounding && e.damageSource.type == "fall") {
         e.player.damage(1)
+        title(e, "Your bones crack", '#E441C3')
     }
 }
 
@@ -433,7 +435,7 @@ function rangedLaunched(e) {
         if (Math.random() < .25) {
             e.setCanceled(true)
             e.player.playSound("quark:entity.toretoise.hurt", 1, 1)
-            executeCommand('/title ' + e.player.name + ' actionbar {"text":"Butter Fingers!","italic":true,"color":"#E441C3"}')
+            title(e, "Your finger slipped!", '#E441C3')
             summonArrowInFrontOfPlayer(e)
             e.player.removeItem("arrow", 1)
         }

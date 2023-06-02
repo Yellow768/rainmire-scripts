@@ -230,3 +230,25 @@ function trigger(e) {
 		updateStats(e)
 	}
 }
+
+function dialog(e) {
+	if (e.player.hasTag("social_anxiety")) {
+		for (var i = 0; i < 9; i++) {
+			addToScore(statsStringArray[i] + "Mod", -1)
+		}
+		title(e, "You're starting to sweat", '#E441C3')
+		updateStats(e)
+	}
+
+}
+
+function dialogClose(e) {
+	if (e.player.hasTag("social_anxiety")) {
+		for (var i = 0; i < 9; i++) {
+			addToScore(statsStringArray[i] + "Mod", 1)
+		}
+		title(e, "That wasn't so bad", '#E441C3')
+		updateStats(e)
+	}
+
+}
