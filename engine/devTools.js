@@ -547,7 +547,7 @@ function interact(e) {
 
             }
             else {
-                if (executeCommand('/kill @e[type=minecraft:item,x=' + position.x + ',y=' + position.y + ',z=' + position.z + ',distance=..1.5,tag=DISPLAY]') == "No entity was found") {
+                if (executeCommand('/kill @e[type=minecraft:item,x=' + position.x + ',y=' + position.y + ',z=' + position.z + ',distance=..1.5,tag=DISPLAY,limit=1]') == "No entity was found") {
                     e.player.message("&cThere is no display item there")
                 }
                 else {

@@ -1,8 +1,28 @@
 var API = Java.type('noppes.npcs.api.NpcAPI').Instance();
-
+var scoreboard, playerName
+var reduce = false
 var world = API.getIWorld("overworld")
 function tickEventPlayerTickEvent(e) {
+
     var noppesPlayer = API.getIEntity(e.event.player)
+    scoreboard = noppesPlayer.world.getScoreboard()
+    playerName = noppesPlayer.name
+    if (getScore("using") > 0) {
+        switch (reduce) {
+            case false:
+                reduce = true
+                break;
+            case true:
+                addToScore("perk_power", -1)
+                addToScore("using", -1)
+                reduce = false
+                break;
+        }
+        if (getScore("using") == 0) {
+            reduce = false
+        }
+    }
+
     if (noppesPlayer.hasTag("levitating")) {
         noppesPlayer.setMotionY(0)
         noppesPlayer.world.spawnParticle("falling_water", noppesPlayer.x, noppesPlayer.y - 2, noppesPlayer.z, 0.1, .7, 0.1, 1, 50)
@@ -23,3 +43,20 @@ function worldOut(text) {
     return API.getIWorld("overworld").broadcast(text);
 }
 
+function getScore(scoreBoardName) {
+    if (scoreboard.hasPlayerObjective(playerName, scoreBoardName)) {
+        return scoreboard.getPlayerScore(playerName, scoreBoardName)
+    }
+}
+
+function setScore(scoreBoardName, val) {
+    if (scoreboard.hasPlayerObjective(playerName, scoreBoardName)) {
+        scoreboard.setPlayerScore(playerName, scoreBoardName, val)
+    }
+}
+
+function addToScore(scoreBoardName, val) {
+    if (scoreboard.hasPlayerObjective(playerName, scoreBoardName)) {
+        scoreboard.setPlayerScore(playerName, scoreBoardName, getScore(scoreBoardName) + val)
+    }
+}

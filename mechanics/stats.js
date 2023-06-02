@@ -92,7 +92,7 @@ function updateStats(e) {
 function tick(e) {
 	var sprint = .08 + (0.04 * (getScore("Deftness") - 1))
 	if (e.player.hasTag("winded")) {
-		sprint = 0.05
+		sprint = sprint = .08 + (0.02 * (getScore("Deftness") - 1))
 	}
 	var walk = .08 + (0.01 * (getScore("Deftness") - 1))
 	if (e.player.isSprinting()) {

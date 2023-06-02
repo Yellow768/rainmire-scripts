@@ -9,6 +9,7 @@ var HURRICANE_TIMER = 768100
 var HURRICANE_TIMER_EFFECT = 768101
 var ANIMAL_LOVER_TIMER = 768110
 var ANIMAL_LOVER_PARTICLE_TIMER = 768111
+var SUBTRACT_USING = 768120
 
 var doPerks = false
 var perkReplenishingThreshold = 5
@@ -42,18 +43,19 @@ var p_not_yet = { id: "not_yet", type: 1, name: "Not Yet", cost: 6, description:
 var p_hurricane = { id: "hurricane", type: 0, name: "Hurricane", cost: 10, description: "Create a small hurricane, that sucks in enemies nearby" }
 
 
-var d_extra_fall_damage = { id: "extra_fall_damage", name: "Fragile Feet", description: "You take additional damage when you fall" }
-var d_bow_malfunction = { id: "bow_malfunction", name: "Frail Fingers", description: "Your grip on the bow string occasionally falters." }
-var d_social_anxiety = { id: "social_anxiety", name: "Social Anxiety", description: "-1 to all attributes while in dialog" }
-var d_winded = { id: "winded", name: "Winded", description: "Your sprint is slower" }
-var d_pescetarian = { id: "pescetarian", name: "Pescetarian", description: "Fish is the only food that restores health and hydration" }
-var d_
+var d_extra_fall_damage = { id: "extra_fall_damage", cost: 2, name: "Fragile Feet", description: "You take additional damage when you fall" }
+var d_bow_malfunction = { id: "bow_malfunction", cost: 2, name: "Frail Fingers", description: "Your grip on the bow string occasionally falters." }
+var d_social_anxiety = { id: "social_anxiety", cost: 4, name: "Social Anxiety", description: "-1 to all attributes while in dialog" }
+var d_winded = { id: "winded", name: "Winded", cost: 4, description: "Your sprint is slower" }
+var d_pescetarian = { id: "pescetarian", cost: 3, name: "Pescetarian", description: "Fish is the only food that restores health and hydration" }
+
 
 var all_good_perks
-var all_bad_perks = [d_extra_fall_damage, d_bow_malfunction, d_social_anxiety, d_winded]
+var all_bad_perks = [d_extra_fall_damage, d_bow_malfunction, d_social_anxiety, d_winded, d_pescetarian]
 
 function init(e) {
     player = e.player
+
     //e.player.storeddata.put("selected_bad_perk_array", "[]")
     //e.player.storeddata.put("collected_bad_perk_array", "[]")
     if (e.player.storeddata.get("selected_perk_array") == undefined) {
@@ -132,6 +134,12 @@ function doesNotHavePerk(perk) {
 
 function timer(e) {
     switch (e.id) {
+        case SUBTRACT_USING:
+            if (getScore("using") > 0) {
+                addToScore("perk_power", -1)
+                addToScore("using", -1)
+            }
+            break;
         case GROUNDPOUND_VALIDITY_TIMER:
             if (isGroundPoundValid(e)) {
                 activateGroundPound(e)
@@ -227,7 +235,7 @@ function keyPressed(e) {
     if (e.key == 83) { isMovingBackwards = true }
     if (e.key == 68) { isMovingRight = true }
 
-    if (!e.openGui && e.player.world.storeddata.get(e.player.name + "togglePerks")) {
+    if (!e.openGui && e.player.world.storeddata.get(e.player.name + "togglePerks") && getScore("using") == 0) {
         switch (e.key) {
             case keyBinds.key_perk1:
                 executePerk(e, 0)
@@ -286,7 +294,8 @@ function executePerk(e, index) {
     if (selected_perk_array[index] == undefined) {
         return
     }
-    if (selected_bad_perk_array[index] == undefined) {
+    if (getScore("good_perk_debt") > getScore("bad_perk_debt")) {
+        executeCommand('/title ' + e.player.name + ' actionbar {"text":"Remnants imbalanced. Add a dampening perk, or remove a power perk","color":"red"}')
         return
     }
     var cost = selected_perk_array[index].cost
@@ -352,11 +361,7 @@ function disablePerk(e, index) {
 
 
 function tick(e) {
-    if (getScore("using") > 0) {
-        addToScore("perk_power", -getScore("using"))
-        setScore("using", 0)
 
-    }
     if (flyingUp) {
         e.player.world.spawnParticle("minecraft:bubble_pop", e.player.x, e.player.y, e.player.z, .2, .2, .2, .01, 15)
     }

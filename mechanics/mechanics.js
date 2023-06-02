@@ -94,7 +94,8 @@ function interact(e) {
 		var foodLevel = e.player.getMainhandItem().getFoodLevel()
 		if (e.player.hasTag("pescetarian")) {
 			var isFish = false
-			var fish_food = [""]
+			var fish_food = ["minecraft:cod", "minecraft:cooked_cod", "minecraft:salmon", "minecraft:cooked_salmon", "minecraft:tropical_fish",
+				"upgrade_aquatic:pike", "upgrade_aquatic:cooked_pike", "upgrade_aquatice:lionfish", "upgrade_aquatice:cooked_lionfish", "upgrade_aquatice:perch", , "upgrade_aquatice:cooked_perch"]
 			for (var i = 0; i < fish_food.length; i++) {
 				if (e.player.getMainhandItem().name == fish_food[i]) {
 					isFish = true
@@ -109,6 +110,8 @@ function interact(e) {
 		}
 
 		addToScore("perk_power", Math.floor(foodLevel / 2))
+		setScore("restore_hydrate", 1)
+		e.player.timers.forceStart(768080, 4, false)
 		if (getScore("perk_power") > getScore("max_perk_power")) {
 			setScore("perk_power", getScore("max_perk_power"))
 		}

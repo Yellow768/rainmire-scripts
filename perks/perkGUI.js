@@ -41,8 +41,9 @@ function init(e) {
 
 function interact(e) {
     if (e.player.gamemode != 1 && e.player.isSneaking()) {
-        createPerkGui(e)
         setUpVals(e)
+        createPerkGui(e)
+
     }
 
 }
@@ -83,13 +84,13 @@ function createPerkGui(e) {
     }
     for (var i = 0; i < selected_bad_perk_array.length; i++) {
         var newButton = perkGUI.addButton(100 + i, "", base_x + 146, 14 + base_y + (36 * i), 16, 16)
-        newButton.setHoverText("§d" + selected_bad_perk_array[i].name + " |§r " + selected_bad_perk_array[i].description)
+        newButton.setHoverText("§d" + selected_bad_perk_array[i].name + " | §cCost :" + selected_bad_perk_array[i].cost + " §r " + selected_bad_perk_array[i].description)
         var texture = perkGUI.addTexturedRect(900 + i, "iob:textures/customgui/perks/bad/heart.png", base_x + 142, 10 + base_y + (36 * i), 256, 256)
         texture.setScale(.10)
     }
     for (var i = 0; i < collected_bad_perk_array.length; i++) {
         var newButton = perkGUI.addButton(50 + i, "", base_x + 189, 4 + base_y + (27 * i), 15, 15)
-        newButton.setHoverText("§d" + collected_bad_perk_array[i].name + " |§r " + collected_bad_perk_array[i].description)
+        newButton.setHoverText("§d" + collected_bad_perk_array[i].name + " | §cCost : " + collected_bad_perk_array[i].cost + " §r " + collected_bad_perk_array[i].description)
         if (JSON.stringify(collected_bad_perk_array).indexOf(JSON.stringify(selected_bad_perk_array[i])) != -1) {
             newButton.setEnabled(false)
         }
@@ -97,7 +98,10 @@ function createPerkGui(e) {
         var texture = perkGUI.addTexturedRect(700 + i, "iob:textures/customgui/perks/bad/heart.png", base_x + 185, base_y + (27 * i), 256, 256)
         texture.setScale(.10)
     }
-
+    var good_color = 65280
+    if (getScore("bad_perk_debt") < getScore("good_perk_debt")) { good_color = 16711680 }
+    perkGUI.addLabel(80, getScore("good_perk_debt"), 87, 220, 25, 25, good_color)
+    perkGUI.addLabel(81, getScore("bad_perk_debt"), 163, 220, 25, 25)
     e.player.showCustomGui(perkGUI)
 }
 
@@ -107,9 +111,11 @@ function customGuiButton(e) {
             addToScore("perk_power_mod", selected_perk_array[e.buttonId].cost)
             e.player.removeTag(selected_perk_array[e.buttonId].id)
         }
+        addToScore("good_perk_debt", -selected_perk_array[e.buttonId].cost)
         selected_perk_array.splice(e.buttonId, 1)
         e.player.storeddata.put("selected_perk_array", JSON.stringify(selected_perk_array))
         e.player.playSound(" minecraft:item.trident.throw", 1, 1)
+
 
     }
     if (e.buttonId >= 20 && e.buttonId <= 40) {
@@ -120,9 +126,11 @@ function customGuiButton(e) {
             e.player.addTag(collected_perk_array[e.buttonId - 20].id)
         }
         e.player.playSound("minecraft:item.trident.return", 1, 1)
+        addToScore("good_perk_debt", collected_perk_array[e.buttonId - 20].cost)
     }
     if (e.buttonId >= 100 && e.buttonId <= 104) {
         e.player.removeTag(selected_bad_perk_array[e.buttonId - 100].id)
+        addToScore("bad_perk_debt", -selected_bad_perk_array[e.buttonId - 100].cost)
         selected_bad_perk_array.splice(e.buttonId - 100, 1)
         e.player.storeddata.put("selected_bad_perk_array", JSON.stringify(selected_bad_perk_array))
         e.player.playSound(" minecraft:item.trident.throw", 1, 1)
@@ -134,6 +142,7 @@ function customGuiButton(e) {
         e.player.storeddata.put("selected_bad_perk_array", JSON.stringify(selected_bad_perk_array))
         e.player.playSound("minecraft:item.trident.return", 1, 1)
         e.player.addTag(collected_bad_perk_array[e.buttonId - 50].id)
+        addToScore("bad_perk_debt", collected_bad_perk_array[e.buttonId - 50].cost)
     }
     createPerkGui(e)
     e.player.trigger(200)
