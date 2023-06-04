@@ -10,6 +10,7 @@ var HURRICANE_TIMER_EFFECT = 768101
 var ANIMAL_LOVER_TIMER = 768110
 var ANIMAL_LOVER_PARTICLE_TIMER = 768111
 var SUBTRACT_USING = 768120
+var OXYGENATE_TIMER = 768130
 
 var doPerks = false
 var perkReplenishingThreshold = 5
@@ -26,7 +27,7 @@ var player
 
 
 var p_groundPound = { id: "groundpound", type: 0, name: "Ground Pound", cost: 3, description: "Does a ground pound!" }
-var p_dash = { id: "dash", type: 0, name: "Dash", cost: 2, description: "Does a dash!" }
+var p_dash = { id: "dash", type: 0, name: "Dash", cost: 3, description: "Does a dash!" }
 var p_levitate = { id: "levitate", type: 0, name: "Levitation", cost: 1, description: "While held, levitate!" }
 var p_resurface = { id: "resurface", type: 0, name: "Resurface", cost: 1, description: "Expell all your air for a quick boost upward while in water" }
 var p_low_health_damage = { id: "low_health_damage", type: 1, name: "What Doesn't Kill You...", cost: 4, description: "Your damage is increased the lower your health is." }
@@ -41,7 +42,8 @@ var p_early_bird = { id: "early_bird", type: 1, name: "Early Bird", cost: 6, des
 var p_night_owl = { id: "night_owl", type: 1, name: "Night Owl", cost: 6, description: "During the night, you conserve energy and suffer a -1 to all stats, but gain a +1 during the day" }
 var p_not_yet = { id: "not_yet", type: 1, name: "Not Yet", cost: 6, description: "You store a reserve of blessed water. Once per revive, defy death and restore half of your heatlh, and send out a blast of water to push enemies away" }
 var p_hurricane = { id: "hurricane", type: 0, name: "Hurricane", cost: 10, description: "Create a small hurricane, that sucks in enemies nearby" }
-
+var p_oxygenate = { id: "reoxygenate", type: 0, name: "Re-oxygenate", cost: 6, description: "Filter the air out of your hydration, and use it to refill half of your air" }
+var p_electric_eel = { id: "electric_eel", type: 0, name: "Electric Eel", cost: 6, description: "While in water, send electricty out and shock nearby entities." }
 
 var d_extra_fall_damage = { id: "extra_fall_damage", cost: 2, name: "Fragile Feet", description: "You take additional damage when you fall" }
 var d_bow_malfunction = { id: "bow_malfunction", cost: 2, name: "Frail Fingers", description: "Your grip on the bow string occasionally falters." }
@@ -53,7 +55,9 @@ var d_pescetarian = { id: "pescetarian", cost: 3, name: "Pescetarian", descripti
 var all_good_perks
 var all_bad_perks = [d_extra_fall_damage, d_bow_malfunction, d_social_anxiety, d_winded, d_pescetarian]
 
+
 function init(e) {
+
     player = e.player
 
     //e.player.storeddata.put("selected_bad_perk_array", "[]")
@@ -75,7 +79,7 @@ function init(e) {
     e.player.storeddata.put("collected_bad_perk_array", JSON.stringify(collected_bad_perk_array))
     setUpVals(e)
     p_companion_buff = { id: "companion_buff", type: 0, name: "Encouragement!", cost: 12 - Math.floor((getScore("Charm") + getScore("Empathy") + getScore("Suggestion"))) / 2, description: "Scream out a battle cry and rally your friends! Give your companions a health boost. The cost is lowered depending on your Heart Skills. Cost: " + String(12 - Math.floor((getScore("Charm") + getScore("Empathy") + getScore("Suggestion")) / 2)) }
-    all_good_perks = [p_groundPound, p_dash, p_levitate, p_resurface, p_low_health_damage, p_barter, p_summon, p_companion_buff, p_hurricane, p_blood_cost, p_animal_lover]
+    all_good_perks = [p_groundPound, p_dash, p_levitate, p_resurface, p_low_health_damage, p_barter, p_summon, p_companion_buff, p_hurricane, p_blood_cost, p_animal_lover, p_oxygenate, p_electric_eel]
 }
 
 function trigger(e) {
@@ -190,6 +194,10 @@ function timer(e) {
             break;
         case ANIMAL_LOVER_PARTICLE_TIMER:
             executeCommand("/particle minecraft:dust 0 1 .5 .7 " + e.player.x + " " + (e.player.y + 1) + " " + e.player.z + " .6 .6 .6 .01 20")
+            break;
+        case OXYGENATE_TIMER:
+            e.player.removeTag("oxygenated")
+            title(e, "You can oxygenate once more", "blue")
             break;
     }
 }
@@ -329,6 +337,12 @@ function executePerk(e, index) {
         case "animal_lover":
             perk_animal_lover(e, cost)
             break;
+        case "reoxygenate":
+            perk_oxygenate(e, cost)
+            break;
+        case "electric_eel":
+            perk_electric_eel(e, cost)
+            break;
     }
 }
 
@@ -371,7 +385,7 @@ function tick(e) {
             perkReplenishingThreshold = 4
         }
         else {
-            perkReplenishingThreshold = 0
+            perkReplenishingThreshold = 2
         }
         currentReplensihingLevel++
         if (currentReplensihingLevel >= perkReplenishingThreshold && getScore("perk_power") < getScore("max_perk_power")) {

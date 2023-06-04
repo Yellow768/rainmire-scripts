@@ -1,7 +1,4 @@
 function perk_dash(e, cost) {
-    if (e.player.inWater()) {
-        return
-    }
     if (!attemptToUsePerkPower(e, cost)) {
         return
     }

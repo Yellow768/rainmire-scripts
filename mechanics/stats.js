@@ -201,7 +201,7 @@ function customGuiButton(e) {
 		}
 	}
 	if (e.buttonId == 12) {
-		createPerkGui(e, false)
+		createPerkGui(e, false, true)
 	}
 }
 
@@ -240,7 +240,7 @@ function trigger(e) {
 		updateStats(e)
 	}
 	if (e.id == 5) {
-		createPerkGui(e.arguments[0], true)
+		createPerkGui(e.arguments[0], true, true)
 	}
 }
 

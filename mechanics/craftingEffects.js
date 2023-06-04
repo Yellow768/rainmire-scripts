@@ -206,23 +206,27 @@ function applyStatusToTarget(e) {
     }
 
     if (checkForJellyEffect(e, nbt, "Flammable ", doDurability)) {
-        applyStatusEffect(e, e.target, 3)
+        applyStatusEffect(e, e.target, 3, 100)
     }
     if (checkForJellyEffect(e, nbt, "Paralyzing ", doDurability)) {
-        applyStatusEffect(e, e.target, 1)
+        applyStatusEffect(e, e.target, 1, 100)
         e.damage *= .75
 
     }
     if (checkForJellyEffect(e, nbt, "Panicking ", doDurability)) {
-        applyStatusEffect(e, e.target, 2)
+        applyStatusEffect(e, e.target, 2, 100)
     }
 }
 
 
+function trigger(e) {
+    if (e.id == 10) {
+        applyStatusEffect(e.arguments[0], e.arguments[1], e.arguments[2], e.arguments[3])
+    }
+}
 
 
-
-function applyStatusEffect(e, target, type) {
+function applyStatusEffect(e, target, type, length) {
 
     var statusNPC
     if (target.storeddata.get("hasStatusEffect") == 1) {
@@ -237,7 +241,7 @@ function applyStatusEffect(e, target, type) {
         statusNPC = e.API.clones.spawn(target.x, target.y, target.z, 9, "Status NPC", target.world)
     }
 
-    statusNPC.trigger(type, [target])
+    statusNPC.trigger(type, [target, length])
     player.getMainhandItem().setDamage(player.getMainhandItem().getDamage() + 2)
 }
 

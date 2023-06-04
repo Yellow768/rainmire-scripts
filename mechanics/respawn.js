@@ -1,14 +1,15 @@
 function init(e) {
 	setUpVals(e)
 	respawn(e)
-	if (!e.player.storeddata.has("respawnArray")) {
-		e.player.storeddata.put("respawnArray", "[[2,77,-221]]")
-	}
 }
 
 function died(e) {
 	e.player.playSound("minecraft:particle.soul_escape", 1, 1)
 	e.player.addTag("Dead")
+	e.player.storeddata.put("DeathPosX", e.player.x)
+	e.player.storeddata.put("DeathPosY", e.player.y)
+	e.player.storeddata.put("DeathPosZ", e.player.z)
+
 	e.player.addPotionEffect(15, 255, 255, false)
 	var golden_coin = e.API.getIWorld("overworld").createItem("variedcommodities:coin_gold", 1)
 	var diamond_coin = e.API.getIWorld("overworld").createItem("variedcommodities:coin_diamond", 1)
@@ -25,21 +26,22 @@ function died(e) {
 }
 
 function respawn(e) {
-	if (e.player.hasTag("Dead")) {
+	if (e.player.hasTag("Dead") && e.player.storeddata.has("respawnArray")) {
 		var x, y, z
 		if (e.player.storeddata.has("remnantUUID")) {
 			x = e.player.storeddata.get("spawnX")
 			y = e.player.storeddata.get("spawnY")
 			z = e.player.storeddata.get("spawnZ")
 		}
+
 		else {
 			var respawnArray = JSON.parse(e.player.storeddata.get("respawnArray"))
 			var closestPos
 			var greatestDistance = null
-
+			var playerPos = e.player.world.getBlock(e.player.storeddata.get("DeathPosX"), e.player.storeddata.get("DeathPosY"), e.player.storeddata.get("DeathPosZ")).getPos()
 			for (var i = 0; i < respawnArray.length; i++) {
-				var pos = e.player.world.getBlock(respawnArray[i][0], respawnArray[i][1], respawn[i][1]).getPos()
-				var currentDistance = e.player.pos.distanceTo(pos)
+				var pos = e.player.world.getBlock(respawnArray[i].x, respawnArray[i].y, respawnArray[i].z).getPos()
+				var currentDistance = playerPos.distanceTo(pos)
 				if (greatestDistance == null || currentDistance < greatestDistance) {
 					greatestDistance = currentDistance
 					closestPos = pos
@@ -49,8 +51,6 @@ function respawn(e) {
 			x = closestPos.x
 			y = closestPos.y
 			z = closestPos.z
-			respawnArray = JSON.stringify(respawnArray)
-			e.player.storeddata.put("repawnArray", respawnArray)
 		}
 
 
@@ -65,4 +65,13 @@ function respawn(e) {
 		e.player.playSound("iob:ui.breath", 1, 1)
 		e.player.playSound("minecraft:block.beacon.ambient", 1, 1)
 	}
+	else {
+
+	}
+}
+
+function damaged(e) {
+	e.player.storeddata.put("DeathPosX", e.player.x)
+	e.player.storeddata.put("DeathPosY", e.player.y)
+	e.player.storeddata.put("DeathPosZ", e.player.z)
 }

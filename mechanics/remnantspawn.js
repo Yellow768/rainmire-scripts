@@ -88,7 +88,7 @@ function customGuiButton(e) {
             npc.storeddata.put("z", nZ)
             e.player.closeGui()
             e.player.message("Remnant Spawn Point Set")
-            e.player.storeddata.put("remnantUUID", "")
+            e.player.storeddata.remove("remnantUUID")
         }
         else {
             REMNANT_GUI.addLabel(50, "Coordinates must be numerical values only!", 80, 180, 1, 1)

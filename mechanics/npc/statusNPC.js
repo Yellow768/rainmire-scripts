@@ -25,7 +25,7 @@ function trigger(e) {
         thisNPC.storeddata.put("uuid", target.getUUID())
         target.storeddata.put("paralyzed", 1)
         thisNPC.executeCommand("/particle upgrade_aquatic:yellow_jelly_blob ~ ~1 ~ .5 .5 .5 .02 30")
-        thisNPC.timers.forceStart(PARALYSIS_ID, 40, false)
+        thisNPC.timers.forceStart(PARALYSIS_ID, e.arguments[1], false)
 
     }
     if (e.id == PANICKED_ID) {
@@ -37,7 +37,7 @@ function trigger(e) {
             thisNPC.timers.forceStart(PANICKED_SWING, Math.random() * (40 - 1) + 1, false)
             thisNPC.timers.forceStart(PANICKED_SWING_OFF, Math.random() * (40 - 1) + 1, false)
         }
-        thisNPC.timers.forceStart(PANICKED_ID, 60, false)
+        thisNPC.timers.forceStart(PANICKED_ID, e.arguments[1], false)
 
     }
     if (e.id == FLAME_ID) {

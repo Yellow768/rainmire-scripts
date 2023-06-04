@@ -35,9 +35,17 @@ function removeid(name) {
 var perkGUI, selected_perk_buttons, collected_perk_buttons, selected_perk_array, collected_perk_array, selected_bad_perk_array, collected_bad_perk_array
 var guiOpen = false
 var player
+var fromRemant = false
 
 
-function createPerkGui(e, editable) {
+function createPerkGui(e, editable, init) {
+    fromRemant = false
+    if (editable && init) {
+        e.player.playSound("minecraft:block.conduit.activate", 1, 1)
+        fromRemant = true
+    }
+
+    e.player.playSound("minecraft:item.book.page_turn", 1, 1)
     var base_x = 10
     var base_y = 30
     var selected_base_x = 78
@@ -107,7 +115,7 @@ function perkGuiButton(e) {
         addToScore("good_perk_debt", -selected_perk_array[e.buttonId].cost)
         selected_perk_array.splice(e.buttonId, 1)
         e.player.storeddata.put("selected_perk_array", JSON.stringify(selected_perk_array))
-        e.player.playSound(" minecraft:item.trident.throw", 1, 1)
+        e.player.playSound("minecraft:item.trident.throw", 1, .2)
 
 
     }
@@ -120,13 +128,14 @@ function perkGuiButton(e) {
         }
         e.player.playSound("minecraft:item.trident.return", 1, 1)
         addToScore("good_perk_debt", collected_perk_array[e.buttonId - 20].cost)
+
     }
     if (e.buttonId >= 100 && e.buttonId <= 104) {
         e.player.removeTag(selected_bad_perk_array[e.buttonId - 100].id)
         addToScore("bad_perk_debt", -selected_bad_perk_array[e.buttonId - 100].cost)
         selected_bad_perk_array.splice(e.buttonId - 100, 1)
         e.player.storeddata.put("selected_bad_perk_array", JSON.stringify(selected_bad_perk_array))
-        e.player.playSound(" minecraft:item.trident.throw", 1, 1)
+        e.player.playSound("minecraft:item.trident.throw", 1, .2)
 
 
     }
@@ -136,8 +145,16 @@ function perkGuiButton(e) {
         e.player.playSound("minecraft:item.trident.return", 1, 1)
         e.player.addTag(collected_bad_perk_array[e.buttonId - 50].id)
         addToScore("bad_perk_debt", collected_bad_perk_array[e.buttonId - 50].cost)
+
     }
-    createPerkGui(e, true)
+    createPerkGui(e, true, false)
     e.player.trigger(200)
+
+}
+
+function customGuiClosed(e) {
+    if (fromRemant) {
+        e.player.playSound("minecraft:block.conduit.attack.target", 1, 1)
+    }
 
 }

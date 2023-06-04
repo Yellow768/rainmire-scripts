@@ -157,8 +157,17 @@ function dialog(e) {
     }
     npc.storeddata.put(e.player.name, 1)
     npc.storeddata.put("hasBeenTaken", 1)
-    var respawnArray = JSON.parse(e.player.storeddata.get("respawnArray"))
-    respawnArray.push([nX, nY, nZ])
+    var respawnArray = []
+    if (e.player.storeddata.has("respawnArray")) {
+        respawnArray = JSON.parse(e.player.storeddata.get("respawnArray"))
+    }
+    respawnArray.push(
+        {
+            x: parseInt(nX),
+            y: parseInt(nY),
+            z: parseInt(nZ)
+        }
+    )
     respawnArray = JSON.stringify(respawnArray)
-    e.player.storeddata.put("repawnArray", respawnArray)
+    e.player.storeddata.put("respawnArray", respawnArray)
 }
