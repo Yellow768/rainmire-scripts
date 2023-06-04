@@ -1,6 +1,9 @@
 function init(e) {
 	setUpVals(e)
 	respawn(e)
+	if (!e.player.storeddata.has("respawnArray")) {
+		e.player.storeddata.put("respawnArray", "[[2,77,-221]]")
+	}
 }
 
 function died(e) {
@@ -23,10 +26,33 @@ function died(e) {
 
 function respawn(e) {
 	if (e.player.hasTag("Dead")) {
+		var x, y, z
+		if (e.player.storeddata.has("remnantUUID")) {
+			x = e.player.storeddata.get("spawnX")
+			y = e.player.storeddata.get("spawnY")
+			z = e.player.storeddata.get("spawnZ")
+		}
+		else {
+			var respawnArray = JSON.parse(e.player.storeddata.get("respawnArray"))
+			var closestPos
+			var greatestDistance = null
 
-		var x = e.player.storeddata.get("spawnX")
-		var y = e.player.storeddata.get("spawnY")
-		var z = e.player.storeddata.get("spawnZ")
+			for (var i = 0; i < respawnArray.length; i++) {
+				var pos = e.player.world.getBlock(respawnArray[i][0], respawnArray[i][1], respawn[i][1]).getPos()
+				var currentDistance = e.player.pos.distanceTo(pos)
+				if (greatestDistance == null || currentDistance < greatestDistance) {
+					greatestDistance = currentDistance
+					closestPos = pos
+				}
+
+			}
+			x = closestPos.x
+			y = closestPos.y
+			z = closestPos.z
+			respawnArray = JSON.stringify(respawnArray)
+			e.player.storeddata.put("repawnArray", respawnArray)
+		}
+
 
 		e.player.removeTag("Dead")
 		executeCommand('/title ' + e.player.name + ' times 20 40 20')

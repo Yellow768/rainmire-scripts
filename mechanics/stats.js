@@ -116,6 +116,7 @@ function createStatsScreen(e) {
 	if (getScore("AttrPoints") > 0) {
 		createUpgradeButtons()
 	}
+	GUI_STATS.addButton(12, "View Perks", 260, 25, 50, 20)
 	e.player.showCustomGui(GUI_STATS)
 }
 
@@ -185,13 +186,22 @@ function createUpgradeButtons() {
 	}
 }
 
+
+
 function customGuiButton(e) {
+	if (e.player.getCustomGui() != GUI_STATS) {
+		perkGuiButton(e)
+		return
+	}
 	for (var i = 0; i < 9; i++) {
 		if (e.buttonId == 20 + i) {
 			addToScore(statsStringArray[i] + "Base", 1)
 			addToScore("AttrPoints", -1)
 			createStatsScreen(e)
 		}
+	}
+	if (e.buttonId == 12) {
+		createPerkGui(e, false)
 	}
 }
 
@@ -228,6 +238,18 @@ function trigger(e) {
 			}
 		}
 		updateStats(e)
+	}
+	if (e.id == 5) {
+		createPerkGui(e.arguments[0], true)
+	}
+}
+
+function attack(e) {
+	if (!e.player.isSneaking() && e.type == 1 && (e.target.name.indexOf("Remnant") != -1)) {
+		e.target.trigger(1, [e.player])
+	}
+	if (e.player.isSneaking() && e.player.gamemode == 1 && e.type == 1 && e.target.name.indexOf("Remnant")) {
+		e.target.trigger(2, [e])
 	}
 }
 

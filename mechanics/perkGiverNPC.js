@@ -34,7 +34,7 @@ function removeid(name) {
 
 var perk_id, npc, setterGUI, type, taken
 
-function init(e) {
+function perk_init(e) {
     if (!e.npc.storeddata.has("perkID")) {
         e.npc.storeddata.put("perkID", "empty")
     }
@@ -59,7 +59,10 @@ function interact(e) {
         e.setCanceled(true)
         createPerkSetterGUI(e)
     }
-    else if (type == "Dampening Perk") {
+    else if (npc.storeddata.get(e.player.name) == 1) {
+        e.player.trigger(5, [e])
+    }
+    else if (type == "Dampening Perk" && npc.storeddata.get(e.player.name) == 0) {
         e.player.message("&5The Remnant resists you. Weaken it.")
         e.npc.executeCommand("playsound minecraft:entity.guardian.hurt player @a[distance=..4] ~ ~ ~")
     }
@@ -85,7 +88,10 @@ function createPerkSetterGUI(e) {
     e.player.showCustomGui(setterGUI)
 }
 
-function customGuiButton(e) {
+function perk_customGuiButton(e) {
+    if (e.player.getCustomGui() != setterGUI) {
+        return
+    }
     if (e.buttonId == 3) {
         switch (type) {
             case "Good Perk":
@@ -101,26 +107,35 @@ function customGuiButton(e) {
         setterGUI.update(e.player)
     }
     if (e.buttonId == 4) {
+        npc.storeddata.put(e.player.name, 0)
         npc.storeddata.put("hasBeenTaken", 0)
-        npc.getAdvanced().setSound(0, "minecraft:ambient.crimson_forest.mood")
-        npc.job.setSong("minecraft:ambient.crimson_forest.loop")
+        if (type == "Dampening Perk") {
+            npc.getAdvanced().setSound(0, "minecraft:ambient.crimson_forest.mood")
+            npc.job.setSong("minecraft:ambient.crimson_forest.loop")
+        }
         taken = 0
     }
 
 }
 
 function customGuiClosed(e) {
+    if (e.player.getCustomGui() != setterGUI) { return }
     npc.storeddata.put("perkID", setterGUI.getComponent(1).getText())
     npc.storeddata.put("XP", setterGUI.getComponent(6).getText())
     perk_id = npc.storeddata.get("perkID")
 }
 
 function dialog(e) {
+    if (npc.storeddata.get(e.player.name) != 0) {
+        e.setCanceled(true)
+        return
+    }
     if (type == "Good Perk") {
         e.player.trigger(210, [perk_id])
         e.npc.executeCommand("/particle minecraft:dust 1 1 0 1 ~ ~1 ~ 1 1 1 .000005 150")
         e.npc.executeCommand("/playsound minecraft:block.bell.use player @a[distance=..4] ~ ~ ~")
         e.npc.executeCommand("/playsound minecraft:block.beacon.power_select player @a[distance=..4] ~ ~ ~")
+        npc.storeddata.put("hasBeenTaken", 1)
         e.player.message("&e&lYou have been blessed with an enhancement...")
     }
     else {
@@ -140,4 +155,10 @@ function dialog(e) {
         e.npc.executeCommand("/xp add " + e.player.name + " " + e.npc.storeddata.get("XP") + " points")
         e.player.message("&5&lYou have found a dampening perk...")
     }
+    npc.storeddata.put(e.player.name, 1)
+    npc.storeddata.put("hasBeenTaken", 1)
+    var respawnArray = JSON.parse(e.player.storeddata.get("respawnArray"))
+    respawnArray.push([nX, nY, nZ])
+    respawnArray = JSON.stringify(respawnArray)
+    e.player.storeddata.put("repawnArray", respawnArray)
 }

@@ -27,6 +27,12 @@ function timer(e) {
 	}
 }
 
+function attack(e) {
+	if (e.type == 1 && e.target.name.indexOf("Remnant")) {
+		e.target.trigger(2, [e])
+	}
+}
+
 function tick(e) {
 	if (e.player.hasTag("justFired")) {
 		applyEffectToArrow(e)

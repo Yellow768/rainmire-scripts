@@ -113,6 +113,10 @@ function chat(e) {
         case "!display":
             setItemDisplay(e)
             break;
+        case "!resetRespawns":
+            e.player.storeddata.put("respawnArray", "[[2,77,-221]]")
+            e.player.message("Respawns Reset")
+            break;
         default:
             e.setCanceled(false)
     }

@@ -18,38 +18,27 @@ function init(e) {
     nX = e.npc.storeddata.get("x")
     nY = e.npc.storeddata.get("y")
     nZ = e.npc.storeddata.get("z")
+    perk_init(e)
 
 }
 
-function interact(e) {
-    if (e.player.isSneaking() && e.player.gamemode == 1) {
-        showCustomGui(e)
-    }
-    else {
-        e.player.addPotionEffect(10, 3, 100, false)
-        if (e.player.storeddata.get("remnantUUID") != e.npc.getUUID()) {
-            setSpawnPoint(e)
-            e.player.storeddata.put("remnantUUID", e.npc.getUUID())
-        }
-        else {
-            e.npc.executeCommand('/title ' + e.player.name + ' actionbar {"text":"Soul already locked to this remnant","bold":true,"color":"green"}')
-            e.player.playSound("minecraft:entity.guardian.hurt", 1, 1)
-        }
-        // e.npc.executeCommand("noppes quest objective " + e.player.name + " 5 0 1")
-    }
+
+
+function damaged(e) {
+    e.setCanceled(true)
 }
 
-function setSpawnPoint(e) {
-    e.player.storeddata.put("spawnX", nX)
-    e.player.storeddata.put("spawnY", nY)
-    e.player.storeddata.put("spawnZ", nZ)
+function setSpawnPoint(player) {
+    player.storeddata.put("spawnX", nX)
+    player.storeddata.put("spawnY", nY)
+    player.storeddata.put("spawnZ", nZ)
 
-    e.npc.executeCommand("/spawnpoint " + e.player.name + " -90 84 -113")
-    e.npc.executeCommand("playsound minecraft:entity.evoker.prepare_summon player " + e.player.name + " ~ ~ ~ 1")
-    e.npc.executeCommand("/particle minecraft:dust 0 1 0 2 ~ ~.5 ~ 1 .5 1 1 150")
-    e.npc.executeCommand('/title ' + e.player.name + ' times 0 40 20')
-    e.npc.executeCommand('/title ' + e.player.name + ' subtitle {"text":"Soul locked on to remnant","italic":true,"color":"green"}')
-    e.npc.executeCommand('/title ' + e.player.name + ' title {"text":"RESPAWN POINT SET","bold":true,"color":"green"}')
+    npc.executeCommand("/spawnpoint " + player.name + " -90 84 -113")
+    npc.executeCommand("playsound minecraft:entity.evoker.prepare_summon player " + player.name + " ~ ~ ~ 1")
+    npc.executeCommand("/particle minecraft:dust 0 1 0 2 ~ ~.5 ~ 1 .5 1 1 150")
+    npc.executeCommand('/title ' + player.name + ' times 0 40 20')
+    npc.executeCommand('/title ' + player.name + ' subtitle {"text":"Soul locked on to remnant","italic":true,"color":"green"}')
+    npc.executeCommand('/title ' + player.name + ' title {"text":"RESPAWN POINT SET","bold":true,"color":"green"}')
 
 
 }
@@ -79,6 +68,10 @@ function showCustomGui(e) {
 }
 
 function customGuiButton(e) {
+    if (e.player.getCustomGui() != REMNANT_GUI) {
+        perk_customGuiButton(e)
+        return
+    }
     if (e.buttonId == B_UseCurrentCoordID) {
         REMNANT_GUI.getComponent(TA_CoordXID).setText(Math.floor(e.player.x))
         REMNANT_GUI.getComponent(TA_CoordYID).setText(Math.floor(e.player.y))
@@ -102,5 +95,28 @@ function customGuiButton(e) {
             REMNANT_GUI.update(e.player)
 
         }
+    }
+}
+
+function trigger(e) {
+    if (e.id == 1) {
+        var player = e.arguments[0]
+        player.addPotionEffect(10, 3, 100, false)
+        if (player.storeddata.get("remnantUUID") != npc.getUUID()) {
+            setSpawnPoint(player)
+            player.storeddata.put("remnantUUID", npc.getUUID())
+        }
+        else {
+            npc.executeCommand('/title ' + player.name + ' actionbar {"text":"No longer locked to this remnant","bold":true,"color":"green"}')
+            player.playSound("minecraft:entity.guardian.hurt", 1, 1)
+            player.storeddata.remove("spawnX")
+            player.storeddata.remove("spawnY")
+            player.storeddata.remove("spawnZ")
+            player.storeddata.remove("remnantUUID")
+        }
+        // e.npc.executeCommand("noppes quest objective " + e.player.name + " 5 0 1")
+    }
+    if (e.id == 2) {
+        showCustomGui(e.arguments[0])
     }
 }
