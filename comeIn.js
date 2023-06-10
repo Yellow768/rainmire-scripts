@@ -1,0 +1,1 @@
+action_comeIn:{head:{id:0,time:.4,a:[0,0,0],end:[239,174,179],},left_arm:{id:1,time:.4,a:[0,0,0],end:[250,360,271],},right_arm:{id:2,time:.4,a:[0,0,0],end:[76,154,266],},body:{id:3,time:.4,a:[0,0,0],end:[180,180,180],},left_leg:{id:4,time:.4,a:[0,0,0],end:[180,180,180],},right_leg:{id:5,time:.4,a:[0,0,0],end:[180,180,180],},}

@@ -37,6 +37,9 @@ function tickEventPlayerTickEvent(e) {
         noppesPlayer.world.spawnParticle("bubble_pop", noppesPlayer.x - dx, noppesPlayer.y + 1, noppesPlayer.z - dz, 0.1, .1, 0.1, .01, 50)
         noppesPlayer.world.spawnParticle("falling_water", noppesPlayer.x - dx, noppesPlayer.y + 1, noppesPlayer.z - dz, 0.1, .2, 0.1, 1, 5)
     }
+    if (noppesPlayer.hasTag("onIcicle")) {
+        noppesPlayer.setMotionY(0)
+    }
 }
 
 function worldOut(text) {

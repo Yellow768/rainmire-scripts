@@ -1,0 +1,1 @@
+action_shield_over:{head:{id:0,time:.2,a:[0,0,0],end:[184,180,180],},left_arm:{id:1,time:.2,a:[0,0,0],end:[180,180,180],},right_arm:{id:2,time:.2,a:[0,0,0],end:[180,180,180],},body:{id:3,time:.2,a:[0,0,0],end:[180,180,180],},left_leg:{id:4,time:.2,a:[0,0,0],end:[180,180,180],},right_leg:{id:5,time:.2,a:[0,0,0],end:[180,180,180],},}

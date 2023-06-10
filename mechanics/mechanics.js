@@ -87,6 +87,9 @@ function interact(e) {
 	}
 	else if (e.type == 1) {
 		checkPhantomInteractions(e)
+		if (e.player.getOffhandItem().name.indexOf("shield") != -1 && e.target.type == 2 && e.target.getAttackTarget() == e.player) {
+			e.setCanceled(true)
+		}
 	}
 	else if (e.player.getMainhandItem().getDisplayName().indexOf("Puff Bomb") != -1) {
 		summonThrowableBomb(e)

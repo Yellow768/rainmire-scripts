@@ -1,0 +1,1 @@
+action_pizazz:{head:{id:0,time:.2,a:[0,0,0],end:[239,86,179],},left_arm:{id:1,time:.2,a:[0,0,0],end:[202,360,223],},right_arm:{id:2,time:.2,a:[0,0,0],end:[57,207,185],},body:{id:3,time:.2,a:[0,0,0],end:[180,180,180],},left_leg:{id:4,time:.2,a:[0,0,0],end:[180,130,111],},right_leg:{id:5,time:.2,a:[0,0,0],end:[180,180,180],},}

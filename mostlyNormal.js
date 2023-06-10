@@ -1,0 +1,1 @@
+action_mostlyNormal:{head:{id:0,time:1,a:[0,0,0],end:[179,180,182],},left_arm:{id:1,time:1,a:[0,0,0],end:[177,175,175],},right_arm:{id:2,time:1,a:[0,0,0],end:[186,180,177],},body:{id:3,time:1,a:[0,0,0],end:[180,180,180],},left_leg:{id:4,time:1,a:[0,0,0],end:[180,180,174],},right_leg:{id:5,time:1,a:[0,0,0],end:[180,180,180],},}

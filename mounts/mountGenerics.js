@@ -8,3 +8,10 @@ function summonMount(e) {
             break;
     }
 }
+
+function logout(e) {
+    removePhantom(e, false)
+    removePhantom(e, true)
+    deleteBoat(e, false)
+    deleteBoat(e, true)
+}

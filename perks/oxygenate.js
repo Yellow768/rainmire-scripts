@@ -9,12 +9,7 @@ function perk_oxygenate(e, cost) {
     if (!attemptToUsePerkPower(e, cost)) {
         return
     }
-    var air = e.player.storeddata.get("currentAir")
-    air += 150
-    if (air > 300) {
-        air = 300
-    }
-    e.player.storeddata.put("currentAir", air)
+    e.player.addTag("oxygenating")
     e.player.world.playSoundAt(e.player.pos, "minecraft:entity.puffer_fish.blow_up", 1, 1)
     e.player.world.playSoundAt(e.player.pos, "minecraft:block.conduit.activate", 1, 1)
     title(e, "You separate the oxygen from the water. This power must rest for 30 seconds", "cyan")
