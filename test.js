@@ -1,1 +1,0 @@
-action_test:{head:{id:0,time:,4,a:[0,0,0],end:[170,167,174],},left_arm:{id:1,time:,4,a:[0,0,0],end:[35,133,180],},right_arm:{id:2,time:,4,a:[0,0,0],end:[180,180,180],},body:{id:3,time:,4,a:[0,0,0],end:[180,180,180],},left_leg:{id:4,time:,4,a:[0,0,0],end:[180,180,180],},right_leg:{id:5,time:,4,a:[0,0,0],end:[180,180,180],},}

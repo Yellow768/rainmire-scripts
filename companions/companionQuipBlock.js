@@ -1,40 +1,8 @@
 var GUI_CompanionQuipNPC
 var block
 var infoTextString
-var _GUI_IDS = {
-    counter: 1,
-    ids: {},
-    lookup: {}
-}; // var tempdata = API.getIWorld(0).getTempdata();
-// if(tempdata.get('_GUI_IDS')) {
-//     _GUI_IDS = tempdata.get('_GUI_IDS');
-// } else {
-//     tempdata.put('_GUI_IDS', _GUI_IDS);
-// }
 
-function id(name) {
-    if (!name) {
-        name = Math.random().toString(36).substring(7) + Math.random().toString(36).substring(7);
-    }
-
-    var _id = _GUI_IDS.ids[name] || (_GUI_IDS.ids[name] = _GUI_IDS.counter++);
-
-    _GUI_IDS.lookup[_id] = name;
-    return _id;
-}
-
-function idname(_id) {
-    return _GUI_IDS.lookup[_id];
-}
-
-function removeid(name) {
-    var _id = id(name);
-
-    delete _GUI_IDS.lookup[_id];
-    delete _GUI_IDS.ids[name];
-}
-
-;
+    ;
 
 function init(e) {
     block = e.block
@@ -74,7 +42,7 @@ function updateBlockText(e) {
 
 function timer(e) {
     if (e.id == 1) {
-        var nE = e.block.world.getNearbyEntities(e.block.pos, e.block.storeddata.get("range"), 2)
+        var nE = e.block.level.getNearbyEntities(e.block.pos, e.block.storeddata.get("range"), 2)
         if (nE.length > 0) {
             for (var i = 0; i < nE.length; i++) {
                 nE[i].trigger(5005, [e, nE[i], e.block.storeddata.get("quipName")])
@@ -90,33 +58,33 @@ function trigger(e) {
 }
 
 function interact(e) {
-    if (e.player.gamemode == 1) {
-        GUI_CompanionQuipNPC = e.API.createCustomGui(id("GUI_CompanionQuip"), 256, 256, false)
-        GUI_CompanionQuipNPC.addLabel(id("cqtitle"), "Companion Quip Block", 64, 0, 1, 1)
-        GUI_CompanionQuipNPC.addLabel(id("quipName"), "Quip Name", 0, 100, 1, 1)
-        GUI_CompanionQuipNPC.addLabel(id("range"), "Range", 0, 140, 1, 1)
 
-        GUI_CompanionQuipNPC.addTextField(id("quipText"), 60, 97, 160, 15)
-        GUI_CompanionQuipNPC.addTextField(id("rangeText"), 60, 137, 160, 15)
+    GUI_CompanionQuipNPC = e.API.createCustomGui(9, 256, 256, false, e.player)
+    // GUI_CompanionQuipNPC.addLabel(10, "Companion Quip Block", 64, 0, 1, 1)
+    //GUI_CompanionQuipNPC.addLabel(11, "Quip Name", 0, 100, 1, 1)
+    // GUI_CompanionQuipNPC.addLabel(12, "Range", 0, 140, 1, 1)
 
-        GUI_CompanionQuipNPC.addButton(id("saveButton"), "Save Changes", 60, 180, 80, 20)
-        GUI_CompanionQuipNPC.getComponent(id("quipName")).setHoverText("Use the same name in the companion NPC")
+    // GUI_CompanionQuipNPC.addTextField(13, 60, 97, 160, 15)
+    //GUI_CompanionQuipNPC.addTextField(14, 60, 137, 160, 15)
 
-        if (e.block.storeddata.get("quipName") != null) {
-            GUI_CompanionQuipNPC.getComponent(id("quipText")).setText(e.block.storeddata.get("quipName"))
-            GUI_CompanionQuipNPC.getComponent(id("rangeText")).setText(e.block.storeddata.get("range"))
-        }
+    // GUI_CompanionQuipNPC.addButton(15, "Save Changes", 60, 180, 80, 20)
+    // GUI_CompanionQuipNPC.getComponent(11).setHoverText("Use the same name in the companion NPC")
 
-        e.player.message((e.block.storeddata.get("quipName")))
-        e.player.showCustomGui(GUI_CompanionQuipNPC)
-    }
+    // if (e.block.storeddata.get("quipName") != null) {
+    // GUI_CompanionQuipNPC.getComponent(11).setText(e.block.storeddata.get("quipName"))
+    // GUI_CompanionQuipNPC.getComponent(12).setText(e.block.storeddata.get("range"))
+    // }
+
+    //e.player.message((e.block.storeddata.get("quipName")))
+    e.player.showCustomGui(GUI_CompanionQuipNPC)
+
 }
 
 
 function customGuiButton(e) {
-    if (e.buttonId == id("saveButton")) {
-        block.storeddata.put("quipName", GUI_CompanionQuipNPC.getComponent(id("quipText")).getText())
-        block.storeddata.put("range", GUI_CompanionQuipNPC.getComponent(id("rangeText")).getText())
+    if (e.buttonId == 15) {
+        block.storeddata.put("quipName", GUI_CompanionQuipNPC.getComponent(13).getText())
+        block.storeddata.put("range", GUI_CompanionQuipNPC.getComponent(14).getText())
         e.player.closeGui()
 
         updateBlockText()

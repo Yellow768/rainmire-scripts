@@ -27,7 +27,7 @@ function interact(e) {
         quipTempList = []
         quipTempList = quipList
 
-        GUI_CompanionQuipNPC = e.API.createCustomGui(id("GUI_CompanionQuip"), 256, 256, false)
+        GUI_CompanionQuipNPC = e.API.createCustomGui(id("GUI_CompanionQuip"), 256, 256, false, e.player)
         GUI_CompanionQuipNPC.addLabel(id("cqtitle"), "Companion Quips", 100, 0, 1, 1)
         GUI_CompanionQuipNPC.addScroll(id("cqScroll"), 0, 20, 100, 180, quipNameList)
 

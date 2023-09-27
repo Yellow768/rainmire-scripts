@@ -3,12 +3,21 @@ var keyMode = false
 var keyBinds
 
 function init(e) {
-    e.player.message("&dDeveloper Tools On. Type &6!devhelp &dfor a list of functions")
+    if (e.player.storeddata.get("helpMessage") == 1) {
+        e.player.message("&dDeveloper Tools On. Type &6!devHelp &dfor a list of functions")
+    }
+
     if (e.player.world.storeddata.get(e.player.name + "uiPlayChime") == undefined) {
         e.player.world.storeddata.put(e.player.name + "uiPlayChime", 1)
     }
     if (e.player.world.storeddata.get(e.player.name + "brushArray") == undefined) {
         e.player.world.storeddata.put(e.player.name + "brushArray", "[]")
+    }
+    if (!e.player.storeddata.has("creativeStats")) {
+        e.player.storeddata.put("creativeStats", 0)
+    }
+    if (!e.player.storeddata.has("helpMessage")) {
+        e.player.storeddata.put("helpMessage", 0)
     }
     e.player.playSound("minecraft:block.note_block.chime", e.player.storeddata.get("uiPlayChime"), 1)
     if (e.player.world.storeddata.get(e.player.name + "keyBindsJSON") == undefined) {
@@ -117,6 +126,15 @@ function chat(e) {
             e.player.storeddata.remove("respawnArray")
             e.player.message("Respawns Reset")
             break;
+        case "!creativeStats":
+            toggleCreativeStats(e)
+            break;
+        case "!cs":
+            toggleCreativeStats(e)
+            break;
+        case "!toggleInitMessage":
+            toggleInitMessage(e)
+            break;
         default:
             e.setCanceled(false)
     }
@@ -144,6 +162,14 @@ function chat(e) {
         e.setCanceled(true)
         setBreathCommand(e.message.split(' ')[1])
     }
+    if (e.message.indexOf("!givePerk ") != -1) {
+        e.setCanceled(true)
+        givePerk(e.message.split(' ')[1])
+    }
+    if (e.message.indexOf("!giveDampener ") != -1) {
+        e.setCanceled(true)
+        giveDampener(e.message.split(' ')[1])
+    }
 }
 
 
@@ -167,35 +193,40 @@ function trigger(e) {
 function displayHelpMessage(page) {
     if (page == 1) {
         player.message("&a===Dev Help (1/3)===")
+        player.message("&6!applyAttributeModifier <attribute> <value>: &rAdds an attribute modifer to the item in your hand")
+        player.message("&6!brushes &rOR &6!br: &rDisplays saved brushes. Type &6!br help&r for more commands")
+        player.message("&6!bw: &rAdds/Removes 'Breakable' at the beginning of your held item name. Placing a 'Breakable' places a breakable version of that block")
+        player.message("&6!creativeStats || !cs: &rToggle whether Deftness affects you in creative mode")
         player.message("&6!devhelp: &rBrings this list up")
-        player.message("&6!keyBinds: &rBrings up GUI to edit key bindings")
-        player.message("&6!showKey : &rToggles show key mode. When on, key presses will return their key ID in chat (for scripting uses)")
-        player.message("&6!toggleChime : &rToggles if the chime plays whenever the dev tools are reloaded")
-        player.message("&6!resetStats: &rReset your level and attributes to base level")
-        player.message("&6!levelUp: &rLevel up!")
+        player.message("&6!giveAttrPoints [number]: &rGive yourself an amount of attribute points")
+        player.message("&6!givePerk <name>: &rUnlocks this perk for you, if it exists")
         executeCommand('/tellraw @p ["",{"text":"(1/3)","color":"light_purple","clickEvent":{"action":"run_command","value":"/noppes script trigger 2"}},{"text":" ","clickEvent":{"action":"run_command","value":"/noppes script trigger 2"}},{"text":"Next Page >>","color":"gold","clickEvent":{"action":"run_command","value":"/noppes script trigger 2"}}]')
         return
     }
     if (page == 2) {
         player.message("&a===Dev Help (2/3)===")
-        player.message("&6!giveAttrPoints [number]: &rGive yourself an amount of attribute points")
-        player.message("&6!toggleCommandFeedback: &rToggles the gamerule 'sendCommandFeedback'")
-        player.message("&6!togglePerks: &rToggles perks being active.")
-        player.message("&6!brushes &rOR &6!br: &rDisplays saved brushes. Type &6!br help&r for more commands")
-        player.message("&6!bw: &rAdds/Removes 'Breakable' at the beginning of your held item name. Placing a 'Breakable' places a breakable version of that block")
-        player.message("&6!applyAttributeModifier <attribute> <value>: &rAdds an attribute modifer to the item in your hand")
-        executeCommand('/tellraw @p ["",{"text":"(2/3)","color":"light_purple","clickEvent":{"action":"run_command","value":"/noppes script trigger 2"}},{"text":" << Prev Page","color":"gold","clickEvent":{"action":"run_command","value":"/noppes script trigger 4"}},{"text":" \\u0020"},{"text":"Next Page >>","color":"gold","clickEvent":{"action":"run_command","value":"noppes trigger  3"}}]')
+        player.message("&6!giveDampener <name>: &rUnlocks this dampener for you, if it exists")
+        player.message("&6!itemDisplay: &rToggles item display mode. If on, right clicking with an item will place a display of it on the block")
+        player.message("&6!keyBinds: &rBrings up GUI to edit key bindings")
+        player.message("&6!levelUp: &rLevel up!")
+        player.message("&6!resetStats: &rReset your level and attributes to base level")
+        player.message("&6!showKey : &rToggles show key mode. When on, key presses will return their key ID in chat (for scripting uses)")
+        player.message("&6!setBreath <value>: &rSets your air decrease rate")
+        player.message("&6!toggleChime : &rToggles if the chime plays whenever the dev tools are reloaded")
+        executeCommand('/tellraw @p ["",{"text":"(2/3)","color":"light_purple","clickEvent":{"action":"run_command","value":"/noppes script trigger 2"}},{"text":" << Prev Page","color":"gold","clickEvent":{"action":"run_command","value":"/noppes script trigger 4"}},{"text":" \\u0020"},{"text":"Next Page >>","color":"gold","clickEvent":{"action":"run_command","value":"/noppes script trigger 3"}}]')
         return
     }
     if (page == 3) {
         player.message("&a===Dev Help (3/3)===")
+        player.message("&6!toggleCommandFeedback: &rToggles the gamerule 'sendCommandFeedback'")
+        player.message("&6!toggleInitMessage: &rToggles whether the init message appears when scripts reload")
+        player.message("&6!togglePerks: &rToggles perks being active.")
         player.message("&6N: &rToggles Nightvision")
         player.message("&6G: &rSwitched between Adventure Mode and Creative Mode")
         player.message("&6H: &rFully heals you")
         player.message("&6Z: &rPuts your coords in chat. Click it to copy to clipboard")
-        // player.message("&6M: &rToggles the gamerule 'sendCommandFeedback")
         player.message("&6O: &rReloads CustomNPCs scripts")
-        executeCommand('/tellraw @p ["",{"text":"(3/3)","color":"light_purple","clickEvent":{"action":"run_command","value":"/noppes script trigger 2"}},{"text":" ","clickEvent":{"action":"run_command","value":"/noppes script trigger 2"}},{"text":"Next Page >>","color":"gold","clickEvent":{"action":"run_command","value":"/noppes script trigger 3"}}]')
+        executeCommand('/tellraw @p ["",{"text":"(3/3)","color":"light_purple","clickEvent":{"action":"run_command","value":"/noppes script trigger 2"}},{"text":" ","clickEvent":{"action":"run_command","value":"/noppes script trigger 2"}},{"text":"<< Prev Page","color":"gold","clickEvent":{"action":"run_command","value":"/noppes script trigger 2"}}]')
         return
     }
     else {
@@ -242,7 +273,7 @@ function toggleCommandFeedback() {
 function toggleNightVision() {
     switch (player.getPotionEffect(16)) {
         case -1:
-            player.addPotionEffect(16, 5555, 0, true)
+            player.addPotionEffect(16, 5555, 0, false)
             player.message("&bNightvision turned on")
             break;
         default:
@@ -324,7 +355,8 @@ function resetStats() {
     setScore("PerkPoints", 0)
     setScore("swmspd", 0)
     setScore("breath", 0)
-    executeCommand("tag " + player.name + " remove LevelUp")
+
+    player.removeTag("levelUp")
     player.message("&dYour level and attributes have been reset")
     player.world.storeddata.put(player.name + "totalExperiencePoints", 0)
 }
@@ -624,6 +656,40 @@ function setItemDisplay(e) {
             e.player.addTag("displayMode")
             break;
     }
+}
+
+function toggleCreativeStats(e) {
+    switch (e.player.storeddata.get("creativeStats")) {
+        case 0:
+            e.player.storeddata.put("creativeStats", 1)
+            e.player.message("&eDeftness &anow affects you &ein creative mode")
+            break;
+        case 1:
+            e.player.storeddata.put("creativeStats", 0)
+            e.player.message("&eDeftness &cno longer affects you &ein creative mode")
+            break
+    }
+}
+
+function toggleInitMessage(e) {
+    switch (e.player.storeddata.get("helpMessage")) {
+        case 0:
+            e.player.storeddata.put("helpMessage", 1)
+            e.player.message("&eDev help init message turned &aon")
+            break;
+        case 1:
+            e.player.storeddata.put("helpMessage", 0)
+            e.player.message("&eDev help init message turned &coff")
+            break
+    }
+}
+
+function givePerk(message) {
+    player.trigger(210, [message])
+}
+
+function giveDampener(message) {
+    player.trigger(220, [message])
 }
 
 function tick(e) {

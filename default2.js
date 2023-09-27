@@ -1,1 +1,0 @@
-action_default2: { head: { id: 0, time: .5, a: [0, 0, 0], end: [180, 180, 180],}, left_arm: { id: 1, time: .5, a: [0, 0, 0], end: [180, 180, 180],}, right_arm: { id: 2, time: .5, a: [0, 0, 0], end: [180, 180, 180],}, body: { id: 3, time: .5, a: [0, 0, 0], end: [180, 180, 180],} }

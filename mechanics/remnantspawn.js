@@ -47,7 +47,7 @@ function showCustomGui(e) {
 
 
 
-    REMNANT_GUI = e.API.createCustomGui(1, 256, 256, false)
+    REMNANT_GUI = e.API.createCustomGui(1, 256, 256, false, e.player)
     REMNANT_GUI.addLabel(L_TitleID, "Remnant of Safety Settings", 70, 0, 1, 1)
     REMNANT_GUI.addLabel(L_CoordinateID, "Respawn Coordinates:", -40, 50, 1, 1)
     REMNANT_GUI.addTextField(TA_CoordXID, 80, 45, 60, 10)
@@ -76,7 +76,7 @@ function customGuiButton(e) {
         REMNANT_GUI.getComponent(TA_CoordXID).setText(Math.floor(e.player.x))
         REMNANT_GUI.getComponent(TA_CoordYID).setText(Math.floor(e.player.y))
         REMNANT_GUI.getComponent(TA_CoordZID).setText(Math.floor(e.player.z))
-        REMNANT_GUI.update(e.player)
+        REMNANT_GUI.update()
     }
     if (e.buttonId == B_SaveID) {
         if (!isNaN(tX.getText()) && !isNaN(tY.getText()) && !isNaN(tZ.getText())) {
@@ -92,7 +92,7 @@ function customGuiButton(e) {
         }
         else {
             REMNANT_GUI.addLabel(50, "Coordinates must be numerical values only!", 80, 180, 1, 1)
-            REMNANT_GUI.update(e.player)
+            REMNANT_GUI.update()
 
         }
     }
@@ -115,8 +115,26 @@ function trigger(e) {
             player.storeddata.remove("remnantUUID")
         }
         // e.npc.executeCommand("noppes quest objective " + e.player.name + " 5 0 1")
+        addRemnantToRespawnArray(player)
     }
     if (e.id == 2) {
         showCustomGui(e.arguments[0])
     }
+
+}
+
+function addRemnantToRespawnArray(player) {
+    var respawnArray = []
+    if (player.storeddata.has("respawnArray")) {
+        respawnArray = JSON.parse(player.storeddata.get("respawnArray"))
+    }
+    respawnArray.push(
+        {
+            x: parseInt(nX),
+            y: parseInt(nY),
+            z: parseInt(nZ)
+        }
+    )
+    respawnArray = JSON.stringify(respawnArray)
+    player.storeddata.put("respawnArray", respawnArray)
 }

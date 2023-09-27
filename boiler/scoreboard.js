@@ -16,6 +16,7 @@ function getScore(scoreBoardName) {
     if (scoreboard.hasPlayerObjective(playerName, scoreBoardName)) {
         return scoreboard.getPlayerScore(playerName, scoreBoardName)
     }
+    return null
 }
 
 function setScore(scoreBoardName, val) {
@@ -28,4 +29,8 @@ function addToScore(scoreBoardName, val) {
     if (scoreboard.hasPlayerObjective(playerName, scoreBoardName)) {
         scoreboard.setPlayerScore(playerName, scoreBoardName, getScore(scoreBoardName) + val)
     }
+}
+
+function hasScore(scoreboardName) {
+    return scoreboard.hasPlayerObjective(playerName, scoreboardName)
 }

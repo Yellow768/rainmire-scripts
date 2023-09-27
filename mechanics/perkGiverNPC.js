@@ -1,36 +1,3 @@
-var API = Java.type('noppes.npcs.api.NpcAPI').Instance();
-
-"use strict";
-//Runon's Stuff
-var _GUI_IDS = {
-    counter: 1,
-    ids: {},
-    lookup: {}
-}
-
-function id(name) {
-    if (!name) {
-        name = Math.random().toString(36).substring(7) + Math.random().toString(36).substring(7);
-    }
-
-    var _id = _GUI_IDS.ids[name] || (_GUI_IDS.ids[name] = _GUI_IDS.counter++);
-
-    _GUI_IDS.lookup[_id] = name;
-    return _id;
-}
-
-function idname(_id) {
-    return _GUI_IDS.lookup[_id];
-}
-
-function removeid(name) {
-    var _id = id(name);
-
-    delete _GUI_IDS.lookup[_id];
-    delete _GUI_IDS.ids[name];
-}
-
-;
 
 var perk_id, npc, setterGUI, type, taken
 
@@ -55,11 +22,12 @@ function perk_init(e) {
 }
 
 function interact(e) {
+    npc = e.npc
     if (e.player.gamemode == 1 && e.player.isSneaking()) {
         e.setCanceled(true)
         createPerkSetterGUI(e)
     }
-    else if (npc.storeddata.get(e.player.name) == 1) {
+    else if (e.npc.storeddata.get(e.player.name) == 1) {
         e.player.trigger(5, [e])
     }
     else if (type == "Dampening Perk" && npc.storeddata.get(e.player.name) == 0) {
@@ -75,7 +43,7 @@ function timer(e) {
 }
 
 function createPerkSetterGUI(e) {
-    setterGUI = e.API.createCustomGui(id(e.player.name + "perkSetter"), 256, 256, false)
+    setterGUI = e.API.createCustomGui(12, 256, 256, false, e.player)
     var id_text = setterGUI.addTextField(1, 50, 50, 150, 18)
     id_text.setText(perk_id)
     setterGUI.addLabel(2, "Perk ID", 0, 50, 1, 1)
@@ -104,7 +72,7 @@ function perk_customGuiButton(e) {
         }
         npc.storeddata.put("type", type)
         setterGUI.getComponent(3).setLabel(type)
-        setterGUI.update(e.player)
+        setterGUI.update()
     }
     if (e.buttonId == 4) {
         npc.storeddata.put(e.player.name, 0)
@@ -126,7 +94,7 @@ function customGuiClosed(e) {
 }
 
 function dialog(e) {
-    if (npc.storeddata.get(e.player.name) != 0) {
+    if (e.npc.storeddata.get(e.player.name) != 0) {
         e.setCanceled(true)
         return
     }
@@ -157,6 +125,10 @@ function dialog(e) {
     }
     npc.storeddata.put(e.player.name, 1)
     npc.storeddata.put("hasBeenTaken", 1)
+    addRemnantToRespawnArray(e)
+}
+
+function addRemnantToRespawnArray(e) {
     var respawnArray = []
     if (e.player.storeddata.has("respawnArray")) {
         respawnArray = JSON.parse(e.player.storeddata.get("respawnArray"))

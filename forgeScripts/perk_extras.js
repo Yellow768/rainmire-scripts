@@ -27,7 +27,7 @@ function tickEventPlayerTickEvent(e) {
         noppesPlayer.setMotionY(0)
         noppesPlayer.world.spawnParticle("falling_water", noppesPlayer.x, noppesPlayer.y - 2, noppesPlayer.z, 0.1, .7, 0.1, 1, 50)
         noppesPlayer.world.spawnParticle("bubble_pop", noppesPlayer.x, noppesPlayer.y, noppesPlayer.z, 0.3, .2, 0.3, .01, 100)
-
+        e.event.player.field_70143_R = 0
     }
     if (noppesPlayer.hasTag("isDashing")) {
         var angle = noppesPlayer.getRotation()

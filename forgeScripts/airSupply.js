@@ -4,7 +4,7 @@ var currentEyePosition
 var forgePlayer
 var test = 300
 function tickEventPlayerTickEvent(e) {
-
+    noppesPlayer.message("test")
     forgePlayer = e.event.player
     var noppesPlayer = API.getIEntity(forgePlayer)
     if (isNaN(noppesPlayer.storeddata.get("currentAir")) || noppesPlayer.storeddata.get("currentAir") == null) {
@@ -17,7 +17,7 @@ function tickEventPlayerTickEvent(e) {
     }
     var playerX = Math.floor(forgePlayer.func_226277_ct_())
     var playerZ = Math.floor(forgePlayer.func_226281_cx_())
-    currentEyePosition = e.event.player.func_226280_cw_()
+    currentEyePosition = e.event.player.m_20188_()
 
     var blockAtEyeLevel = world.getBlock(playerX, currentEyePosition, playerZ).name
     if (noppesPlayer.hasTag("resurfaced")) {

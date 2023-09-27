@@ -21,6 +21,16 @@ function interact(e) {
                 case "Lock Destroyer":
                     pickLock(e, 1000, 768005)
                 default:
+                    if (e.player.hasTag("flood_lockpick")) {
+                        var sum = getScore("Deftness") + getScore("Aptitude") + getScore("Intellect")
+                        var chance = Math.floor((Math.random() * (sum * 2)) + (sum * 2))
+                        pickLock(e, chance, 0)
+                        e.player.removeTag("flood_lockpick")
+                        var flood_pos = e.target.pos
+                        e.player.world.spawnParticle("falling_water", flood_pos.x, flood_pos.y + 1, flood_pos.z, .4, .4, .4, .2, 500)
+                        e.player.world.playSoundAt(e.player.pos, "entity.player.splash", 1, 1)
+                        break;
+                    }
                     e.setCanceled(true)
                     executeCommand('/title ' + e.player.name + ' actionbar {"text":"Locked! Lock Strength: ' + e.target.storeddata.get("LockDifficulty") + '%","bold":true,"color":"red"}')
                     executeCommand("/playsound minecraft:entity.shulker.close player @a[x=" + e.player.x + ",y=" + e.player.y + ",z=" + e.player.z + ",distance=..5] " + e.player.x + " " + e.player.y + " " + e.player.z)
@@ -29,7 +39,6 @@ function interact(e) {
         }
     }
     if (e.type == 0 && e.player.getMainhandItem().getDisplayName() == "Dev Locker") { changePlayerLockModifier(e) }
-
 
 }
 
@@ -77,9 +86,11 @@ function changePlayerLockModifier(e) {
 function pickLock(e, lockDamage, customModelData) {
     var lockStrength
     if (lockDamage > 0) {
+        if (customModelData != 0) {
+            executeCommand("clear " + e.player.name + " minecraft:tripwire_hook{CustomModelData:" + customModelData + "} 1")
+            executeCommand("/particle item minecraft:tripwire_hook{CustomModelData:" + customModelData + "} " + e.player.x + " " + (e.player.y + 1) + " " + e.player.z + " .5 .2 .5 .4 10")
+        }
 
-        executeCommand("clear " + e.player.name + " minecraft:tripwire_hook{CustomModelData:" + customModelData + "} 1")
-        executeCommand("/particle item minecraft:tripwire_hook{CustomModelData:" + customModelData + "} " + e.player.x + " " + (e.player.y + 1) + " " + e.player.z + " .5 .2 .5 .4 10")
         executeCommand("/playsound minecraft:entity.item_frame.rotate_item player @a[x=" + e.player.x + ",y=" + e.player.y + ",z=" + e.player.z + ",distance=..5] " + e.player.x + " " + e.player.y + " " + e.player.z)
 
 

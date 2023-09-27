@@ -1,1 +1,0 @@
-action_swingOut:{head:{id:0,time:.2,a:[0,0,0],end:[141,174,179],},left_arm:{id:1,time:.2,a:[0,0,0],end:[114,93,180],},right_arm:{id:2,time:.2,a:[0,0,0],end:[36,238,180],},body:{id:3,time:.2,a:[0,0,0],end:[180,180,180],},left_leg:{id:4,time:.2,a:[0,0,0],end:[180,180,180],},right_leg:{id:5,time:.2,a:[0,0,0],end:[180,180,180],},}

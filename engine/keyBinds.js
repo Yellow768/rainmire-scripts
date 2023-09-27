@@ -31,7 +31,7 @@ function showKeybindGUI(e) {
     var verticalPos = 10
     var horizontalSize = 25
     var verticalSize = 20
-    KEYBIND_GUI = e.API.createCustomGui(id("KEYBIND_GUI"), 256, 256, false)
+    KEYBIND_GUI = e.API.createCustomGui(id("KEYBIND_GUI"), 256, 256, false, e.player)
     KEYBIND_GUI.addLabel(id("GUI_Title"), "Custom Keybinds", 100, -5, 1, 1)
 
     KEYBIND_GUI.addButton(id(keyBindsKeys[4]), GLFWKeys[keyBinds.key_stats], horizontalPos, verticalPos, horizontalSize, verticalSize)
@@ -81,7 +81,7 @@ function customGuiClosed(e) {
 
 function editKeyBind(e) {
     KEYBIND_GUI.getComponent(e.buttonId).setLabel('')
-    KEYBIND_GUI.update(e.player)
+    KEYBIND_GUI.update()
     keybindMode = true
     rebindingID = e.buttonId
 }
@@ -93,7 +93,7 @@ function assignKey(e) {
         keyBinds[idname(rebindingID)] = e.key
         keybindMode = false
         KEYBIND_GUI.getComponent(rebindingID).setLabel(GLFWKeys[e.key])
-        KEYBIND_GUI.update(e.player)
+        KEYBIND_GUI.update()
         e.player.world.storeddata.put(e.player.name + "keyBindsJSON", JSON.stringify(keyBinds))
     }
 }

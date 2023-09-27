@@ -18,6 +18,10 @@ function trigger(e) {
         target.storeddata.put("defaultRetaliateType", target.ai.getRetaliateType())
         target.storeddata.put("defaultHitbox", target.display.getHitboxState())
         target.storeddata.put("defaultTint", target.display.getTint())
+        target.storeddata.put("defaultmovingType", target.ai.getMovingType())
+        target.storeddata.put("defaultWanderingRange", target.ai.getWanderingRange())
+        target.storeddata.put("defaultMovingPathType", target.ai.getMovingPathType())
+        target.storeddata.put("defaultMovingPathPause", target.ai.getMovingPathPauses())
         target.storeddata.put("altered", 1)
     }
 
@@ -49,6 +53,7 @@ function trigger(e) {
     thisNPC.world.playSoundAt(thisNPC.pos, "upgrade_aquatic:entity.jellyfish.death", 1, 1)
     thisNPC.world.playSoundAt(thisNPC.pos, "minecraft:entity.turtle.egg_break", 1, 1)
 }
+
 
 function timer(e) {
     var target = findTarget(e)
@@ -93,6 +98,8 @@ function changeNPCStatus(target) {
     target.ai.setRetaliateType(target.storeddata.get("defaultRetaliateType"))
     target.display.setHitboxState(target.storeddata.get("defaultHitbox"))
     target.display.setTint(target.storeddata.get("defaultTint"))
+    target.ai.setMovingPathType(target.storeddata.get("defaultMovingPathType"), target.storeddata.get("defaultMovingPathPauses"))
+    target.ai.setMovingType(target.storeddata.get("defaultMovingType"))
     if (statusMark == undefined) {
         statusMark = target.addMark(0)
     }
@@ -102,7 +109,8 @@ function changeNPCStatus(target) {
         if (target.name != "Water Summon") {
             target.ai.setRetaliateType(1)
         }
-
+        target.ai.setMovingPathType(0, false)
+        target.ai.setMovingType(1)
         target.display.setTint(10494192)
         target.storeddata.put("hasStatusEffect", 1)
         statusMark.setType(1)
@@ -122,10 +130,9 @@ function changeNPCStatus(target) {
     }
     statusMark.update()
     var curPos = target.pos
-
     if (target.storeddata.get("hasStatusEffect") != 1) {
         target.removeMark(statusMark)
-        thisNPC.despawn()
+        thisNPC.kill()
 
     }
 
