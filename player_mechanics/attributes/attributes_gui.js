@@ -50,20 +50,20 @@ function createValues() {
     var swimSpeed = 5.612 * (1 + (0.5 * getScore("swmspd")))
     var swimString = swimSpeed.toString()
 
-    GUI_STATS.addLabel(30, player.getExpLevel(), 45, 117, 1, 1)
-    GUI_STATS.addLabel(31, player.world.storeddata.get(player.name + "totalExperiencePoints") + "/" + xpThreshold, 45, 137, 1, 1)
-    GUI_STATS.addLabel(52, getScore("AttrPoints"), 220, 117, 1, 1)
-    GUI_STATS.addLabel(53, getScore("max_perk_power"), 220, 137, 1, 1)
+    GUI_STATS.addLabel(30, player.getExpLevel(), 45, 113, 1, 1, 16777215)
+    GUI_STATS.addLabel(31, player.world.storeddata.get(player.name + "totalExperiencePoints") + "/" + xpThreshold, 45, 133, 1, 1, 16777215)
+    GUI_STATS.addLabel(52, getScore("AttrPoints"), 220, 117, 1, 1, 16777215)
+    GUI_STATS.addLabel(53, getScore("max_perk_power"), 220, 137, 1, 1, 16777215)
 
 
 
-    GUI_STATS.addLabel(500, player.getMaxHealth(), 58, 188, 1, 1)
-    GUI_STATS.addLabel(401, speedString.substr(0, 4) + " m/s", 58, 208, 1, 1)
-    GUI_STATS.addLabel(90, -3 + getScore("Brawn") * 2, 58, 228, 1, 1)
+    GUI_STATS.addLabel(500, player.getMaxHealth(), 54, 184, 1, 1, 16777215)
+    GUI_STATS.addLabel(401, speedString.substr(0, 4) + " m/s", 58, 204, 1, 1, 16777215)
+    GUI_STATS.addLabel(90, -3 + getScore("Brawn") * 2, 58, 224, 1, 1, 16777215)
 
-    GUI_STATS.addLabel(91, player.storeddata.get("airDecreaseRate") + "s", 220, 188, 1, 1)
-    GUI_STATS.addLabel(92, swimString.substr(0, 4) + " m/s", 220, 208, 1, 1)
-    GUI_STATS.addLabel(93, 10 * getScore("Aptitude") + "%", 220, 228, 1, 1)
+    GUI_STATS.addLabel(91, (16 / player.storeddata.get("airDecreaseRate")).toFixed(2) + "s", 220, 184, 1, 1, 16777215)
+    GUI_STATS.addLabel(92, swimString.substr(0, 4) + " m/s", 220, 204, 1, 1, 16777215)
+    GUI_STATS.addLabel(93, 10 * getScore("Aptitude") + "%", 220, 224, 1, 1, 16777215)
 }
 
 function createUpgradeButtons() {
@@ -86,6 +86,7 @@ function createUpgradeButtons() {
 function customGuiButton(e) {
     if (e.player.getCustomGui() != GUI_STATS) {
         perkGuiButton(e)
+        aquacustomGuiButton(e)
         return
     }
     for (var i = 0; i < 9; i++) {

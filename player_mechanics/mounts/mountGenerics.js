@@ -18,11 +18,11 @@ function switchMount(e) {
         switch (e.player.storeddata.get("currentMount")) {
             case 0:
                 e.player.storeddata.put("currentMount", 1)
-                title(e, "Mount switched to Phantom", "blue")
+                displayTitle(e, "Mount switched to Phantom", "blue")
                 break;
             case 1:
                 e.player.storeddata.put("currentMount", 0)
-                title(e, "Mount switched to Evergrow Boat", "green")
+                displayTitle(e, "Mount switched to Evergrow Boat", "green")
                 break;
         }
     }

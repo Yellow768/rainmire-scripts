@@ -35,10 +35,11 @@ function keyPressed(e) {
         return
     }
     var keyBinds = JSON.parse(e.player.world.storeddata.get(e.player.name + "keyBindsJSON"))
+    if (keyMode) {
+        e.player.message(e.key)
+    }
     if (e.openGui == '') {
-        if (keyMode) {
-            e.player.message(e.key)
-        }
+
         switch (e.key) {
             case keyBinds.key_gamemode:
                 switchGamemode()
@@ -108,6 +109,8 @@ function chat(e) {
             e.player.storeddata.put("collected_perk_array", "[]")
             e.player.storeddata.put("selected_bad_perk_array", "[]")
             e.player.storeddata.put("collected_bad_perk_array", "[]")
+            setScore("good_perk_debt", 0)
+            setScore("bad_perk_debt", 0)
             e.player.message("&eAll Perks Forgotten. Reset Scripts")
             break;
         case "!resetCurrentAir":
@@ -607,7 +610,7 @@ function interact(e) {
 
                 var scripts = nbt.getList("Scripts", nbt.getListType("Scripts"))[0];
                 var sl = [];
-                var requiredScripts = ["worldelements/breakable_wall.js"]; // scripts from your folder
+                var requiredScripts = ["blocks/breakable_wall.js"]; // scripts from your folder
 
                 for (var i = 0; i < requiredScripts.length; i++) {
                     var test = e.API.stringToNbt('{}');

@@ -1,3 +1,4 @@
+
 function isItemValidForJelly(e, item) {
 
     if (item.type == 4 || item.name == "minecraft:bow" || item.displayName.indexOf("Bomb") != -1 || item.name == "minecraft:crossbow") {
@@ -230,7 +231,7 @@ function applyStatusToTarget(e) {
 }
 
 
-function trigger(e) {
+function craftingTriggers(e) {
     if (e.id == 10) {
         applyStatusEffect(e.arguments[0], e.arguments[1], e.arguments[2], e.arguments[3])
     }

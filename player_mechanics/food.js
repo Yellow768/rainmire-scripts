@@ -1,11 +1,12 @@
 function eatFood(e) {
     var food = e.player.getMainhandItem()
     var foodLevel = food.getFoodLevel()
-    e.setCanceled(true)
+
 
     if (!isFoodValid(e, food)) {
         return
     }
+    e.setCanceled(true)
     addToScore("perk_power", Math.floor(foodLevel / 2))
     setScore("restore_hydrate", 1)
     e.player.timers.forceStart(768080, 4, false)
@@ -41,6 +42,7 @@ function isFoodValid(e, food) {
     if (isFish) {
         return false
     }
+    if (food.name == "aquamirae:esca") { return false }
     return true
 }
 

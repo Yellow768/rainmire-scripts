@@ -162,15 +162,18 @@ function applyArmorAttributeModifiers(e) {
 	updateStats(e)
 }
 
-function trigger(e) {
+function statTriggers(e) {
 	if (e.id == 1 && !justLoggedIn) {
 		applyArmorAttributeModifiers(e)
 	}
 	if (e.id == 5) {
-		createPerkGui(e.arguments[0], true, true)
+		e.arguments[0].player.timers.start(CREATE_PERK_GUI, 1, false)
 	}
 	if (e.id == 6) {
 		updateStats(e)
+	}
+	if (e.id == 7) {
+		openAquaticGUI()
 	}
 }
 
@@ -188,7 +191,7 @@ function dialog(e) {
 		for (var i = 0; i < 9; i++) {
 			addToScore(statsStringArray[i] + "Mod", -1)
 		}
-		title(e, "You're starting to sweat", '#E441C3')
+		displayTitle(e, "You're starting to sweat", '#E441C3')
 		updateStats(e)
 	}
 
@@ -199,14 +202,13 @@ function dialogClose(e) {
 		for (var i = 0; i < 9; i++) {
 			addToScore(statsStringArray[i] + "Mod", 1)
 		}
-		title(e, "That wasn't so bad", '#E441C3')
+		displayTitle(e, "That wasn't so bad", '#E441C3')
 		updateStats(e)
 	}
 
 }
 
 function handlePlayerAirSupply(e) {
-	e.player.message(e.player.getMCEntity().m_20146_())
 	if (isNaN(e.player.storeddata.get("currentAir")) || e.player.storeddata.get("currentAir") == null) {
 		e.player.message("No Air! Reset!")
 		e.player.storeddata.put("currentAir", 300)
@@ -216,15 +218,14 @@ function handlePlayerAirSupply(e) {
 		return
 	}
 	var playerX = Math.floor(e.player.x)
-	var playerZ = Math.floor(e.player.y)
+	var playerZ = Math.floor(e.player.z)
 	var currentEyePosition = e.player.getMCEntity().m_20188_()
 
-	var blockAtEyeLevel = e.player.world.getBlock(playerX, currentEyePosition, playerZ).name
+	var blockAtEyeLevel = e.player.world.getBlock(e.player.x, currentEyePosition, e.player.z).name
 	if (e.player.hasTag("resurfaced")) {
 		e.player.getMCEntity().m_20301_(-10)
 		e.player.storeddata.put("currentAir", -10)
 	}
-	e.player.message(currentEyePosition)
 	if (blockAtEyeLevel == "minecraft:water" && !e.player.hasTag("oxygenating")) {
 		if (e.player.storeddata.get("currentAir") < 1) {
 			return

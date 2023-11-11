@@ -1,6 +1,7 @@
 //Gameplay Mechanics Non-Datapack
 var confirm = false
 var cantAttack = false
+var CREATE_PERK_GUI = 768950
 function init(e) {
 	e.player.timers.forceStart(768200, 40, true)
 	setUpVals(e)
@@ -32,9 +33,16 @@ function timer(e) {
 		case AIR_SUPPLY_TIMER:
 			handlePlayerAirSupply(e)
 			break;
+		case CREATE_PERK_GUI:
+			createPerkGui(e, true, true)
+			break;
 	}
 }
 
+function trigger(e) {
+	craftingTriggers(e)
+	statTriggers(e)
+}
 
 
 function tick(e) {
@@ -57,6 +65,18 @@ function interact(e) {
 		if (isItemValidForJelly(e, item)) {
 			applyJelly(e, item)
 		}
+		return
+	}
+	if (e.player.getOffhandItem().getDisplayName().indexOf("Remnant Shard") != -1 && e.player.getMainhandItem().getDisplayName().indexOf("Remnant Shard") != -1) {
+		e.player.getOffhandItem().setStackSize(e.player.getOffhandItem().getStackSize() - 1)
+		e.player.getMainhandItem().setStackSize(e.player.getMainhandItem().getStackSize() - 1)
+		executeCommand('/give ' + e.player.name + ' aquamirae:esca{display:{Lore:[\'{"italic":false,"color":"white","extra":[{"text":""},{"color":"dark_aqua","text":"Use at a Power or Dampening Remnant"}],"text":""}\', \'{"italic":false,"color":"white","extra":[{"text":""},{"color":"dark_aqua","text":"to obtain a perk. Or ingest it to"}],"text":""}\', \'{"italic":false,"color":"white","extra":[{"text":""},{"color":"dark_aqua","text":"enhance your aquatic abilities"}],"text":""}\'],Name:\'{"italic":false,"extra":[{"text":""},{"underlined":true,"obfuscated":true,"color":"aqua","text":"a"},{"underlined":true,"color":"aqua","text":"Remnant Vessel"},{"underlined":true,"obfuscated":true,"color":"aqua","text":"K"}],"text":""}\'}} 1')
+		e.player.playSound("minecraft:item.totem.use", 1, 1)
+		e.player.playSound("minecraft:entity.blaze.ambient", 1, .7)
+		e.player.world.spawnParticle("aquamirae:electric", e.player.x, e.player.y + 1, e.player.z, .3, .4, .3, 1, 100)
+		e.player.world.spawnParticle("aquamirae:ghost", e.player.x, e.player.y + 1, e.player.z, .3, .4, .3, 1, 100)
+		e.player.world.spawnParticle("aquamirae:ghost_shine", e.player.x, e.player.y + 1, e.player.z, .3, .4, .3, 1, 100)
+		displayTitle(e, "...Remnant Vessel Created...", "aqua")
 		return
 	}
 	if (e.player.getMainhandItem().getDisplayName().indexOf("Jelly") != -1) {
@@ -96,9 +116,7 @@ function dialog(e) {
 
 function keyPressed(e) {
 	var keyBinds = JSON.parse(e.player.world.storeddata.get(e.player.name + "keyBindsJSON"))
-	if (e.openGui) {
-		return
-	}
+	if (e.openGui) { return }
 	switch (e.key) {
 		case keyBinds.key_summonMount:
 			handleMountInput(e)

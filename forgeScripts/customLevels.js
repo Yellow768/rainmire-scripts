@@ -24,23 +24,23 @@ function getPlayerName(player) {
 }
 
 function getPlayerXP(player) {
-	return player.field_71106_cc
+	return player.f_36080_
 }
 
 function addToPlayerXP(player, amount) {
-	player.field_71106_cc += amount
+	player.f_36080_ += amount
 }
 
 function setPlayerXP(player, value) {
-	player.field_71106_cc = value
+	player.f_36080_ = value
 }
 
 function getPlayerLevel(player) {
-	return player.field_71068_ca
+	return player.f_36078_
 }
 
 function addToPlayerLevel(player, amount) {
-	player.field_71068_ca += amount
+	player.f_36078_ += amount
 }
 
 function getRequiredXPForLevel(level) {
@@ -62,8 +62,8 @@ function playerXpEventXpChange(e) {
 }
 
 function playerXpEventPickupXp(e) {
-	var xp = e.event.getOrb().field_70530_e;
-	e.event.getOrb().field_70530_e = 0
+	var xp = e.event.getOrb().f_20770_;
+	e.event.getOrb().f_20770_ = 0
 	addCustomXpValue(e.event.getPlayer(), xp)
 }
 

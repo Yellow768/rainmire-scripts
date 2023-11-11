@@ -1,7 +1,7 @@
 function perk_icicle(e, cost) {
     var blockAbovePos = findBlockAbove(e)
     if (blockAbovePos == null) {
-        title(e, "No valid block above you", '#00FFFF')
+        displayTitle(e, "No valid block above you", '#00FFFF')
         playFailure(e)
         return
     }
