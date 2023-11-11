@@ -92,7 +92,7 @@ function createPerkGui(e, editable, init) {
     var prev_selected_y = 0
     for (var i = 0; i < selected_bad_perk_array.length; i++) {
         var newButton = perkGUI.addButton(100 + i, "", base_x + 148, 29 + base_y + (35 * i - 0.3), 16, 16)
-        newButton.setHoverText("§e" + eval("dampening_perks." + selected_bad_perk_array[i] + ".name") + + " | §bCost: " + + eval("dampening_perks." + selected_bad_perk_array[i] + ".cost") + " §r" + + eval("dampening_perks." + selected_bad_perk_array[i] + ".description"))
+        newButton.setHoverText("§e" + eval("dampening_perks." + selected_bad_perk_array[i] + ".name") + " | §bCost: " + eval("dampening_perks." + selected_bad_perk_array[i] + ".cost") + " §r" + eval("dampening_perks." + selected_bad_perk_array[i] + ".description"))
         newButton.setEnabled(editable)
         var texture = perkGUI.addTexturedRect(700 + i, "iob:textures/customgui/perks/dampening/" + selected_bad_perk_array[i] + ".png", base_x + 142, 20 + base_y + (35 * i - 0.3), 256, 256)
         texture.setScale(.11)

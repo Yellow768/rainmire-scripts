@@ -1,6 +1,6 @@
 
 var perk1_id, perk2_id, perk3_id, npc, setterGUI, API, collected_bad_perk_array, collected_perk_array, available_perks
-var playerName, type, player, color
+var playerName, type, player
 
 
 function perk_init(e) {
@@ -46,16 +46,25 @@ function createPerkSetterGUI(e) {
     setterGUI.addButton(7, type, 50, 190, 50, 20)
     e.player.showCustomGui(setterGUI)
 }
-
 function perk_customGuiButton(e) {
     if (e.player.getCustomGui() == AQUA_GUI) {
         if (e.buttonId >= 0 && e.buttonId <= 2) {
+            var color
+            switch (type) {
+                case "good":
+                    color = "aqua"
+                    break;
+                case "dampening":
+                    color = "gold"
+                    break;
+            }
             if (type == "good") player.trigger(210, available_perks[e.buttonId])
             if (type == "dampening") player.trigger(220, available_perks[e.buttonId])
-            displayTitle(e, color + "You have gained &l" + eval(type + "_perks." + available_perks[i] + ".name"))
+            npc.executeCommand('/title ' + player.name + ' actionbar ["",{"text":"You have gained ","underlined":true,"color":"light_purple"},{"text":"' + eval(type + "_perks." + available_perks[e.buttonId] + ".name") + '","bold":true,"underlined":true,"color":"' + color + '"}]')
             player.closeGui()
             npc.timers.start(1, 0, false)
             player.playSound("minecraft:block.respawn_anchor.charge", 1, 1)
+            player.playSound("minecraft:block.respawn_anchor.set_spawn", 1, 1)
             player.removeItem("aquamirae:esca", 1)
 
         }
@@ -110,6 +119,7 @@ function timer(e) {
 }
 var AQUA_GUI
 function openPerkPurchasingGUI() {
+    var color
     switch (type) {
         case "good":
             color = "§b"

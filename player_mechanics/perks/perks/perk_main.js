@@ -200,23 +200,28 @@ function timer(e) {
             displayTitle(e, "You can oxygenate once more", "blue")
             break;
         case ICICLE_TAG_TIMER:
+
             if (!e.player.tempdata.has("iciclePos")) {
                 e.player.timers.stop(ICICLE_TAG_TIMER)
                 e.player.removeTag("onIcicle")
 
                 break;
             }
-            if (e.player.pos.distanceTo(e.player.tempdata.get("iciclePos")) <= .8) {
+            var iciclePos = e.player.tempdata.get("iciclePos")
+
+            var distanceToIcicle = TrueDistanceCoord(e.player.x, e.player.y, e.player.z, iciclePos.x, iciclePos.y, iciclePos.z)
+            if (distanceToIcicle <= .8) {
                 e.player.addTag("onIcicle")
-                e.player.timers.forceStart(ICICLE_TAG_TIMER, 1, true)
+                e.player.timers.forceStart(ICICLE_TAG_TIMER, 0, true)
                 e.player.setMotionY(0)
 
             }
+
             if (e.player.hasTag("onIcicle")) {
                 if (e.player.isSprinting()) {
                     breakIcicle(e, e.player.tempdata.get("iciclePos"))
                     e.player.knockback(2, e.player.rotation)
-                    e.player.timers.start(ICICLE_TAG_TIMER + 1, 1, false)
+                    e.player.timers.start(ICICLE_TAG_TIMER + 1, 0, false)
                     e.player.timers.stop(ICICLE_TAG_TIMER)
                     break;
                 }
@@ -224,8 +229,11 @@ function timer(e) {
                     breakIcicle(e, e.player.tempdata.get("iciclePos"))
                     break;
                 }
-                if (e.player.pos.distanceTo(e.player.tempdata.get("iciclePos")) > 1.4) {
+                if (distanceToIcicle > .8) {
                     breakIcicle(e, e.player.tempdata.get("iciclePos"))
+                }
+                else {
+                    e.player.setMotionY(0)
                 }
             }
             break;
@@ -234,7 +242,7 @@ function timer(e) {
             break;
         case ICICLE_TAG_TIMER + 2:
             if (e.player.tempdata.has("iciclePos")) {
-                if (e.player.pos.distanceTo(e.player.tempdata.get("iciclePos")) > 1.4) {
+                if (distanceToIcicle > .8) {
                     breakIcicle(e, e.player.tempdata.get("iciclePos"))
                 }
             }
@@ -605,4 +613,12 @@ function died(e) {
         breakIcicle(e, e.player.tempdata.has("iciclePos"))
     }
 
+}
+
+function TrueDistanceCoord(x1, y1, z1, x2, y2, z2) {
+    var dx = x1 - x2
+    var dy = y1 - y2
+    var dz = z1 - z2
+    var R = Math.pow((dx * dx + dy * dy + dz * dz), 0.5)
+    return R;
 }
