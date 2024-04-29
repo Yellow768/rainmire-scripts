@@ -1,7 +1,10 @@
 //Main Script
 
 var spit = {
-    unresting_spit_1: { head: { id: 0, time: .2, a: [0, 0, 0], end: [193, 170, 173], }, left_arm: { id: 1, time: .2, a: [0, 0, 0], end: [180, 180, 166], }, right_arm: { id: 2, time: .2, a: [0, 0, 0], end: [180, 180, 195], } },
+    unresting_spit_1: { 
+        head: { id: 0, time: .2, a: [0, 0, 0], end: [193, 170, 173], }, 
+        left_arm: { id: 1, time: .2, a: [0, 0, 0], end: [180, 180, 166], }, 
+        right_arm: { id: 2, time: .2, a: [0, 0, 0], end: [180, 180, 195], } },
     unresting_spit_2: { head: { id: 0, time: .09, a: [0, 0, 0], end: [177, 176, 196], }, left_arm: { id: 1, time: .09, a: [0, 0, 0], end: [228, 166, 173], }, right_arm: { id: 2, time: .09, a: [0, 0, 0], end: [221, 180, 184], } },
     unresting_spit_3: { head: { id: 0, time: .3, a: [0, 0, 0], end: [177, 176, 196], }, left_arm: { id: 1, time: .3, a: [0, 0, 0], end: [228, 166, 173], }, right_arm: { id: 2, time: .3, a: [0, 0, 0], end: [221, 180, 184], } },
     unresting_spit_4: { head: { id: 0, time: .6, a: [0, 0, 0], end: [180, 180, 180], }, left_arm: { id: 1, time: .6, a: [0, 0, 0], end: [182, 185, 184], }, right_arm: { id: 2, time: .6, a: [0, 0, 0], end: [183, 185, 178], } }

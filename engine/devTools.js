@@ -23,7 +23,10 @@ function init(e) {
     if (e.player.world.storeddata.get(e.player.name + "keyBindsJSON") == undefined) {
         e.player.world.storeddata.put(e.player.name + "keyBindsJSON", JSON.stringify(defaultKeyBinds))
     }
+    e.player.tempdata.put("currentOpponents", [])
+    executeCommand("/stopsound " + e.player.name + " record iob:music.battle.drums")
     setUpVals(e)
+    e.player.timers.forceStart(909820, 0, true)
 
 }
 
@@ -37,6 +40,9 @@ function keyPressed(e) {
     var keyBinds = JSON.parse(e.player.world.storeddata.get(e.player.name + "keyBindsJSON"))
     if (keyMode) {
         e.player.message(e.key)
+    }
+    if (e.key == keyBinds.key_escape_dialog) {
+        e.API.executeCommand(e.player.world, "noppes dialog show " + e.player + name + " 218 Free")
     }
     if (e.openGui == '') {
 
@@ -56,12 +62,27 @@ function keyPressed(e) {
             case keyBinds.key_reload:
                 executeCommand('/tellraw @a {"text":"CUSTOMNPCS: Reloading Scripts (This may take a bit! Expect lag!)","color":"yellow"}')
                 executeCommand("noppes script reload")
+                executeCommand("kubejs reload server_scripts")
+                executeCommand("kubejs reload client_scripts")
+                executeCommand("kubejs reload startup_scripts")
                 break;
             case keyBinds.key_brushes:
                 listBrushPresets()
                 break;
             case keyBinds.key_copyCoordinates:
                 copyCoordinates()
+                break;
+            case keyBinds.key_breath:
+                switch (e.player.getPotionEffect(13)) {
+                    case -1:
+                        e.player.addPotionEffect(13, 10000, 1, false)
+                        e.player.message("&bWater Breathing &dturned &aon")
+                        break;
+                    default:
+                        executeCommand("/effect clear " + player.name + " minecraft:water_breathing");
+                        e.player.message("&bWater Breathing &dturned &coff")
+                        break;
+                }
                 break;
         }
     }
@@ -137,6 +158,33 @@ function chat(e) {
             break;
         case "!toggleInitMessage":
             toggleInitMessage(e)
+            break;
+        case "!resetSpawns":
+            e.player.storeddata.remove("respawnArray")
+            e.player.message("Respawns cleared")
+            break;
+        case "!resetChecks":
+            e.player.storeddata.put("checked_dialogs", '{"0":"[]"}')
+            e.player.message("Checks cleared")
+            break;
+        case "!resetObservations":
+            e.player.storeddata.put("foundObservationBlocks", "[]")
+            break;
+        case "!resetTraps":
+            e.player.storeddata.put("encounteredTrapBlocks", "[]")
+            e.player.message("&eReset Trap Block Checks")
+            break;
+        case "!toggleObservationBlockVisibility":
+            if (!e.player.world.storeddata.has("observationBlocksVisible")) e.player.world.storeddata.put("observationBlocksVisible", 0)
+            e.player.world.storeddata.put("observationBlocksVisible", Number(!Boolean(e.player.world.storeddata.get("observationBlocksVisible"))))
+            e.player.message("&dObservation Blocks Visibility Toggled")
+            break;
+        case "!tobv":
+            e.player.world.storeddata.put("observationBlocksVisible", Number(!Boolean(e.player.world.storeddata.get("observationBlocksVisible"))))
+            e.player.message("&dObservation Blocks Visibility Toggled")
+            break;
+        case "!ua":
+            e.player.timers.forceStart(7, 0, false)
             break;
         default:
             e.setCanceled(false)
@@ -339,13 +387,13 @@ function forceLevelUp() {
     for (var i = 0; i < player.getExpLevel(); i++) {
         xpThreshold += 50 + ((i) * 50)
     }
-    player.world.storeddata.put("totalExperiencePoints", xpThreshold)
+    player.storeddata.put("totalExperiencePoints", xpThreshold)
     executeCommand("tag " + player.name + " add LevelUp")
     player.setExpLevel(player.getExpLevel() + 1)
 }
 
 function resetStats() {
-    var statsStringArray = ["Charm", "Empathy", "Suggestion", "Brawn", "Grit", "Deftness", "Intellect", "Perception", "Aptitude"]
+    var statsStringArray = ["Charm", "Empathy", "Suggestion", "Brawn", "Grit", "Deftness", "Logic", "Perception", "Knowledge"]
     for (var i = 0; i < 9; i++) {
         setScore(statsStringArray[i] + "Base", 1)
         setScore(statsStringArray[i] + "Mod", 0)
@@ -358,10 +406,11 @@ function resetStats() {
     setScore("PerkPoints", 0)
     setScore("swmspd", 0)
     setScore("breath", 0)
+    player.storeddata.put("originalAttPts", 0)
 
     player.removeTag("levelUp")
     player.message("&dYour level and attributes have been reset")
-    player.world.storeddata.put(player.name + "totalExperiencePoints", 0)
+    player.storeddata.put("totalExperiencePoints", 0)
 }
 
 function giveAttributePoints(amount) {
@@ -376,7 +425,7 @@ function giveAttributePoints(amount) {
 }
 
 function applyAttributeModifier(e, attribute, value) {
-    var statsStringArray = ["Charm", "Empathy", "Suggestion", "Brawn", "Grit", "Deftness", "Intellect", "Perception", "Aptitude"]
+    var statsStringArray = ["Charm", "Empathy", "Suggestion", "Brawn", "Grit", "Deftness", "Logic", "Perception", "Knowledge"]
     var isValidAttribute = false
     for (var i = 0; i < statsStringArray.length; i++) {
         if (statsStringArray[i] == attribute) {
@@ -573,8 +622,51 @@ function copyCoordinates() {
 
 }
 
+function timer(e) {
+    musicTimer(e)
+    if (e.id == 451) {
+        var place_pos = e.player.tempdata.get("npc_placed").up(1)
+        var npc = e.player.world.getNearbyEntities(place_pos, 1, 2)[0]
+        try {
+            var nbt = npc.getEntityNbt()
+            var s1 = e.API.stringToNbt('{}');
+            s1.putString("Script", "");
+            s1.setList("Console", []);
+            nbt.setList("Scripts", [s1]);
+
+            var scripts = nbt.getList("Scripts", nbt.getListType("Scripts"))[0];
+            var sl = [];
+            var requiredScripts = ["npcs/boiler/living_base.js", "npcs/boiler/status_effects.js"]; // scripts from your folder
+
+            for (var i = 0; i < requiredScripts.length; i++) {
+                var test = e.API.stringToNbt('{}');
+                test.putString('Line', requiredScripts[i]);
+                sl.push(test);
+            }
+
+            scripts.setList("ScriptList", sl);
+            nbt.setByte("ScriptEnabled", 1);
+
+            npc.setEntityNbt(nbt);
+            // when updated
+            var sdata = npc.getStoreddata();
+            sdata.put("updated", Date.now());
+        }
+
+        catch (er) {
+            e.player.message("§cError: §r" + er);
+        }
+    }
+}
+
 function interact(e) {
+
     if (e.type == 2) {
+        if (e.player.getMainhandItem().name == "customnpcs:npcwand") {
+            e.player.tempdata.put("npc_placed", e.target.pos)
+            e.player.timers.start(451, 2, false)
+
+        }
         if (e.player.hasTag("displayMode")) {
             e.setCanceled(true)
             var block = e.player.rayTraceBlock(10, true, false)
@@ -596,6 +688,11 @@ function interact(e) {
 
             }
             return
+        }
+        if (e.player.tempdata.has("clamNPCConfig")) {
+            e.player.tempdata.get("clamNPCConfig").trigger(1, [e.target.pos])
+            e.player.message("Clam Redstone Set")
+            e.player.tempdata.remove("clamNPCConfig")
         }
         if (e.player.getMainhandItem().getDisplayName().indexOf("Breakable") != -1) {
             var sidePlaced = e.player.rayTraceBlock(8, false, false).getSideHit()
@@ -624,6 +721,42 @@ function interact(e) {
                 e.player.world.getBlock(place_pos.getX(), place_pos.getY(), place_pos.getZ()).setTileEntityNBT(nbt);
                 e.player.world.getBlock(place_pos.getX(), place_pos.getY(), place_pos.getZ()).trigger(3, e.player.getMainhandItem().name)
 
+                // when updated
+                var sdata = e.player.world.getBlock(place_pos.getX(), place_pos.getY(), place_pos.getZ()).getStoreddata();
+                sdata.put("updated", Date.now());
+            }
+
+            catch (er) {
+                e.player.message("§cError: §r" + er);
+            }
+        }
+        if (e.player.getMainhandItem().getDisplayName() == "Chain") {
+            var sidePlaced = e.player.rayTraceBlock(8, false, false).getSideHit()
+            var place_pos = e.target.pos.offset(sidePlaced)
+            e.player.world.setBlock(place_pos, "customnpcs:npcscripted")
+            try {
+                var nbt = e.player.world.getBlock(place_pos).getBlockEntityNBT()
+                var s1 = e.API.stringToNbt('{}');
+                s1.putString("Script", "");
+                s1.setList("Console", []);
+                nbt.setList("Scripts", [s1]);
+
+                var scripts = nbt.getList("Scripts", nbt.getListType("Scripts"))[0];
+                var sl = [];
+                var requiredScripts = ["blocks/chain.js"]; // scripts from your folder
+
+                for (var i = 0; i < requiredScripts.length; i++) {
+                    var test = e.API.stringToNbt('{}');
+                    test.putString('Line', requiredScripts[i]);
+                    sl.push(test);
+                }
+
+                scripts.setList("ScriptList", sl);
+                nbt.setByte("ScriptEnabled", 1);
+                var block = e.player.world.getBlock(place_pos.getX(), place_pos.getY(), place_pos.getZ())
+                block.setTileEntityNBT(nbt);
+                block.setModel("chain")
+                e.player.world.playSoundAt(block.pos, "block.chain.place", 1, 1)
                 // when updated
                 var sdata = e.player.world.getBlock(place_pos.getX(), place_pos.getY(), place_pos.getZ()).getStoreddata();
                 sdata.put("updated", Date.now());

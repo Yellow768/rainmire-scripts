@@ -22,7 +22,7 @@ function interact(e) {
                     pickLock(e, 1000, 768005)
                 default:
                     if (e.player.hasTag("flood_lockpick")) {
-                        var sum = getScore("Deftness") + getScore("Aptitude") + getScore("Intellect")
+                        var sum = getScore("Deftness") + getScore("Knowledge") + getScore("Knowledge")
                         var chance = Math.floor((Math.random() * (sum * 2)) + (sum * 2))
                         pickLock(e, chance, 0)
                         e.player.removeTag("flood_lockpick")
@@ -94,7 +94,7 @@ function pickLock(e, lockDamage, customModelData) {
         executeCommand("/playsound minecraft:entity.item_frame.rotate_item player @a[x=" + e.player.x + ",y=" + e.player.y + ",z=" + e.player.z + ",distance=..5] " + e.player.x + " " + e.player.y + " " + e.player.z)
 
 
-        var damageModifier = 5 * (getScore("Aptitude") - 1)
+        var damageModifier = 5 * (getScore("Knowledge") - 1)
         e.target.storeddata.put("LockDifficulty", e.target.storeddata.get("LockDifficulty") - (lockDamage + damageModifier))
 
         if (e.target.storeddata.get("LockDifficulty") > 0) {

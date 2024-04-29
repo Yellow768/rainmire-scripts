@@ -18,6 +18,8 @@ var defaultKeyBinds = {
     "key_perk3": 67,
     "key_perk4": 86,
     "key_perk5": 66,
+    "key_breath": 89,
+    "key_escape_dialog": 80
 
 }
 
@@ -48,18 +50,19 @@ function showKeybindGUI(e) {
     KEYBIND_GUI.addButton(id(keyBindsKeys[11]), GLFWKeys[keyBinds.key_perk3], horizontalPos + 50, verticalPos + 200, horizontalSize, verticalSize)
     KEYBIND_GUI.addButton(id(keyBindsKeys[12]), GLFWKeys[keyBinds.key_perk4], horizontalPos + 80, verticalPos + 200, horizontalSize, verticalSize)
     KEYBIND_GUI.addButton(id(keyBindsKeys[13]), GLFWKeys[keyBinds.key_perk5], horizontalPos + 110, verticalPos + 200, horizontalSize, verticalSize)
-
+    KEYBIND_GUI.addButton(id(keyBindsKeys[14]), GLFWKeys[keyBinds.key_breath], horizontalPos + 180, verticalPos + 30, horizontalSize, verticalSize)
     KEYBIND_GUI.addButton(id("Default"), "Set to default", horizontalPos, verticalPos + 230, 140, 20)
 
-    KEYBIND_GUI.addLabel(id("L_Stats"), "Stats Screen:", horizontalPos - 80, verticalPos + 10, 1, 1)
-    KEYBIND_GUI.addLabel(id("L_summonMount"), "Summon Mount:", horizontalPos + 100, verticalPos + 10, 1, 1)
-    KEYBIND_GUI.addLabel(id("L_Nightvision"), "Nightvision:", horizontalPos - 80, verticalPos + 70, 1, 1)
-    KEYBIND_GUI.addLabel(id("L_Gamemode"), "Gamemode:", horizontalPos - 80, verticalPos + 100, 1, 1)
-    KEYBIND_GUI.addLabel(id("L_Heal"), "Fully heal:", horizontalPos - 80, verticalPos + 130, 1, 1)
-    KEYBIND_GUI.addLabel(id("L_Command"), "Cmnd Feedback:", horizontalPos + 80, verticalPos + 130, 1, 1)
-    KEYBIND_GUI.addLabel(id("L_Reload"), "Reload Scripts:", horizontalPos + 80, verticalPos + 160, 1, 1)
-    KEYBIND_GUI.addLabel(id("L_Brushes"), "Show Brushes:", horizontalPos + 80, verticalPos + 70, 1, 1)
-    KEYBIND_GUI.addLabel(id("L_CopyCoords"), "Copy Coordinates:", horizontalPos + 80, verticalPos + 100, 1, 1)
+    KEYBIND_GUI.addLabel(id("L_Stats"), "Stats Screen:", horizontalPos - 80, verticalPos + 10, 1, 1, 0xffffff)
+    KEYBIND_GUI.addLabel(id("L_summonMount"), "Summon Mount:", horizontalPos + 100, verticalPos + 10, 1, 1, 0xffffff)
+    KEYBIND_GUI.addLabel(id("L_Nightvision"), "Nightvision:", horizontalPos - 80, verticalPos + 70, 1, 1, 0xffffff)
+    KEYBIND_GUI.addLabel(id("L_Gamemode"), "Gamemode:", horizontalPos - 80, verticalPos + 100, 1, 1, 0xffffff)
+    KEYBIND_GUI.addLabel(id("L_Heal"), "Fully heal:", horizontalPos - 80, verticalPos + 130, 1, 1, 0xffffff)
+    KEYBIND_GUI.addLabel(id("L_Command"), "Cmnd Feedback:", horizontalPos + 80, verticalPos + 130, 1, 1, 0xffffff)
+    KEYBIND_GUI.addLabel(id("L_Reload"), "Reload Scripts:", horizontalPos + 80, verticalPos + 160, 1, 1, 0xffffff)
+    KEYBIND_GUI.addLabel(id("L_Brushes"), "Show Brushes:", horizontalPos + 80, verticalPos + 70, 1, 1, 0xffffff)
+    KEYBIND_GUI.addLabel(id("L_CopyCoords"), "Copy Coordinates:", horizontalPos + 80, verticalPos + 100, 1, 1, 0xffffff)
+    KEYBIND_GUI.addLabel(id("L_Breath"), "Toggle Breath:", horizontalPos + 80, verticalPos + 40, 1, 1, 0xffffff)
     e.player.showCustomGui(KEYBIND_GUI)
 }
 

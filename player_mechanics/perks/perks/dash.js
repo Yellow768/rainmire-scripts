@@ -1,8 +1,12 @@
+
+
+
 function perk_dash(e, cost) {
     if (!attemptToUsePerkPower(e, cost)) {
         return
     }
     var direction = e.player.getRotation()
+
     if (isMovingForward) {
         direction = e.player.getRotation()
     }
@@ -27,14 +31,24 @@ function perk_dash(e, cost) {
             direction -= 135
         }
     }
-
-
-    if (e.player.getMotionY() != noVelocity) {
-        e.player.knockback(2, direction)
+    var d
+    var deftnessModifier = (getScore("Deftness")) / 4
+    if (e.player.getMCEntity().m_5842_()) {
+        d = FrontVectors(e.player, direction, -e.player.pitch, 1.6 + deftnessModifier, false)
     }
     else {
-        e.player.setMotionY(.2)
-        e.player.knockback(4, direction)
+        d = FrontVectors(e.player, direction, 7, 1.6 + deftnessModifier, false)
+    }
+
+    if (!e.player.getMCEntity().m_20096_()) {
+        e.player.setMotionY(d[1] / 1.55)
+        e.player.setMotionX(d[0] / 1.55)
+        e.player.setMotionZ(d[2] / 1.55)
+    }
+    else {
+        e.player.setMotionY(d[1])
+        e.player.setMotionX(d[0])
+        e.player.setMotionZ(d[2])
     }
     e.player.timers.forceStart(DASH_TIMER, 15, false)
     e.player.addTag("isDashing")

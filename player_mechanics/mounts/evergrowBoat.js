@@ -6,8 +6,8 @@ function toggleEvergrowBoat(e) {
         e.player.timers.stop(768201)
         return
     }
-    if (getScore("perk_power") > 1) {
-        addToScore("using", -1)
+    if (getScore("perk_power") > 0) {
+        addToScore("using", 1)
         summonEvergrowBoat(e)
     }
 

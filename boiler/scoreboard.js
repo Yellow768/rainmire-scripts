@@ -2,9 +2,11 @@ var scoreboard
 var playerName
 var player
 
+
 function init(e) {
     setUpVals(e)
 }
+
 
 function setUpVals(e) {
     scoreboard = e.player.world.getScoreboard()

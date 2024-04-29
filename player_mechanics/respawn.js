@@ -1,7 +1,10 @@
 function init(e) {
 	setUpVals(e)
 	respawn(e)
+	if (!e.player.storeddata.has("checked_dialogs")) e.player.storeddata.put("checked_dialogs", '{"0": "[]"}')
 }
+
+
 
 function died(e) {
 	e.player.playSound("minecraft:particle.soul_escape", 1, 1)
@@ -26,9 +29,10 @@ function died(e) {
 }
 
 function respawn(e) {
-	if (!e.player.hasTag("Dead") || !e.player.storeddata.has("respawnArray")) {
+	if (!e.player.hasTag("Dead")) {
 		return
 	}
+
 	var x, y, z
 	if (e.player.storeddata.has("remnantUUID")) {
 		x = e.player.storeddata.get("spawnX")
@@ -36,6 +40,10 @@ function respawn(e) {
 		z = e.player.storeddata.get("spawnZ")
 	}
 	else {
+		if (!e.player.storeddata.has("respawnArray")) {
+			e.player.message("You don't have a respawn array")
+			return
+		}
 		var respawnArray = JSON.parse(e.player.storeddata.get("respawnArray"))
 		var closestPos
 		var greatestDistance = null
@@ -63,6 +71,7 @@ function respawn(e) {
 	e.player.setPosition(x, y, z)
 	e.player.playSound("iob:ui.breath", 1, 1)
 	e.player.playSound("minecraft:block.beacon.ambient", 1, 1)
+	setScore("perk_power", getScore("max_perk_power"))
 }
 
 

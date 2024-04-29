@@ -193,7 +193,7 @@ function timer(e) {
 
             break;
         case ANIMAL_LOVER_PARTICLE_TIMER:
-            executeCommand("/particle minecraft:dust 0 1 .5 .7 " + e.player.x + " " + (e.player.y + 1) + " " + e.player.z + " .6 .6 .6 .01 20")
+            executeCommand("/particle minecraft:dust 0 1 .5 .7 " + e.player.x + " " + (e.player.y + 1) + " " + e.player.z + " .6 .6 .6 .01 20 force")
             break;
         case OXYGENATE_TIMER:
             e.player.removeTag("oxygenated")
@@ -248,7 +248,7 @@ function timer(e) {
             }
             break;
         case INVISIBILITY_TIMER:
-            perk_invisibility(e, p_invisibility.cost)
+            perk_invisibility(e, good_perks.invisibility.cost)
             break;
     }
 }
@@ -534,9 +534,13 @@ function damaged(e) {
         e.setCanceled(true)
         return
     }
-    if (e.player.hasTag("extra_fall_damage") && !groundPounding && e.damageSource.type == "fall") {
-        e.player.damage(2)
-        displayTitle(e, "Your bones crack", '#E441C3')
+    if (e.damageSource.type == "fall") {
+        if (e.player.getMCEntity().f_19789_ < 6) { e.player.tempdata.put("cancelFallDamage", true); e.setCanceled(true); e.API.executeCommand(e.player.world, "/stopsound " + e.player.name + " player minecraft:entity.player.hurt") }
+
+        if (e.player.hasTag("extra_fall_damage") && !groundPounding) {
+            e.player.damage(2)
+            displayTitle(e, "Your bones crack", '#E441C3')
+        }
     }
     if (e.player.hasTag("bouncy")) {
         e.player.knockback(1, e.player.rotation)

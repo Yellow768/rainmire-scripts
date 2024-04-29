@@ -39,6 +39,7 @@ var fromRemant = false
 
 
 function createPerkGui(e, editable, init) {
+    print("Test")
     fromRemant = false
     if (editable && init) {
         e.player.playSound("minecraft:block.conduit.activate", 1, 1)

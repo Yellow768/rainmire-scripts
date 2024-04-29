@@ -23,7 +23,7 @@ function getRandomFloat(min, max) {
     return Math.random() * (max - min) + min; // The maximum is exclusive and the minimum is inclusive
 }
 
-function frontVectors(entity, dr, dp, distance, mode) {
+function FrontVectors(entity, dr, dp, distance, mode) {
     if (!mode) mode = 0
     if (mode == 1) { var angle = dr + entity.getRotation(); var pitch = (-entity.getPitch() + dp) * Math.PI / 180; if (dp == 0) pitch = 0; }
     if (mode == 0) { var angle = dr; var pitch = (dp) * Math.PI / 180 }
@@ -47,4 +47,61 @@ function tempGet(entity, key) {
 
 function tempPut(entity, key, value) {
     entity.tempdata.put(key, value)
+}
+
+
+
+function DoKnockback(npc, targ, kb, kbVert) {
+    targ.setMotionY(kbVert)
+    if (kb < 1) {
+        var d = FrontVectors(npc, GetPlayerRotation(npc, targ), 0, kb, 0)
+        targ.setMotionX(d[0])
+        targ.setMotionZ(d[2])
+        return;
+    }
+    targ.knockback(kb, GetPlayerRotation(npc, targ))
+}
+
+
+function TrueDistanceCoord(x1, y1, z1, x2, y2, z2) {
+
+    var dx = x1 - x2
+
+    var dy = y1 - y2
+
+    var dz = z1 - z2
+
+    var R = Math.pow((dx * dx + dy * dy + dz * dz), 0.5)
+
+    return R;
+}
+
+function GetPlayerRotation(npc, player) {
+
+    var dx = npc.getX() - player.getX();
+
+    var dz = player.getZ() - npc.getZ();
+
+    if (dz >= 0) {
+
+        var angle = (Math.atan(dx / dz) * 180 / Math.PI);
+
+        if (angle < 0) {
+
+            angle = 360 + angle;
+        }
+    }
+
+    if (dz < 0) {
+
+        dz = -dz;
+
+        var angle = 180 - (Math.atan(dx / dz) * 180 / Math.PI);
+    }
+
+    return angle;
+}
+
+function clamp(val, min, max) {
+    return val > max ? max : val < min ? min : val;
 }

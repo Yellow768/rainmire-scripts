@@ -17,8 +17,8 @@ function perk_animal_lover(e, cost) {
                 nE[i].setAttackTarget(null)
 
             }
-            nE[i].executeCommand("/particle minecraft:happy_villager ~ ~ ~ .5 .5 .5 .1 14")
-            nE[i].executeCommand("/particle minecraft:heart ~ ~1 ~ .5 .5 .5 .1 5")
+            nE[i].executeCommand("/particle minecraft:happy_villager ~ ~ ~ .5 .5 .5 .1 14 force")
+            nE[i].executeCommand("/particle minecraft:heart ~ ~1 ~ .5 .5 .5 .1 5 force")
 
         }
     }

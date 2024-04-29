@@ -6,7 +6,7 @@ function perk_repair(e, cost) {
     if (!attemptToUsePerkPower(e, cost)) {
         return
     }
-    var repairAmount = 30 + (Math.random() * 10) * getScore("Intellect")
+    var repairAmount = 30 + (Math.random() * 10) * getScore("Knowledge")
     e.player.getMainhandItem().setDamage(e.player.getMainhandItem().getDamage() - Math.floor(repairAmount))
     var nbt = e.player.getMainhandItem().nbt.setBoolean("repaired", true)
     e.player.getMainhandItem()

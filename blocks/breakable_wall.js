@@ -1,12 +1,18 @@
 var self
-var active = false
 var was_set = false
 var can_set = true
+var active
 
 function init(e) {
+    if (!e.block.storeddata.has("active")) { e.block.storeddata.put("active", 0) }
+
+    active = Boolean(e.block.storeddata.get("active"))
     self = e.block
-    e.block.world.spawnParticle("minecraft:enchanted_hit", e.block.x, e.block.y, e.block.z, .7, .7, .7, .002, 8)
-    e.block.timers.forceStart(2, 20, true)
+    if (!active) {
+        e.block.world.spawnParticle("minecraft:enchanted_hit", e.block.x, e.block.y, e.block.z, .7, .7, .7, .002, 8)
+        e.block.timers.forceStart(2, 20, true)
+    }
+
 }
 
 function interact(e) {
@@ -122,6 +128,8 @@ function toggleActive(e) {
         }
     }
     active = !active
+
+    self.storeddata.put("active", +active)
     can_set = false
     self.timers.forceStart(3, 40, false)
     if (!active) {

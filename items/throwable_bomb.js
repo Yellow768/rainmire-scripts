@@ -13,7 +13,7 @@ var primed = []; /*global*/
 
 function summonThrowableBomb(event) {
     var MH = event.player.mainhandItem;
-    if (MH && MH.name == item.id && MH.displayName.indexOf("Bomb") != -1) {
+    if (MH && MH.name == item.id) {
         event.setCanceled(true)
         var e = playerShoot(event, bomb);
         event.player.world.playSoundAt(event.player.pos, "customnpcs:misc.swosh", 1, 1)

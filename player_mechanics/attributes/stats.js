@@ -1,7 +1,5 @@
-var statsStringArray = ["Charm", "Empathy", "Suggestion", "Brawn", "Grit", "Deftness", "Intellect", "Perception", "Aptitude"]
-var GUI_STATS
-var xPos = [18, 100, 180]
-var yPos = [42, 62, 84]
+var statsStringArray = ["Charm", "Empathy", "Suggestion", "Grit", "Brawn", "Deftness", "Logic", "Perception", "Knowledge"]
+
 var justLoggedIn = false
 
 var AIR_SUPPLY_TIMER = 768500
@@ -9,6 +7,8 @@ var AIR_SUPPLY_TIMER = 768500
 function init(e) {
 	setUpVals(e)
 	updateStats(e)
+
+
 }
 
 function login(e) {
@@ -16,14 +16,7 @@ function login(e) {
 	e.player.timers.start(20, 10, false)
 }
 
-function timer(e) {
-	if (e.id == 20) {
-		justLoggedIn = false
-	}
-	if (e.id == AIR_SUPPLY_TIMER) {
-		handlePlayerAirSupply(e)
-	}
-}
+
 
 function setUpVals(e) {
 	e.player.timers.forceStart(AIR_SUPPLY_TIMER, 0, true)
@@ -39,7 +32,7 @@ function setUpVals(e) {
 		e.player.storeddata.put("airDecreaseRate", 1)
 	}
 	updateStats(e)
-	setScore("perk_power", getScore("max_perk_power"))
+
 	e.player.setHealth(e.player.getMaxHealth())
 	if (hasScore("Deftness") == false) {
 		for (var i = 0; i < statsStringArray.length; i++) {
@@ -47,7 +40,9 @@ function setUpVals(e) {
 			setScore(statsStringArray[i] + "Mod", 0)
 		}
 	}
-
+	if (e.player.storeddata.get("originalAttPts") != getScore("AttrPoints")) {
+		setScore("AttrPoints", e.player.storeddata.get("originalAttPts"))
+	}
 }
 
 function levelUp(e) {
@@ -55,7 +50,7 @@ function levelUp(e) {
 		e.player.removeTag("LevelUp")
 		addToScore("AttrPoints", 1)
 		e.player.playSound("minecraft:ui.toast.challenge_complete", 1, 1)
-		executeCommand("/particle minecraft:end_rod " + e.player.x + " " + e.player.y + " " + e.player.z + " .5 .5 .5 .5 100")
+		executeCommand("/particle minecraft:end_rod " + e.player.x + " " + e.player.y + " " + e.player.z + " .5 .5 .5 .5 100 force")
 		executeCommand('/title ' + e.player.name + ' actionbar {"text":"You have leveled up!","bold":true,"color":"yellow"}')
 		executeCommand('/title ' + e.player.name + ' times 0 40 20')
 		executeCommand('/title ' + e.player.name + ' subtitle {"text":"Check stats screen!","bold":true,"color":"gold"}')
@@ -75,7 +70,7 @@ function updateStats(e) {
 	if (player.hasTag("glass_frame")) {
 		setScore("Grit", 1)
 	}
-	var sumOfHnM = getScore("Charm") + getScore("Empathy") + getScore("Suggestion") + getScore("Intellect") + getScore("Perception") + getScore("Aptitude")
+	var sumOfHnM = getScore("Charm") + getScore("Empathy") + getScore("Suggestion") + getScore("Logic") + getScore("Perception") + getScore("Knowledge")
 	setScore("max_perk_power", sumOfHnM + getScore("perk_power_mod"))
 	if (getScore("perk_power") > getScore("max_perk_power")) {
 		setScore("perk_power", getScore("max_perk_power"))
@@ -88,7 +83,7 @@ function updateStats(e) {
 }
 
 
-function stat_tick_functions(e) {
+function attribute_functions(e) {
 	handlePlayerMovementSpeed(e)
 	e.player.setHunger(10)
 }
@@ -102,10 +97,11 @@ function handlePlayerMovementSpeed(e) {
 	//Define Speed Values
 	var sprint_speed = .08 + (0.04 * (getScore("Deftness") - 1))
 	var walk_speed = .08 + (0.01 * (getScore("Deftness") - 1))
-	var swim_sprint_speed = 1 + (0.5 * getScore("swmspd"))
+	var swim_sprint_speed = getScore("swmspd")
 	var swim_walk_speed = 1 + (0.25 * getScore("swmspd"))
-	if (e.player.inWater()) {
-		walk_speed += 1
+	if (e.player.inWater() && e.player.world.getBlock(e.player.pos).name == "minecraft:water") {
+
+		if (e.player.world.getBlock(e.player.pos).getProperty("level") == 7) walk_speed += 1
 	}
 	if (e.player.hasTag("winded")) {
 		sprint = sprint = .08 + (0.02 * (getScore("Deftness") - 1))
@@ -127,14 +123,16 @@ function handlePlayerMovementSpeed(e) {
 }
 
 
-
+var modifier_interval = 0
 function applyArmorAttributeModifiers(e) {
+
+	if (modifier_interval % 3 != 0) { modifier_interval += 1; return }
+	modifier_interval += 1
 	var player = e.arguments[0]
 	var fromItem = e.arguments[1]
 	var toItem = e.arguments[2]
 	var slot = e.arguments[3]
-	var attributes = ["Charm", "Empathy", "Suggestion", "Brawn", "Grit", "Deftness", "Intellect", "Perception", "Aptitude"]
-
+	var attributes = ["Charm", "Empathy", "Suggestion", "Brawn", "Grit", "Deftness", "Logic", "Perception", "Knowledge"]
 	for (var i = 0; i < attributes.length; i++) {
 		if (fromItem.nbt.has(attributes[i])) {
 			if (fromItem.isWearable()) {
@@ -160,6 +158,7 @@ function applyArmorAttributeModifiers(e) {
 		}
 	}
 	updateStats(e)
+
 }
 
 function statTriggers(e) {
@@ -177,14 +176,7 @@ function statTriggers(e) {
 	}
 }
 
-function attack(e) {
-	if (!e.player.isSneaking() && e.type == 1 && (e.target.name.indexOf("Remnant") != -1)) {
-		e.target.trigger(1, [e.player])
-	}
-	if (e.player.isSneaking() && e.player.gamemode == 1 && e.type == 1 && e.target.name.indexOf("Remnant")) {
-		e.target.trigger(2, [e])
-	}
-}
+
 
 function dialog(e) {
 	if (e.player.hasTag("social_anxiety")) {
@@ -208,6 +200,15 @@ function dialogClose(e) {
 
 }
 
+function died(e) {
+	for (var i = 0; i < statsStringArray.length; i++) {
+		setScore(statsStringArray[i] + "Mod", 0)
+	}
+}
+
+//
+
+
 function handlePlayerAirSupply(e) {
 	if (isNaN(e.player.storeddata.get("currentAir")) || e.player.storeddata.get("currentAir") == null) {
 		e.player.message("No Air! Reset!")
@@ -226,7 +227,7 @@ function handlePlayerAirSupply(e) {
 		e.player.getMCEntity().m_20301_(-10)
 		e.player.storeddata.put("currentAir", -10)
 	}
-	if (blockAtEyeLevel == "minecraft:water" && !e.player.hasTag("oxygenating")) {
+	if (e.player.getMCEntity().m_5842_() && !e.player.hasTag("oxygenating")) {
 		if (e.player.storeddata.get("currentAir") < 1) {
 			return
 		}
@@ -235,7 +236,7 @@ function handlePlayerAirSupply(e) {
 			return
 		}
 
-		var newAirSupply = e.player.storeddata.get("currentAir") - e.player.storeddata.get("airDecreaseRate")
+		var newAirSupply = e.player.storeddata.get("currentAir") - 300 / ((5 + (5 * e.player.storeddata.get("airDecreaseRate"))) * 20)
 		e.player.getMCEntity().m_20301_(Math.ceil(newAirSupply))
 		if (newAirSupply < -20) { newAirSupply = 0 }
 		//worldOut(e.player.getMCEntity().func_70086_ai())
@@ -252,7 +253,7 @@ function handlePlayerAirSupply(e) {
 			var newAirSupply = parseFloat(e.player.storeddata.get("currentAir"))
 			var airDecreaseRate = parseFloat(e.player.storeddata.get("airDecreaseRate"))
 
-			newAirSupply += 5 * airDecreaseRate
+			newAirSupply += 5 / airDecreaseRate
 			//worldOut(parseInt(newAirSupply) + parseInt(e.player.storeddata.get("airDecreaseRate")))
 			if (e.player.hasTag("oxygenating") && newAirSupply >= e.player.tempdata.get("targetOxygen")) {
 				e.player.removeTag("oxygenating")

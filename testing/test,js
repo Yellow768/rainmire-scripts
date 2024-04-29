@@ -1,0 +1,24 @@
+var xpTotalLvl = [250,300,360,430,520,620,750,900,1080,1290,1550,1860,2230,2680,3210,3850,4620,5550,6660,8000];
+var API = Java.type('noppes.npcs.api.NpcAPI').Instance();
+
+function playerPickupXpEvent(e) {
+  var playerForge = e.getEntityPlayer();
+  var player = API.getIEntity(e.getEntityPlayer());
+  var xp = e.getOrb().f_20770_;
+  if(playerForge.f_36080_==NaN){
+      playerForge.f_36080_ = 0;
+  }
+  playerForge.f_36080_ = playerForge.f_36080_ + xp / xpTotalLvl[player.getExpLevel()];
+  e.getOrb().f_20770_ = 0;
+  if(playerForge.f_36080_>=1){
+      playerForge.f_36080_ = playerForge.f_36080_ - 1;
+      player.setExpLevel(player.getExpLevel()+1);
+  }
+  player.setExpLevel(player.getExpLevel());
+  worldOut(playerForge.f_36080_);
+  playerForge.f_36079_ = 2000; // Total exp
+}
+
+function worldOut(text) {
+  return API.getIWorld(0).broadcast(text);
+}

@@ -1,7 +1,20 @@
 {
 	"folders": [
 		{
+			"name": "ecmascript",
 			"path": "."
+		},
+		{
+			"name": "SERVER KubeJS",
+			"path": "../../../../kubejs"
+		},
+		{
+			"name": "CLIENT KubeJS",
+			"path": "../../../../../kubejs"
 		}
-	]
+	],
+	"settings": {
+		"workbench.colorTheme": "Default Dark Modern",
+		"workbench.editor.decorations.colors": true
+	}
 }

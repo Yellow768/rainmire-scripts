@@ -3,7 +3,7 @@ var quipNameList
 var quipTempList
 var tempScrollIndex
 var GUI_CompanionQuipNPC
-var thisNPC
+var npc
 
 
 function init(e) {
@@ -17,7 +17,7 @@ function init(e) {
 function interact(e) {
     if (e.player.gamemode == 1 && e.player.isSneaking()) {
         e.setCanceled(true)
-        thisNPC = e.npc
+        npc = e.npc
         tempScrollIndex = 0
 
         quipNameList = []
@@ -123,13 +123,13 @@ function customGuiButton(e) {
         }
 
         quipList = quipTempList
-        thisNPC.storeddata.put("quipArray", JSON.stringify(quipList))
+        npc.storeddata.put("quipArray", JSON.stringify(quipList))
         e.player.closeGui()
     }
 }
 
 function customGuiClosed(e) {
-    quipList = JSON.parse(thisNPC.storeddata.get("quipArray"))
+    quipList = JSON.parse(npc.storeddata.get("quipArray"))
 }
 
 function customGuiScroll(e) {

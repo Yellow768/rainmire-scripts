@@ -87,14 +87,14 @@ function checkEarlyBird(e) {
 
 
 function negativeModifier(e) {
-    var statsStringArray = ["Charm", "Empathy", "Suggestion", "Brawn", "Grit", "Deftness", "Intellect", "Perception", "Aptitude"]
+    var statsStringArray = ["Charm", "Empathy", "Suggestion", "Brawn", "Grit", "Deftness", "Logic", "Perception", "Knowledge"]
     for (var stat in statsStringArray) {
         addToScore(statsStringArray[stat] + "Mod", -1)
     }
 }
 
 function positiveModifier(e) {
-    var statsStringArray = ["Charm", "Empathy", "Suggestion", "Brawn", "Grit", "Deftness", "Intellect", "Perception", "Aptitude"]
+    var statsStringArray = ["Charm", "Empathy", "Suggestion", "Brawn", "Grit", "Deftness", "Logic", "Perception", "Knowledge"]
     for (var stat in statsStringArray) {
         addToScore(statsStringArray[stat] + "Mod", 1)
     }

@@ -53,27 +53,36 @@ function runCommand(command) {
 
 }
 
-
+var xpEventChangeTriggerIteration = 0
 function playerXpEventXpChange(e) {
-	if (e.event.getAmount() > 0) {
+	if (e.event.getAmount() > 0 && xpEventChangeTriggerIteration == 0) {
 		runCommand("xp add " + getPlayerName(e.event.getPlayer()) + " -" + e.event.getAmount() + " points");
 		addCustomXpValue(e.event.getPlayer(), e.event.getAmount())
+
+	}
+	xpEventChangeTriggerIteration++
+	if (xpEventChangeTriggerIteration == 5) {
+		xpEventChangeTriggerIteration = 0
 	}
 }
 
+var xpPickupEventTriggerIteration = 0
 function playerXpEventPickupXp(e) {
-	var xp = e.event.getOrb().f_20770_;
-	e.event.getOrb().f_20770_ = 0
-	addCustomXpValue(e.event.getPlayer(), xp)
+	if (xpPickupEventTriggerIteration == 0) {
+		var xp = e.event.getOrb().f_20770_;
+		e.event.getOrb().f_20770_ = 0
+		addCustomXpValue(e.event.getPlayer(), xp)
+	}
+	xpPickupEventTriggerIteration++
+	if (xpPickupEventTriggerIteration == 5) {
+		xpPickupEventTriggerIteration = 0
+	}
 }
 
 
 function addCustomXpValue(forgePlayer, xpToAdd) {
 	var noppesPlayer = API.getIEntity(forgePlayer)
-	noppesPlayer.getWorld().getStoreddata().put(noppesPlayer.name + "totalExperiencePoints", noppesPlayer.getWorld().getStoreddata().get(noppesPlayer.name + "totalExperiencePoints") + xpToAdd)
-	if (getPlayerScore(noppesPlayer, "PERK_Educated") == 1) {
-		xpToAdd = Math.ceil(xpToAdd * 1.1)
-	}
+	noppesPlayer.getStoreddata().put("totalExperiencePoints", noppesPlayer.getStoreddata().get("totalExperiencePoints") + xpToAdd)
 
 	if (getPlayerXP(forgePlayer) == NaN) {
 		setPlayerXP(forgePlayer, 0);

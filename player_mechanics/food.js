@@ -7,11 +7,21 @@ function eatFood(e) {
         return
     }
     e.setCanceled(true)
-    addToScore("perk_power", Math.floor(foodLevel / 2))
+    if (food.displayName.indexOf("Salt") != -1) {
+        addToScore("perk_power", -Math.floor(foodLevel / 2))
+        foodLevel *= 2
+        e.player.world.spawnParticle("heart", e.player.x, e.player.y + 1, e.player.z, .2, .5, .2, 0, 10)
+
+    }
+    else addToScore("perk_power", -Math.floor(foodLevel / 2))
+
     setScore("restore_hydrate", 1)
     e.player.timers.forceStart(768080, 4, false)
     if (getScore("perk_power") > getScore("max_perk_power")) {
         setScore("perk_power", getScore("max_perk_power"))
+    }
+    if (getScore("perk_power") < 0) {
+        setScore("perk_power", 0)
     }
     produceFoodParticles(e)
     e.player.playSound("minecraft:entity.generic.eat", 1, 1)
@@ -58,6 +68,6 @@ function produceFoodParticles(e) {
     var x = e.player.x + (dx * pitch)
     var y = e.player.y + 1 + dy
     var z = e.player.z + (dz * pitch)
-    executeCommand("/particle minecraft:item " + e.player.getMainhandItem().name + " " + x + " " + y + " " + z + " .3 .2 .3 .00001 20")
+    executeCommand("/particle minecraft:item " + e.player.getMainhandItem().name + " " + x + " " + y + " " + z + " .3 .2 .3 .00001 20 force")
 
 }

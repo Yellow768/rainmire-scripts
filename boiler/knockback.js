@@ -34,7 +34,8 @@ var y_additive = 2//how much to add in height to y particles's emmision
 * @param {NpcEvent.UpdateEvent} event
 
 */
-
+//I think I copied this without reading it.
+/*
 function tick(event) {
 
     var nearbies = event.npc.world.getNearbyEntities(event.npc.getPos(), detectRange, 1)
@@ -46,6 +47,8 @@ function tick(event) {
     }
 
 }
+*/
+
 
 //adapted from circle particle AOE atk scr, credit to Hank
 
