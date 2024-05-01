@@ -18,7 +18,6 @@ function init(e) {
 
 
 function trigger(e) {
-    npc = e.arguments[0]
 
     if (e.id == APPLY_STATUS_EFFECTS_ID) {
         if (!npc.storeddata.has("altered")) {
@@ -29,6 +28,7 @@ function trigger(e) {
             npc.storeddata.put("defaultWanderingRange", npc.ai.getWanderingRange())
             npc.storeddata.put("defaultMovingPathType", npc.ai.getMovingPathType())
             npc.storeddata.put("defaultMovingPathPause", npc.ai.getMovingPathPauses())
+            npc.storeddata.put("defaultWalkingSpeed", npc.ai.getWalkingSpeed())
             npc.storeddata.put("altered", 1)
         }
     }
@@ -36,6 +36,7 @@ function trigger(e) {
         npc.storeddata.put("paralyzed", 1)
         npc.executeCommand("/particle upgrade_aquatic:yellow_jelly_blob ~ ~1 ~ .5 .5 .5 .02 30 force")
         npc.timers.forceStart(PARALYSIS_ID, e.arguments[1], false)
+        changeNPCStatus()
 
     }
     if (e.id == PANICKED_ID) {
@@ -47,15 +48,16 @@ function trigger(e) {
             npc.timers.forceStart(PANICKED_SWING_OFF, Math.random() * (40 - 1) + 1, false)
         }
         npc.timers.forceStart(PANICKED_ID, e.arguments[1], false)
+        changeNPCStatus()
 
     }
     if (e.id == FLAME_ID) {
         npc.setBurning(60)
         npc.executeCommand("/particle upgrade_aquatic:red_jelly_blob ~ ~1 ~ .5 .5 .5 .02 30 force")
     }
-    changeNPCStatus()
-    npc.world.playSoundAt(npc.pos, "upgrade_aquatic:entity.jellyfish.death", 1, 1)
-    npc.world.playSoundAt(npc.pos, "minecraft:entity.turtle.egg_break", 1, 1)
+
+
+
 }
 
 
@@ -66,6 +68,9 @@ function timer(e) {
     }
     if (e.id == PANICKED_ID) {
         npc.storeddata.remove("panicked")
+        npc.timers.stop(PANICKED_JUMP)
+        npc.timers.stop(PANICKED_SWING)
+        npc.timers.stop(PANICKED_SWING_OFF)
         changeNPCStatus()
     }
     if (e.id == PANICKED_JUMP) {
@@ -94,6 +99,7 @@ function changeNPCStatus() {
     npc.display.setTint(npc.storeddata.get("defaultTint"))
     npc.ai.setMovingPathType(npc.storeddata.get("defaultMovingPathType"), npc.storeddata.get("defaultMovingPathPause"))
     npc.ai.setMovingType(npc.storeddata.get("defaultMovingType"))
+    npc.ai.setWalkingSpeed(npc.storeddata.get("defaultWalkingSpeed"))
     if (statusMark == undefined) {
         statusMark = npc.addMark(0)
     }
@@ -128,12 +134,19 @@ function changeNPCStatus() {
     if (npc.storeddata.get("hasStatusEffect") != 1) {
         npc.removeMark(statusMark)
         npc.storeddata.remove("altered")
+        npc.trigger(123406, [npc])
+
         try {
             undoStatusEffects(e)
         } catch (e) {
 
         }
 
+    }
+    else {
+        npc.world.playSoundAt(npc.pos, "upgrade_aquatic:entity.jellyfish.death", 1, 1)
+        npc.world.playSoundAt(npc.pos, "minecraft:entity.turtle.egg_break", 1, 1)
+        npc.trigger(123405, [npc])
     }
 
 }

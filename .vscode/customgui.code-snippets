@@ -2,12 +2,12 @@
     "CustomGuiEvent.CloseEvent": {
         "prefix": "customGui:closed",
         "body": [
-        "/**",
-        " * @param {CustomGuiEvent.CloseEvent} event",
-        " */",
-        "function customGuiClosed(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {CustomGuiEvent.CloseEvent} e",
+            " */",
+            "function customGuiClosed(e){",
+            "    $0",
+            "}"
         ],
         "description": "CustomGuiEvent.CloseEvent",
         "scope": "javascript,typescript"
@@ -15,12 +15,12 @@
     "CustomGuiEvent.ButtonEvent": {
         "prefix": "customGui:button",
         "body": [
-        "/**",
-        " * @param {CustomGuiEvent.ButtonEvent} event",
-        " */",
-        "function customGuiButton(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {CustomGuiEvent.ButtonEvent} e",
+            " */",
+            "function customGuiButton(e){",
+            "    $0",
+            "}"
         ],
         "description": "CustomGuiEvent.ButtonEvent",
         "scope": "javascript,typescript"
@@ -28,12 +28,12 @@
     "CustomGuiEvent.SlotEvent": {
         "prefix": "customGui:slot",
         "body": [
-        "/**",
-        " * @param {CustomGuiEvent.SlotEvent} event",
-        " */",
-        "function customGuiSlot(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {CustomGuiEvent.SlotEvent} e",
+            " */",
+            "function customGuiSlot(e){",
+            "    $0",
+            "}"
         ],
         "description": "CustomGuiEvent.SlotEvent",
         "scope": "javascript,typescript"
@@ -41,12 +41,12 @@
     "CustomGuiEvent.SlotClickEvent": {
         "prefix": "customGui:slotClicked",
         "body": [
-        "/**",
-        " * @param {CustomGuiEvent.SlotClickEvent} event",
-        " */",
-        "function customGuiSlotClicked(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {CustomGuiEvent.SlotClickEvent} e",
+            " */",
+            "function customGuiSlotClicked(e){",
+            "    $0",
+            "}"
         ],
         "description": "CustomGuiEvent.SlotClickEvent",
         "scope": "javascript,typescript"
@@ -54,12 +54,12 @@
     "CustomGuiEvent.ScrollEvent": {
         "prefix": "customGui:scroll",
         "body": [
-        "/**",
-        " * @param {CustomGuiEvent.ScrollEvent} event",
-        " */",
-        "function customGuiScroll(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {CustomGuiEvent.ScrollEvent} e",
+            " */",
+            "function customGuiScroll(e){",
+            "    $0",
+            "}"
         ],
         "description": "CustomGuiEvent.ScrollEvent",
         "scope": "javascript,typescript"

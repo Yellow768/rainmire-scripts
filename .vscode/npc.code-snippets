@@ -2,12 +2,12 @@
     "NpcEvent.InitEvent": {
         "prefix": "npc:init",
         "body": [
-        "/**",
-        " * @param {NpcEvent.InitEvent} event",
-        " */",
-        "function init(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {NpcEvent.InitEvent} e",
+            " */",
+            "function init(e){",
+            "    $0",
+            "}"
         ],
         "description": "NpcEvent.InitEvent",
         "scope": "javascript,typescript"
@@ -15,12 +15,12 @@
     "NpcEvent.UpdateEvent": {
         "prefix": "npc:tick",
         "body": [
-        "/**",
-        " * @param {NpcEvent.UpdateEvent} event",
-        " */",
-        "function tick(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {NpcEvent.UpdateEvent} e",
+            " */",
+            "function tick(e){",
+            "    $0",
+            "}"
         ],
         "description": "NpcEvent.UpdateEvent",
         "scope": "javascript,typescript"
@@ -28,12 +28,12 @@
     "NpcEvent.TargetEvent": {
         "prefix": "npc:target",
         "body": [
-        "/**",
-        " * @param {NpcEvent.TargetEvent} event",
-        " */",
-        "function target(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {NpcEvent.TargetEvent} e",
+            " */",
+            "function target(e){",
+            "    $0",
+            "}"
         ],
         "description": "NpcEvent.TargetEvent",
         "scope": "javascript,typescript"
@@ -41,12 +41,12 @@
     "NpcEvent.TargetLostEvent": {
         "prefix": "npc:targetLost",
         "body": [
-        "/**",
-        " * @param {NpcEvent.TargetLostEvent} event",
-        " */",
-        "function targetLost(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {NpcEvent.TargetLostEvent} e",
+            " */",
+            "function targetLost(e){",
+            "    $0",
+            "}"
         ],
         "description": "NpcEvent.TargetLostEvent",
         "scope": "javascript,typescript"
@@ -54,12 +54,12 @@
     "NpcEvent.InteractEvent": {
         "prefix": "npc:interact",
         "body": [
-        "/**",
-        " * @param {NpcEvent.InteractEvent} event",
-        " */",
-        "function interact(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {NpcEvent.InteractEvent} e",
+            " */",
+            "function interact(e){",
+            "    $0",
+            "}"
         ],
         "description": "NpcEvent.InteractEvent",
         "scope": "javascript,typescript"
@@ -67,12 +67,12 @@
     "NpcEvent.DiedEvent": {
         "prefix": "npc:died",
         "body": [
-        "/**",
-        " * @param {NpcEvent.DiedEvent} event",
-        " */",
-        "function died(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {NpcEvent.DiedEvent} e",
+            " */",
+            "function died(e){",
+            "    $0",
+            "}"
         ],
         "description": "NpcEvent.DiedEvent",
         "scope": "javascript,typescript"
@@ -80,12 +80,12 @@
     "NpcEvent.KilledEntityEvent": {
         "prefix": "npc:kill",
         "body": [
-        "/**",
-        " * @param {NpcEvent.KilledEntityEvent} event",
-        " */",
-        "function kill(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {NpcEvent.KilledEntityEvent} e",
+            " */",
+            "function kill(e){",
+            "    $0",
+            "}"
         ],
         "description": "NpcEvent.KilledEntityEvent",
         "scope": "javascript,typescript"
@@ -93,12 +93,12 @@
     "NpcEvent.MeleeAttackEvent": {
         "prefix": "npc:meleeAttack",
         "body": [
-        "/**",
-        " * @param {NpcEvent.MeleeAttackEvent} event",
-        " */",
-        "function meleeAttack(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {NpcEvent.MeleeAttackEvent} e",
+            " */",
+            "function meleeAttack(e){",
+            "    $0",
+            "}"
         ],
         "description": "NpcEvent.MeleeAttackEvent",
         "scope": "javascript,typescript"
@@ -106,12 +106,12 @@
     "NpcEvent.RangedLaunchedEvent": {
         "prefix": "npc:rangedAttack",
         "body": [
-        "/**",
-        " * @param {NpcEvent.RangedLaunchedEvent} event",
-        " */",
-        "function rangedAttack(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {NpcEvent.RangedLaunchedEvent} e",
+            " */",
+            "function rangedAttack(e){",
+            "    $0",
+            "}"
         ],
         "description": "NpcEvent.RangedLaunchedEvent",
         "scope": "javascript,typescript"
@@ -119,12 +119,12 @@
     "NpcEvent.DamagedEvent": {
         "prefix": "npc:damaged",
         "body": [
-        "/**",
-        " * @param {NpcEvent.DamagedEvent} event",
-        " */",
-        "function damaged(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {NpcEvent.DamagedEvent} e",
+            " */",
+            "function damaged(e){",
+            "    $0",
+            "}"
         ],
         "description": "NpcEvent.DamagedEvent",
         "scope": "javascript,typescript"
@@ -132,12 +132,12 @@
     "NpcEvent.RangedLaunchCollideEventedEvent": {
         "prefix": "npc:collide",
         "body": [
-        "/**",
-        " * @param {NpcEvent.CollideEvent} event",
-        " */",
-        "function collide(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {NpcEvent.CollideEvent} e",
+            " */",
+            "function collide(e){",
+            "    $0",
+            "}"
         ],
         "description": "NpcEvent.CollideEvent",
         "scope": "javascript,typescript"
@@ -145,12 +145,12 @@
     "NpcEvent.TimerEvent": {
         "prefix": "npc:timer",
         "body": [
-        "/**",
-        " * @param {NpcEvent.TimerEvent} event",
-        " */",
-        "function timer(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {NpcEvent.TimerEvent} e",
+            " */",
+            "function timer(e){",
+            "    $0",
+            "}"
         ],
         "description": "NpcEvent.TimerEvent",
         "scope": "javascript,typescript"
@@ -158,12 +158,12 @@
     "RoleEvent.BankUnlockedEvent": {
         "prefix": "npc:role:bankUnlocked",
         "body": [
-        "/**",
-        " * @param {RoleEvent.BankUnlockedEvent} event",
-        " */",
-        "function role(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {RoleEvent.BankUnlockedEvent} e",
+            " */",
+            "function role(e){",
+            "    $0",
+            "}"
         ],
         "description": "RoleEvent.BankUnlockedEvent",
         "scope": "javascript,typescript"
@@ -171,12 +171,12 @@
     "RoleEvent.BankUpgradedEvent": {
         "prefix": "npc:role:bankUpgraded",
         "body": [
-        "/**",
-        " * @param {RoleEvent.BankUpgradedEvent} event",
-        " */",
-        "function role(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {RoleEvent.BankUpgradedEvent} e",
+            " */",
+            "function role(e){",
+            "    $0",
+            "}"
         ],
         "description": "RoleEvent.BankUpgradedEvent",
         "scope": "javascript,typescript"
@@ -184,12 +184,12 @@
     "RoleEvent.FollowerFinishedEvent": {
         "prefix": "npc:role:followerFinished",
         "body": [
-        "/**",
-        " * @param {RoleEvent.FollowerFinishedEvent} event",
-        " */",
-        "function role(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {RoleEvent.FollowerFinishedEvent} e",
+            " */",
+            "function role(e){",
+            "    $0",
+            "}"
         ],
         "description": "RoleEvent.FollowerFinishedEvent",
         "scope": "javascript,typescript"
@@ -197,12 +197,12 @@
     "RoleEvent.FollowerHireEvent": {
         "prefix": "npc:role:followerHire",
         "body": [
-        "/**",
-        " * @param {RoleEvent.FollowerHireEvent} event",
-        " */",
-        "function role(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {RoleEvent.FollowerHireEvent} e",
+            " */",
+            "function role(e){",
+            "    $0",
+            "}"
         ],
         "description": "RoleEvent.FollowerHireEvent",
         "scope": "javascript,typescript"
@@ -210,12 +210,12 @@
     "RoleEvent.MailmanEvent": {
         "prefix": "npc:role:mailman",
         "body": [
-        "/**",
-        " * @param {RoleEvent.MailmanEvent} event",
-        " */",
-        "function role(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {RoleEvent.MailmanEvent} e",
+            " */",
+            "function role(e){",
+            "    $0",
+            "}"
         ],
         "description": "RoleEvent.MailmanEvent",
         "scope": "javascript,typescript"
@@ -223,12 +223,12 @@
     "RoleEvent.TradeFailedEvent": {
         "prefix": "npc:role:tradeFailed",
         "body": [
-        "/**",
-        " * @param {RoleEvent.TradeFailedEvent} event",
-        " */",
-        "function role(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {RoleEvent.TradeFailedEvent} e",
+            " */",
+            "function role(e){",
+            "    $0",
+            "}"
         ],
         "description": "RoleEvent.TradeFailedEvent",
         "scope": "javascript,typescript"
@@ -236,12 +236,12 @@
     "RoleEvent.TraderEvent": {
         "prefix": "npc:role:trader",
         "body": [
-        "/**",
-        " * @param {RoleEvent.TraderEvent} event",
-        " */",
-        "function role(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {RoleEvent.TraderEvent} e",
+            " */",
+            "function role(e){",
+            "    $0",
+            "}"
         ],
         "description": "RoleEvent.TraderEvent",
         "scope": "javascript,typescript"
@@ -249,12 +249,12 @@
     "RoleEvent.TransporterUnlockedEvent": {
         "prefix": "npc:role:transporterUnlocked",
         "body": [
-        "/**",
-        " * @param {RoleEvent.TransporterUnlockedEvent} event",
-        " */",
-        "function role(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {RoleEvent.TransporterUnlockedEvent} e",
+            " */",
+            "function role(e){",
+            "    $0",
+            "}"
         ],
         "description": "RoleEvent.TransporterUnlockedEvent",
         "scope": "javascript,typescript"
@@ -262,12 +262,12 @@
     "RoleEvent.TransporterUseEvent": {
         "prefix": "npc:role:transporterUse",
         "body": [
-        "/**",
-        " * @param {RoleEvent.TransporterUseEvent} event",
-        " */",
-        "function role(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {RoleEvent.TransporterUseEvent} e",
+            " */",
+            "function role(e){",
+            "    $0",
+            "}"
         ],
         "description": "RoleEvent.TransporterUseEvent",
         "scope": "javascript,typescript"
@@ -275,12 +275,12 @@
     "RoleEvent.*": {
         "prefix": "npc:role",
         "body": [
-        "/**",
-        " * @param {RoleEvent.$1} event",
-        " */",
-        "function role(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {RoleEvent.$1} e",
+            " */",
+            "function role(e){",
+            "    $0",
+            "}"
         ],
         "description": "RoleEvent.*",
         "scope": "javascript,typescript"

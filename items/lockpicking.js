@@ -21,16 +21,6 @@ function interact(e) {
                 case "Lock Destroyer":
                     pickLock(e, 1000, 768005)
                 default:
-                    if (e.player.hasTag("flood_lockpick")) {
-                        var sum = getScore("Deftness") + getScore("Knowledge") + getScore("Knowledge")
-                        var chance = Math.floor((Math.random() * (sum * 2)) + (sum * 2))
-                        pickLock(e, chance, 0)
-                        e.player.removeTag("flood_lockpick")
-                        var flood_pos = e.target.pos
-                        e.player.world.spawnParticle("falling_water", flood_pos.x, flood_pos.y + 1, flood_pos.z, .4, .4, .4, .2, 500)
-                        e.player.world.playSoundAt(e.player.pos, "entity.player.splash", 1, 1)
-                        break;
-                    }
                     e.setCanceled(true)
                     executeCommand('/title ' + e.player.name + ' actionbar {"text":"Locked! Lock Strength: ' + e.target.storeddata.get("LockDifficulty") + '%","bold":true,"color":"red"}')
                     executeCommand("/playsound minecraft:entity.shulker.close player @a[x=" + e.player.x + ",y=" + e.player.y + ",z=" + e.player.z + ",distance=..5] " + e.player.x + " " + e.player.y + " " + e.player.z)

@@ -2,7 +2,7 @@ var hookTarget
 var usingHookshot = false
 
 function interact(e) {
-    if (e.player.getMainhandItem().getDisplayName() == "Hookshot" && e.player.getMainhandItem().getItemNbt().getCompound("tag").getByte("Charged")) {
+    if (e.player.getMainhandItem().getDisplayName() == "Hookshot") {
         usingHookshot = true
         e.player.timers.forceStart(900, 1, false)
     }
@@ -26,7 +26,7 @@ function damagedEntity(e) {
 
 function timer(e) {
     if (e.id == 12345) {
-        var distance = hookTarget.pos.distanceTo(e.player.pos) - 5
+        var distance = Math.abs((Math.abs(hookTarget.x) - Math.abs(e.player.x)) + (Math.abs(hookTarget.z) - Math.abs(e.player.z))) - 7
         var vertical_distance = .5 + (e.player.y - hookTarget.y)
         if (vertical_distance > 1.2) {
             vertical_distance = 1.2
@@ -42,9 +42,9 @@ function timer(e) {
             distance += 2
         }
         distance -= vertical_distance
-        knockbackEntity(hookTarget, e.player.pos, -distance)
+        DoKnockback(e.player, hookTarget, -distance / 3, vertical_distance)
 
-        hookTarget.setMotionY(vertical_distance)
+        //hookTarget.setMotionY(vertical_distance)
 
         //(world, source, resolution, particleName, sourcePos, targetPos)
     }
@@ -53,9 +53,9 @@ function timer(e) {
         var t = e.player //particle to this target
         e.player.world.playSoundAt(e.player.pos, "variedcommodities:misc.swosh", 1, 1)
         e.player.world.playSoundAt(e.player.pos, "minecraft:entity.mooshroom.suspicious_milk", 1, 1)
-        e.player.world.playSoundAt(e.player.pos, "create:fwoomp", 1, 1)
+        e.player.world.playSoundAt(e.player.pos, "create:fwoomp", .2, .5)
 
-        particleLine(e.player.getWorld(), hookTarget, 20, "smoke", s.x, s.y, s.z, t.x, t.y, t.z) //s.pos and t.pos can be replace by any position you want
+        particleLine(e.player.getWorld(), hookTarget, 20, "alexsmobs:smelly", s.x, s.y, s.z, t.x, t.y, t.z) //s.pos and t.pos can be replace by any position you want
     }
 }
 

@@ -3,7 +3,7 @@
         "prefix": "block:init",
         "body": [
             "/**",
-            " * @param {BlockEvent.InitEvent} event",
+            " * @param {BlockEvent.InitEvent} e",
             " */",
             "function init(e){",
             "    $0",
@@ -16,9 +16,9 @@
         "prefix": "block:fallenUpon",
         "body": [
             "/**",
-            " * @param {BlockEvent.EntityFallenUponEvent} event",
+            " * @param {BlockEvent.EntityFallenUponEvent} e",
             " */",
-            "function fallenUpon(event){",
+            "function fallenUpon(e){",
             "    $0",
             "}"
         ],
@@ -29,9 +29,9 @@
         "prefix": "block:interact",
         "body": [
             "/**",
-            " * @param {BlockEvent.InteractEvent} event",
+            " * @param {BlockEvent.InteractEvent} e",
             " */",
-            "function interact(event){",
+            "function interact(e){",
             "    $0",
             "}"
         ],
@@ -42,9 +42,9 @@
         "prefix": "block:redstone",
         "body": [
             "/**",
-            " * @param {BlockEvent.RedstoneEvent} event",
+            " * @param {BlockEvent.RedstoneEvent} e",
             " */",
-            "function redstone(event){",
+            "function redstone(e){",
             "    $0",
             "}"
         ],
@@ -55,9 +55,9 @@
         "prefix": "block:doorToggle",
         "body": [
             "/**",
-            " * @param {BlockEvent.DoorToggleEvent} event",
+            " * @param {BlockEvent.DoorToggleEvent} e",
             " */",
-            "function doorToggle(event){",
+            "function doorToggle(e){",
             "    $0",
             "}"
         ],
@@ -68,9 +68,9 @@
         "prefix": "block:broken",
         "body": [
             "/**",
-            " * @param {BlockEvent.BreakEvent} event",
+            " * @param {BlockEvent.BreakEvent} e",
             " */",
-            "function broken(event){",
+            "function broken(e){",
             "    $0",
             "}"
         ],
@@ -81,9 +81,9 @@
         "prefix": "block:exploded",
         "body": [
             "/**",
-            " * @param {BlockEvent.ExplodedEvent} event",
+            " * @param {BlockEvent.ExplodedEvent} e",
             " */",
-            "function exploded(event){",
+            "function exploded(e){",
             "    $0",
             "}"
         ],
@@ -94,9 +94,9 @@
         "prefix": "block:rainFilled",
         "body": [
             "/**",
-            " * @param {BlockEvent.RainFillEvent} event",
+            " * @param {BlockEvent.RainFillEvent} e",
             " */",
-            "function rainFilled(event){",
+            "function rainFilled(e){",
             "    $0",
             "}"
         ],
@@ -107,9 +107,9 @@
         "prefix": "block:neighborChanged",
         "body": [
             "/**",
-            " * @param {BlockEvent.NeighborChangedEvent} event",
+            " * @param {BlockEvent.NeighborChangedEvent} e",
             " */",
-            "function neighborChanged(event){",
+            "function neighborChanged(e){",
             "    $0",
             "}"
         ],
@@ -120,9 +120,9 @@
         "prefix": "block:tick",
         "body": [
             "/**",
-            " * @param {BlockEvent.UpdateEvent} event",
+            " * @param {BlockEvent.UpdateEvent} e",
             " */",
-            "function tick(event){",
+            "function tick(e){",
             "    $0",
             "}"
         ],
@@ -133,9 +133,9 @@
         "prefix": "block:clicked",
         "body": [
             "/**",
-            " * @param {BlockEvent.ClickedEvent} event",
+            " * @param {BlockEvent.ClickedEvent} e",
             " */",
-            "function clicked(event){",
+            "function clicked(e){",
             "    $0",
             "}"
         ],
@@ -146,9 +146,9 @@
         "prefix": "block:harvested",
         "body": [
             "/**",
-            " * @param {BlockEvent.HarvestedEvent} event",
+            " * @param {BlockEvent.HarvestedEvent} e",
             " */",
-            "function harvested(event){",
+            "function harvested(e){",
             "    $0",
             "}"
         ],
@@ -159,9 +159,9 @@
         "prefix": "block:collide",
         "body": [
             "/**",
-            " * @param {BlockEvent.CollidedEvent} event",
+            " * @param {BlockEvent.CollidedEvent} e",
             " */",
-            "function collide(event){",
+            "function collide(e){",
             "    $0",
             "}"
         ],
@@ -172,9 +172,9 @@
         "prefix": "block:timer",
         "body": [
             "/**",
-            " * @param {BlockEvent.TimerEvent} event",
+            " * @param {BlockEvent.TimerEvent} e",
             " */",
-            "function timer(event){",
+            "function timer(e){",
             "    $0",
             "}"
         ],

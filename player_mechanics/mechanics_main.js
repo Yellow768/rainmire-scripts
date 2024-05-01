@@ -47,12 +47,6 @@ function timer(e) {
 		case 7:
 			openAquaticGUI()
 			break;
-		case STATS_MECHANIC_TIMER:
-			handlePlayerMovementSpeed(e)
-			if (e.player.world.getBlock(e.player.pos).name == "kubejs:thorny_kelp") {
-				e.player.damage(2)
-			}
-			break;
 	}
 }
 

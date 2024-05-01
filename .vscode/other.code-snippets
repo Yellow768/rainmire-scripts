@@ -2,12 +2,12 @@
     "ProjectileEvent.UpdateEvent": {
         "prefix": "projectile:tick",
         "body": [
-        "/**",
-        " * @param {ProjectileEvent.UpdateEvent} event",
-        " */",
-        "function projectileTick(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {ProjectileEvent.UpdateEvent} e",
+            " */",
+            "function projectileTick(e){",
+            "    $0",
+            "}"
         ],
         "description": "ProjectileEvent.UpdateEvent",
         "scope": "javascript,typescript"
@@ -15,12 +15,12 @@
     "ProjectileEvent.ImpactEvent": {
         "prefix": "projectile:impact",
         "body": [
-        "/**",
-        " * @param {ProjectileEvent.ImpactEvent} event",
-        " */",
-        "function projectileImpact(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {ProjectileEvent.ImpactEvent} e",
+            " */",
+            "function projectileImpact(e){",
+            "    $0",
+            "}"
         ],
         "description": "ProjectileEvent.ImpactEvent",
         "scope": "javascript,typescript"
@@ -28,12 +28,12 @@
     "QuestEvent.QuestStartEvent": {
         "prefix": "quest:start",
         "body": [
-        "/**",
-        " * @param {QuestEvent.QuestStartEvent} event",
-        " */",
-        "function questStart(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {QuestEvent.QuestStartEvent} e",
+            " */",
+            "function questStart(e){",
+            "    $0",
+            "}"
         ],
         "description": "QuestEvent.QuestStartEvent",
         "scope": "javascript,typescript"
@@ -41,12 +41,12 @@
     "QuestEvent.QuestCompletedEvent": {
         "prefix": "quest:completed",
         "body": [
-        "/**",
-        " * @param {QuestEvent.QuestCompletedEvent} event",
-        " */",
-        "function questCompleted(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {QuestEvent.QuestCompletedEvent} e",
+            " */",
+            "function questCompleted(e){",
+            "    $0",
+            "}"
         ],
         "description": "QuestEvent.QuestCompletedEvent",
         "scope": "javascript,typescript"
@@ -54,12 +54,12 @@
     "QuestEvent.QuestTurnedInEvent": {
         "prefix": "quest:turnIn",
         "body": [
-        "/**",
-        " * @param {QuestEvent.QuestTurnedInEvent} event",
-        " */",
-        "function questTurnIn(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {QuestEvent.QuestTurnedInEvent} e",
+            " */",
+            "function questTurnIn(e){",
+            "    $0",
+            "}"
         ],
         "description": "QuestEvent.QuestTurnedInEvent",
         "scope": "javascript,typescript"
@@ -67,12 +67,12 @@
     "DialogEvent.OpenEvent": {
         "prefix": "dialog:open",
         "body": [
-        "/**",
-        " * @param {DialogEvent.OpenEvent} event",
-        " */",
-        "function dialog(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {DialogEvent.OpenEvent} e",
+            " */",
+            "function dialog(e){",
+            "    $0",
+            "}"
         ],
         "description": "DialogEvent.OpenEvent",
         "scope": "javascript,typescript"
@@ -80,12 +80,12 @@
     "DialogEvent.CloseEvent": {
         "prefix": "dialog:close",
         "body": [
-        "/**",
-        " * @param {DialogEvent.CloseEvent} event",
-        " */",
-        "function dialogClose(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {DialogEvent.CloseEvent} e",
+            " */",
+            "function dialogClose(e){",
+            "    $0",
+            "}"
         ],
         "description": "DialogEvent.CloseEvent",
         "scope": "javascript,typescript"
@@ -93,12 +93,12 @@
     "HandlerEvent.RecipesLoadedEvent": {
         "prefix": "dialog:option",
         "body": [
-        "/**",
-        " * @param {HandlerEvent.RecipesLoadedEvent} event",
-        " */",
-        "function dialogOption(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {HandlerEvent.RecipesLoadedEvent} e",
+            " */",
+            "function dialogOption(e){",
+            "    $0",
+            "}"
         ],
         "description": "HandlerEvent.RecipesLoadedEvent",
         "scope": "javascript,typescript"
@@ -106,12 +106,12 @@
     "ForgeEvent.InitEvent": {
         "prefix": "forge:init",
         "body": [
-        "/**",
-        " * @param {ForgeEvent.InitEvent} event",
-        " */",
-        "function init(event){",
-        "    $0",
-        "}"
+            "/**",
+            " * @param {ForgeEvent.InitEvent} e",
+            " */",
+            "function init(e){",
+            "    $0",
+            "}"
         ],
         "description": "ForgeEvent.InitEvent",
         "scope": "javascript,typescript"

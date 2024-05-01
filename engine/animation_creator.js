@@ -329,7 +329,7 @@ function exportAnimation() {
     if (file_name == null) {
         return
     } else {
-        fileWriter = new java.io.FileWriter("world\\customnpcs\\scripts\\animations\\" + file_name + ".js");
+        fileWriter = new java.io.FileWriter("saves\\world\\customnpcs\\scripts\\animations\\" + file_name + ".js");
         fileWriter.write(json)
         fileWriter.write("\n" + editor_format)
         fileWriter.close();

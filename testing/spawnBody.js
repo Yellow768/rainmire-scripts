@@ -17,6 +17,8 @@ function init(e) {
     }
 }
 
+
+
 function died(e) {
     var body = e.API.clones.get(1, "Dead Body", e.npc.world)
     e.npc.world.spawnEntity(body)

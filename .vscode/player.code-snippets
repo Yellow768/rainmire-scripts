@@ -3,9 +3,9 @@
         "prefix": "player:init",
         "body": [
             "/**",
-            " * @param {PlayerEvent.InitEvent} event",
+            " * @param {PlayerEvent.InitEvent} e",
             " */",
-            "function init(event){",
+            "function init(e){",
             "    $0",
             "}"
         ],
@@ -29,9 +29,9 @@
         "prefix": "player:interact",
         "body": [
             "/**",
-            " * @param {PlayerEvent.InteractEvent} event",
+            " * @param {PlayerEvent.InteractEvent} e",
             " */",
-            "function interact(event){",
+            "function interact(e){",
             "    $0",
             "}"
         ],
@@ -42,9 +42,9 @@
         "prefix": "player:attack",
         "body": [
             "/**",
-            " * @param {PlayerEvent.AttackEvent} event",
+            " * @param {PlayerEvent.AttackEvent} e",
             " */",
-            "function attack(event){",
+            "function attack(e){",
             "    $0",
             "}"
         ],
@@ -55,9 +55,9 @@
         "prefix": "player:broken",
         "body": [
             "/**",
-            " * @param {PlayerEvent.BreakEvent} event",
+            " * @param {PlayerEvent.BreakEvent} e",
             " */",
-            "function broken(event){",
+            "function broken(e){",
             "    $0",
             "}"
         ],
@@ -68,9 +68,9 @@
         "prefix": "player:toss",
         "body": [
             "/**",
-            " * @param {PlayerEvent.TossEvent} event",
+            " * @param {PlayerEvent.TossEvent} e",
             " */",
-            "function toss(event){",
+            "function toss(e){",
             "    $0",
             "}"
         ],
@@ -81,9 +81,9 @@
         "prefix": "player:pickedUp",
         "body": [
             "/**",
-            " * @param {PlayerEvent.PickUpEvent} event",
+            " * @param {PlayerEvent.PickUpEvent} e",
             " */",
-            "function pickedUp(event){",
+            "function pickedUp(e){",
             "    $0",
             "}"
         ],
@@ -94,9 +94,9 @@
         "prefix": "player:containerOpen",
         "body": [
             "/**",
-            " * @param {PlayerEvent.ContainerOpen} event",
+            " * @param {PlayerEvent.ContainerOpen} e",
             " */",
-            "function containerOpen(event){",
+            "function containerOpen(e){",
             "    $0",
             "}"
         ],
@@ -107,9 +107,9 @@
         "prefix": "player:containerClosed",
         "body": [
             "/**",
-            " * @param {PlayerEvent.ContainerClosed} event",
+            " * @param {PlayerEvent.ContainerClosed} e",
             " */",
-            "function containerClosed(event){",
+            "function containerClosed(e){",
             "    $0",
             "}"
         ],
@@ -120,9 +120,9 @@
         "prefix": "player:containerClosed",
         "body": [
             "/**",
-            " * @param {PlayerEvent.DamagedEntityEvent} event",
+            " * @param {PlayerEvent.DamagedEntityEvent} e",
             " */",
-            "function containerClosed(event){",
+            "function containerClosed(e){",
             "    $0",
             "}"
         ],
@@ -133,9 +133,9 @@
         "prefix": "player:rangedLaunched",
         "body": [
             "/**",
-            " * @param {PlayerEvent.RangedLaunchedEvent} event",
+            " * @param {PlayerEvent.RangedLaunchedEvent} e",
             " */",
-            "function rangedLaunched(event){",
+            "function rangedLaunched(e){",
             "    $0",
             "}"
         ],
@@ -146,9 +146,9 @@
         "prefix": "player:died",
         "body": [
             "/**",
-            " * @param {PlayerEvent.DiedEvent} event",
+            " * @param {PlayerEvent.DiedEvent} e",
             " */",
-            "function died(event){",
+            "function died(e){",
             "    $0",
             "}"
         ],
@@ -159,9 +159,9 @@
         "prefix": "player:kill",
         "body": [
             "/**",
-            " * @param {PlayerEvent.KilledEntityEvent} event",
+            " * @param {PlayerEvent.KilledEntityEvent} e",
             " */",
-            "function kill(event){",
+            "function kill(e){",
             "    $0",
             "}"
         ],
@@ -172,9 +172,9 @@
         "prefix": "player:damaged",
         "body": [
             "/**",
-            " * @param {PlayerEvent.DamagedEvent} event",
+            " * @param {PlayerEvent.DamagedEvent} e",
             " */",
-            "function damaged(event){",
+            "function damaged(e){",
             "    $0",
             "}"
         ],
@@ -185,9 +185,9 @@
         "prefix": "player:timer",
         "body": [
             "/**",
-            " * @param {PlayerEvent.TimerEvent} event",
+            " * @param {PlayerEvent.TimerEvent} e",
             " */",
-            "function timer(event){",
+            "function timer(e){",
             "    $0",
             "}"
         ],
@@ -198,9 +198,9 @@
         "prefix": "player:login",
         "body": [
             "/**",
-            " * @param {PlayerEvent.LoginEvent} event",
+            " * @param {PlayerEvent.LoginEvent} e",
             " */",
-            "function login(event){",
+            "function login(e){",
             "    $0",
             "}"
         ],
@@ -211,9 +211,9 @@
         "prefix": "player:logout",
         "body": [
             "/**",
-            " * @param {PlayerEvent.LogoutEvent} event",
+            " * @param {PlayerEvent.LogoutEvent} e",
             " */",
-            "function logout(event){",
+            "function logout(e){",
             "    $0",
             "}"
         ],
@@ -224,9 +224,9 @@
         "prefix": "player:levelUp",
         "body": [
             "/**",
-            " * @param {PlayerEvent.LevelUpEvent} event",
+            " * @param {PlayerEvent.LevelUpEvent} e",
             " */",
-            "function levelUp(event){",
+            "function levelUp(e){",
             "    $0",
             "}"
         ],
@@ -237,9 +237,9 @@
         "prefix": "player:keyPressed",
         "body": [
             "/**",
-            " * @param {PlayerEvent.KeyPressedEvent} event",
+            " * @param {PlayerEvent.KeyPressedEvent} e",
             " */",
-            "function keyPressed(event){",
+            "function keyPressed(e){",
             "    $0",
             "}"
         ],
@@ -250,9 +250,9 @@
         "prefix": "player:chat",
         "body": [
             "/**",
-            " * @param {PlayerEvent.ChatEvent} event",
+            " * @param {PlayerEvent.ChatEvent} e",
             " */",
-            "function chat(event){",
+            "function chat(e){",
             "    $0",
             "}"
         ],
@@ -263,9 +263,9 @@
         "prefix": "player:factionUpdate",
         "body": [
             "/**",
-            " * @param {PlayerEvent.FactionUpdateEvent} event",
+            " * @param {PlayerEvent.FactionUpdateEvent} e",
             " */",
-            "function factionUpdate(event){",
+            "function factionUpdate(e){",
             "    $0",
             "}"
         ],
@@ -276,9 +276,9 @@
         "prefix": "player:scriptCommand",
         "body": [
             "/**",
-            " * @param {WorldEvent.ScriptCommandEvent} event",
+            " * @param {WorldEvent.ScriptCommandEvent} e",
             " */",
-            "function scriptCommand(event){",
+            "function scriptCommand(e){",
             "    $0",
             "}"
         ],

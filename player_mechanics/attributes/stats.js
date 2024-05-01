@@ -106,6 +106,11 @@ function handlePlayerMovementSpeed(e) {
 	if (e.player.hasTag("winded")) {
 		sprint = sprint = .08 + (0.02 * (getScore("Deftness") - 1))
 	}
+	if (e.player.hasTag("usingBow")) {
+		walk_speed = .4 + (0.01 * (getScore("Deftness") - 1))
+		swim_walk_speed = 1.4 + (0.25 * getScore("swmspd"))
+
+	}
 	//Apply them
 	if (e.player.hasTag("paralyzed")) {
 		executeCommand("attribute " + e.player.name + " forge:swim_speed base set 0")

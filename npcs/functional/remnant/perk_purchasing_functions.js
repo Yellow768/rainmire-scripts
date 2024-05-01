@@ -36,12 +36,6 @@ function openPerkEditorGUI(e) {
 }
 
 
-
-
-
-
-
-
 function perkEditorGuiButton(e) {
     if (e.buttonId == 7) {
         switch (type) {

@@ -28,13 +28,14 @@ var collected_bad_perk_array = []
 var player
 var reduce = false
 
+
 function init(e) {
 
     player = e.player
 
     //e.player.storeddata.put("selected_bad_perk_array", "[]")
     //e.player.storeddata.put("collected_bad_perk_array", "[]")
-    if (e.player.storeddata.get("selected_perk_array") == undefined) {
+    if (!e.player.storeddata.has("selected_perk_array")) {
         e.player.storeddata.put("selected_perk_array", "[]")
         e.player.storeddata.put("collected_perk_array", "[]")
         e.player.storeddata.put("selected_bad_perk_array", "[]")
@@ -433,6 +434,8 @@ function executePerk(e, index) {
             break;
     }
 }
+
+
 
 function disablePerk(e, index) {
     if (selected_perk_array[index] == undefined) {

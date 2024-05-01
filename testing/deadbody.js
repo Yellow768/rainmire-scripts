@@ -12,6 +12,8 @@ function init(e) {
     }
 }
 
+
+
 function trigger(e) {
     if (e.id == 1) {
         parent = e.arguments[0]

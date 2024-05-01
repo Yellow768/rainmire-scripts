@@ -70,6 +70,9 @@ function activateGroundPound(e) {
         if (e.player.factionStatus(nNPCS[i].getFaction().getId()) != 1) {
             nNPCS[i].damage(distance * 2.5)
             knockbackEntity(nNPCS[i], e.player.pos, distance)
+            if (nNPCS[i].name == "Burrower") {
+                nNPCS[i].trigger(1, [])
+            }
         }
     }
 
@@ -84,11 +87,11 @@ function activateGroundPound(e) {
     groundPounding = false
     e.player.world.spawnParticle("minecraft:cloud", e.player.x, e.player.y - 1, e.player.z, radius / 4, .02, radius / 4, .5, 20 * distance)
     e.player.world.playSoundAt(e.player.pos, "supplementaries:item.bomb", 1, 1)
-    spawnCircularParticles(e, "minecraft:crit", distance, .2, 1, e.player.pos)
-    spawnCircularParticles(e, "minecraft:splash", distance, .02, 1, e.player.pos)
+    spawnCircularParticles(e.player.world, "minecraft:crit", distance, .2, 1, e.player.x, e.player.y, e.player.z)
+    spawnCircularParticles(e.player.world, "minecraft:splash", distance, .02, 1, e.player.x, e.player.y, e.player.z)
 
 
-    spawnCircularParticles(e, "minecraft:falling_water", distance, .2, 5, e.player.pos)
+    spawnCircularParticles(e.player.world, "minecraft:falling_water", distance, .2, 5, e.player.x, e.player.y, e.player.z)
     e.player.damage(0.0000001)
     e.player.timers.stop(GROUNDPOUND_VALIDITY_TIMER)
 }
