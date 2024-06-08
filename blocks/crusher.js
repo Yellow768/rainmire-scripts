@@ -9,13 +9,20 @@ function timer(e) {
         switch (yMotion) {
             case 2:
                 yMotion = -2
+                e.npc.world.playSoundAt(e.npc.pos, "minecraft:block.piston.contract", .7, .2)
+
+                e.npc.timers.start(id("crush_sound"), 3, false)
                 break;
             case -2:
                 yMotion = 2
+                e.npc.world.playSoundAt(e.npc.pos, "minecraft:block.piston.extend", .7, .2)
                 break;
         }
 
         e.npc.setMotionY(yMotion)
+    }
+    if (e.id == id("crush_sound")) {
+        e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.item.break", 1, .2)
     }
 }
 
