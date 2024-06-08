@@ -1,7 +1,7 @@
 var tooLate = false
 
 function init(e) {
-    loadIds(e.player.world)
+
     e.player.timers.stop(id("maintainY"))
     e.player.timers.stop(id("checkForLowHealth"))
     e.player.timers.stop(11)
@@ -49,7 +49,7 @@ function timer(e) {
             e.player.timers.stop(id("checkForLowHealth"))
             e.player.timers.start(id("maintainY"), 0, true)
             e.player.timers.start(id("stopMaintainY"), 35, false)
-            
+
 
         }
 

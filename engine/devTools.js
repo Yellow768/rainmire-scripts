@@ -26,7 +26,6 @@ function init(e) {
     e.player.tempdata.put("currentOpponents", [])
     executeCommand("/stopsound " + e.player.name + " record iob:music.battle.drums")
     setUpVals(e)
-    loadIds(e.player.world)
     e.player.timers.forceStart(909820, 0, true)
 
 }

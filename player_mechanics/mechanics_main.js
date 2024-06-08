@@ -3,7 +3,7 @@ var confirm = false
 var cantAttack = false
 var CREATE_PERK_GUI = 768950
 function init(e) {
-	loadIds(e.player.world)
+
 	e.player.timers.forceStart(768200, 40, true)
 	e.player.timers.forceStart(id("updateHydrationData"), 0, true)
 

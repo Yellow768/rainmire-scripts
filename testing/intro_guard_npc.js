@@ -1,7 +1,7 @@
 var npc
 function init(e) {
     npc = e.npc
-    loadIds(e.npc.world)
+
     npc.trigger(id("init"))
     npc.timers.stop(id("checkForPlayer"))
     e.npc.timers.stop(id("checkForPlayer2"))

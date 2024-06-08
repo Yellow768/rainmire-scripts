@@ -1,7 +1,7 @@
 var api = Java.type('noppes.npcs.api.NpcAPI').Instance();
 load(api.getLevelDir() + "/scripts/ecmascript/boiler/id_generator.js");
 function init(e) {
-    loadIds(e.npc.world)
+
     if (e.npc.storeddata.has("navSpeed") && e.npc.ai.getWalkingSpeed() == 0) {
         e.npc.ai.setWalkingSpeed(e.npc.storeddata.get("navSpeed"))
     }

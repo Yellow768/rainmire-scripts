@@ -5,7 +5,7 @@ var guard_npc
 function init(e) {
     player = e.player
 
-    loadIds(player.world)
+
     e.player.timers.stop(id("liftSound"))
     e.player.timers.stop(id("explosionEffects"))
     e.player.timers.stop(id("smallEffects"))

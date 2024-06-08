@@ -7,7 +7,7 @@ var stunned = false
  */
 function init(e) {
     npc = e.npc
-    loadIds(e.npc.world)
+
 }
 
 function target(e) {

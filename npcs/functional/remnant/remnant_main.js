@@ -2,7 +2,7 @@ var npc, player, API
 function init(e) {
     initializeRespawnPointData(e)
     initalizePerksData(e)
-    loadIds(e.npc.world)
+
     npc = e.npc
     API = e.API
 }

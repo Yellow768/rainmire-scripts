@@ -1,4 +1,6 @@
 var API = Java.type('noppes.npcs.api.NpcAPI').Instance();
+var world = API.getIWorld("minecraft:overworld")
+
 
 "use strict";
 
@@ -10,7 +12,13 @@ var _IDS = {
     lookup: {}
 }
 
-function resetIds(world) {
+wsd = world.storeddata
+if (!wsd.has("ids")) {
+    wsd.put("ids", JSON.stringify(_IDS))
+}
+_IDS = JSON.parse(wsd.get("ids"))
+
+function resetIds() {
     _IDS = {
         counter: 1,
         ids: {},
@@ -21,17 +29,7 @@ function resetIds(world) {
     world.broadcast("hey")
 }
 
-
-function loadIds(world) {
-    wsd = world.storeddata
-    if (!wsd.has("ids")) {
-        wsd.put("ids", JSON.stringify(_IDS))
-    }
-    _IDS = JSON.parse(wsd.get("ids"))
-}
-
 function id(name) {
-
     _IDS = JSON.parse(wsd.get("ids"))
     if (!name) {
         name = Math.random().toString(36).substring(7) + Math.random().toString(36).substring(7);

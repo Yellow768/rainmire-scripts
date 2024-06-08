@@ -76,7 +76,7 @@ function init(e) {
     e.player.storeddata.put("collected_dampeners", JSON.stringify(collected_dampeners))
     setUpVals(e)
     e.player.timers.forceStart(PERK_VISUAL_FEEDBACK_TIMER, 0, true)
-    loadIds(e.player.world)
+
 }
 
 function trigger(e) {

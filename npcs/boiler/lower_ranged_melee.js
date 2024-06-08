@@ -4,10 +4,6 @@ var api = Java.type('noppes.npcs.api.NpcAPI').Instance();
 //load(api.getLevelDir() + "/scripts/ecmascript/boiler/id_generator.js");
 var EntitiesType = Java.type('noppes.npcs.api.constants.EntitiesType')
 
-function init(e) {
-    loadIds(e.npc.world)
-}
-
 function meleeAttack(e) {
     e.setCanceled(true)
 }
