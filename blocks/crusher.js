@@ -1,7 +1,7 @@
 var in_crush_position = false
 
 function init(e) {
-    e.npc.timers.forceStart(id("crusher"), 15, true)
+    e.npc.timers.forceStart(id("crusher"), e.npc.getStats().getRanged().getDelayMin(), false)
 }
 
 function timer(e) {
@@ -9,15 +9,17 @@ function timer(e) {
         var motion
         switch (in_crush_position) {
             case false:
-                motion = -e.npc.stats.getMelee().getRange()
+                motion = -e.npc.stats.getRanged().getRange()
                 e.npc.world.playSoundAt(e.npc.pos, "minecraft:block.piston.contract", .7, .2)
                 in_crush_position = true
                 e.npc.timers.start(id("crush_sound"), 3, false)
+                e.npc.timers.forceStart(id("crusher"), e.npc.getStats().getRanged().getDelayMax(), false)
                 break;
             case true:
-                motion = e.npc.stats.getMelee().getRange()
+                motion = e.npc.stats.getRanged().getRange()
                 in_crush_position = false
                 e.npc.world.playSoundAt(e.npc.pos, "minecraft:block.piston.extend", .7, .2)
+                e.npc.timers.forceStart(id("crusher"), e.npc.getStats().getRanged().getDelayMin(), false)
                 break;
         }
 
