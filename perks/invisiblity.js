@@ -14,3 +14,5 @@ function perk_invisibility(e, cost) {
 
 
 }
+
+function invisibility_timers(e) { }

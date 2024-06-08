@@ -72,16 +72,32 @@ function updateStats(e) {
 	}
 	var sumOfHnM = getScore("Charm") + getScore("Empathy") + getScore("Suggestion") + getScore("Logic") + getScore("Perception") + getScore("Knowledge")
 	setScore("max_perk_power", sumOfHnM + getScore("perk_power_mod"))
+	if (player.hasTag("Intro")) {
+		setScore("max_perk_power", 0)
+	}
 	if (getScore("perk_power") > getScore("max_perk_power")) {
 		setScore("perk_power", getScore("max_perk_power"))
 	}
 	var health = 4 * (getScore("Grit") + 1)
 	var damage = +1 + (2 * (getScore("Brawn") - 1))
-	executeCommand("attribute " + player.name + " minecraft:generic.max_health base set " + health)
-	executeCommand("attribute " + player.name + " minecraft:generic.attack_damage base set " + damage)
+	if (!player.hasTag("Intro")) {
+		executeCommand("attribute " + player.name + " minecraft:generic.max_health base set " + health)
+		executeCommand("attribute " + player.name + " minecraft:generic.attack_damage base set " + damage)
+	}
+	else {
+		executeCommand("attribute " + player.name + " minecraft:generic.max_health base set 20")
+	}
+
 
 }
 
+function updateHydrationData(e) {
+	player.nbt.setInteger("hydration", getScore("perk_power"))
+	player.nbt.setInteger("max_hydration", getScore("max_perk_power"))
+	player.nbt.setInteger("delta", getScore("using"))
+	player.nbt.setInteger("breath", getScore("breath"))
+	player.nbt.setInteger("restoring", getScore("restore_hydrate"))
+}
 
 function attribute_functions(e) {
 	handlePlayerMovementSpeed(e)
@@ -89,6 +105,10 @@ function attribute_functions(e) {
 }
 
 function handlePlayerMovementSpeed(e) {
+	if (player.hasTag("Intro")) {
+		executeCommand("attribute " + e.player.name + " minecraft:generic.movement_speed base set 0.075")
+		return
+	}
 	if (!dataGet(e.player, "creativeStats") && e.player.gamemode == 1) {
 		executeCommand("attribute " + e.player.name + " minecraft:generic.movement_speed base set 0.1")
 		executeCommand("attribute " + e.player.name + " forge:swim_speed base set 0.8")
@@ -171,6 +191,7 @@ function statTriggers(e) {
 		applyArmorAttributeModifiers(e)
 	}
 	if (e.id == 5) {
+		player.playSound("minecraft:block.conduit.activate", 1, 1)
 		e.arguments[0].player.timers.start(CREATE_PERK_GUI, 1, false)
 	}
 	if (e.id == 6) {
@@ -215,6 +236,7 @@ function died(e) {
 
 
 function handlePlayerAirSupply(e) {
+	if (e.player.hasTag("Intro")) { return }
 	if (isNaN(e.player.storeddata.get("currentAir")) || e.player.storeddata.get("currentAir") == null) {
 		e.player.message("No Air! Reset!")
 		e.player.storeddata.put("currentAir", 300)

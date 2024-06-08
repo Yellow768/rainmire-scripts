@@ -26,6 +26,7 @@ function init(e) {
     e.player.tempdata.put("currentOpponents", [])
     executeCommand("/stopsound " + e.player.name + " record iob:music.battle.drums")
     setUpVals(e)
+    loadIds(e.player.world)
     e.player.timers.forceStart(909820, 0, true)
 
 }
@@ -122,17 +123,32 @@ function chat(e) {
         case "!bw":
             convertToBreakableWall(e)
             break;
+        case "!resetIDGenerator":
+            resetIds(e.player.world)
+            e.player.message("&eReset all IDs")
+            break;
         case "!togglePerks":
             togglePerks(e)
             break;
         case "!resetPerks":
-            e.player.storeddata.put("selected_perk_array", "[]")
-            e.player.storeddata.put("collected_perk_array", "[]")
-            e.player.storeddata.put("selected_bad_perk_array", "[]")
-            e.player.storeddata.put("collected_bad_perk_array", "[]")
+            e.player.storeddata.remove("selected_powers")
             setScore("good_perk_debt", 0)
             setScore("bad_perk_debt", 0)
             e.player.message("&eAll Perks Forgotten. Reset Scripts")
+            break;
+        case "!allPerks":
+            var perk_ids = Object.keys(good_perks)
+            for (var i = 0; i < perk_ids.length; i++) {
+                givePerk(perk_ids[i])
+            }
+            e.player.message("&bAll perks granted")
+            break;
+        case "!allDampeners":
+            var perk_ids = Object.keys(dampening_perks)
+            for (var i = 0; i < perk_ids.length; i++) {
+                giveDampener(perk_ids[i])
+            }
+            e.player.message("&6All dampeners granted")
             break;
         case "!resetCurrentAir":
             resetCurrentAir()
@@ -375,6 +391,8 @@ function switchGamemode() {
 
 function fullyHeal() {
     player.setHealth(player.getMaxHealth())
+    player.getMCEntity().m_20301_(300)
+    player.storeddata.put("currentAir", 300)
     player.message("&aYou have been fully healed")
 }
 
@@ -404,8 +422,8 @@ function resetStats() {
     executeCommand("xp set " + player.name + " 0 points")
     setScore("AttrPoints", 0)
     setScore("PerkPoints", 0)
-    setScore("swmspd", 0)
-    setScore("breath", 0)
+    setScore("swmspd", 1)
+    setScore("breath", 1)
     player.storeddata.put("originalAttPts", 0)
 
     player.removeTag("levelUp")
@@ -660,7 +678,7 @@ function timer(e) {
 }
 
 function interact(e) {
-
+    useNPCTool(e)
     if (e.type == 2) {
         if (e.player.getMainhandItem().name == "customnpcs:npcwand") {
             e.player.tempdata.put("npc_placed", e.target.pos)

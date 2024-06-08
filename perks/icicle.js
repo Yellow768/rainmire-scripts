@@ -82,3 +82,5 @@ function breakIcicle(e, pos) {
     executeCommand(String(command))
     e.player.tempdata.remove("iciclePos")
 }
+
+function icicle_timers(e) { }

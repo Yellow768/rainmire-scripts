@@ -2,6 +2,7 @@ var npc, player, API
 function init(e) {
     initializeRespawnPointData(e)
     initalizePerksData(e)
+    loadIds(e.npc.world)
     npc = e.npc
     API = e.API
 }
@@ -20,7 +21,7 @@ function interact(e) {
 
 function timer(e) {
     if (e.id == 1) {
-        openPerkPurchasingGUI()
+        openPerkPurchasingGUI(true)
     }
     if (e.id == 2) {
         openRespawnPointEditorGUI()

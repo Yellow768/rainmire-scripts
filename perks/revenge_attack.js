@@ -18,3 +18,5 @@ function perk_revenge_attack_damage(e) {
         e.player.world.spawnParticle("damage_indicator", e.target.x, e.target.y + 1, e.target.z, .2, .4, .2, 1, e.damage * 5)
     }
 }
+
+function revenge_attack_timers(e) { }

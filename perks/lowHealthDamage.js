@@ -11,3 +11,5 @@ function perk_low_health_damage(e) {
         e.player.world.playSoundAt(e.player.pos, "minecraft:entity.boat.paddle_water", 1, 1)
     }
 }
+
+function low_health_damage_timers(e) { }

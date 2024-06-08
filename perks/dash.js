@@ -1,11 +1,11 @@
 
-
+var direction
 
 function perk_dash(e, cost) {
     if (!attemptToUsePerkPower(e, cost)) {
         return
     }
-    var direction = e.player.getRotation()
+    direction = e.player.getRotation()
 
     if (isMovingForward) {
         direction = e.player.getRotation()
@@ -50,11 +50,31 @@ function perk_dash(e, cost) {
         e.player.setMotionX(d[0])
         e.player.setMotionZ(d[2])
     }
-    e.player.timers.forceStart(DASH_TIMER, 15, false)
+    e.player.timers.forceStart(id("DASH_TIMER"), 15, false)
+    e.player.timers.forceStart(id("DASH_COLLISION_CHECK"), 0, true)
     e.player.addTag("isDashing")
     e.player.world.playSoundAt(e.player.pos, "minecraft:item.bucket.empty", 1, 1)
     e.player.world.playSoundAt(e.player.pos, "variedcommodities:magic.shot", 1, 1)
     e.player.world.playSoundAt(e.player.pos, "minecraft:ambient.underwater.exit", 1, 1)
 
+
+}
+
+var delay = 0
+
+function dash_timers(e) {
+    switch (e.id) {
+        case id("DASH_TIMER"):
+            e.player.removeTag("isDashing")
+            e.player.timers.stop(id("DASH_COLLISION_CHECK"))
+            //e.player.world.playSoundAt(e.player.pos, "minecraft:weather.rain", .2, 1)
+            break;
+        case id("DASH_COLLISION_CHECK"):
+            dashCheckForCollision(e)
+            break;
+    }
+}
+
+function dashCheckForCollision(e) {
 
 }

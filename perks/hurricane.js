@@ -56,3 +56,5 @@ function hurricaneEffects(e) {
 
 
 }
+
+function hurricane_timers(e) { }

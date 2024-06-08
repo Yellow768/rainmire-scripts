@@ -5,8 +5,15 @@ var yPos = [15, 35, 54]
 
 var unsavedChangesMode = false
 
-function createStatsScreen(e) {
-    GUI_STATS = e.API.createCustomGui(id("STATS_GUI"), 256, 256, false, e.player)
+function createStatsScreen(e, withSound) {
+    if (!withSound) withSound = false
+    //if (withSound) //e.player.playSound("minecraft:item.book.page_turn", 1, .8)
+    _IDS = {
+        counter: 1,
+        ids: {},
+        lookup: {}
+    }
+    GUI_STATS = e.API.createCustomGui(id("STATS_GUI"), 256, 256, false, player)
     GUI_STATS.setBackgroundTexture("iob:textures/customgui/statsscreen.png")
     createScores(e)
     createValues()
@@ -14,24 +21,15 @@ function createStatsScreen(e) {
         if (!unsavedChangesMode) {
             for (var i = 0; i < statsStringArray.length; i++) {
                 temporary_stat_values[statsStringArray[i]] = getScore(statsStringArray[i] + "Base")
-                e.player.storeddata.put("originalAttPts", getScore("AttrPoints"))
+                player.storeddata.put("originalAttPts", getScore("AttrPoints"))
             }
         }
         createUpgradeButtons()
     }
-    GUI_STATS.addButton(12, "View Perks", 260, 25, 50, 20)
-    for (var i = 0; i < 5; i++) {
-        GUI_STATS.addTexturedRect(104 + i, "iob:textures/customgui/perks/good/barter.png", 15, 135 + (i * 22), 256, 256).setScale(.070)
-        GUI_STATS.addButton(204 + i, "", 18, 138 + (i * 22), 12, 12).setHoverText("Guess I'm OOGLI goo")
-    }
-    for (var i = 0; i < 5; i++) {
-        GUI_STATS.addTexturedRect(350 + i, "iob:textures/customgui/perks/empty_active_slot.png", 100, 135 + (i * 22), 256, 256).setScale(.070)
-    }
-    for (var i = 0; i < 5; i++) {
-        GUI_STATS.addTexturedRect(360 + i, "iob:textures/customgui/perks/empty_dampener_active_slot.png", 130, 135 + (i * 22), 256, 256).setScale(.070)
-    }
-    e.player.showCustomGui(GUI_STATS)
-    e.player.playSound("minecraft:item.book.page_turn", 1, .8)
+
+    player.showCustomGui(GUI_STATS)
+
+    player.timers.start(id("perkGUIDelay"), 0, false)
 }
 
 function returnAttString(val) {
@@ -41,7 +39,6 @@ function returnAttString(val) {
 
 function createScores(e) {
     var L_Stat = 500
-
     updateStats(e)
     var x_pos = -1
     var y_pos = 0
@@ -57,22 +54,22 @@ function createScores(e) {
 
         for (var j = 0; j < value; j++) {
             L_Stat++
-            GUI_STATS.addTexturedRect(L_Stat, "iob:textures/customgui/attribute_point.png", xPos[x_pos] + (j * 9), yPos[y_pos], 256, 256).setScale(.031)
+            GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/attribute_point.png", xPos[x_pos] + (j * 9), yPos[y_pos], 256, 256).setScale(.031)
         }
         for (var j = value; j < 5; j++) {
             L_Stat++
-            GUI_STATS.addTexturedRect(L_Stat, "iob:textures/customgui/perks/empty_slot.png", xPos[x_pos] + (j * 9), yPos[y_pos], 256, 256).setScale(.031)
+            GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/perks/empty_slot.png", xPos[x_pos] + (j * 9), yPos[y_pos], 256, 256).setScale(.031)
         }
 
         L_Stat++
         if (value < 10) {
-            GUI_STATS.addTexturedRect(L_Stat, "iob:textures/customgui/numbers.png", xPos[x_pos] + 45, yPos[y_pos] + 9, 25, 25, 25 * (getScore(statsStringArray[i])), 0).setScale(.3)
+            GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/numbers.png", xPos[x_pos] + 45, yPos[y_pos] + 9, 25, 25, 25 * (getScore(statsStringArray[i])), 0).setScale(.3)
         }
         else {
             var digit_array = value.toString()
-            GUI_STATS.addTexturedRect(L_Stat, "iob:textures/customgui/numbers.png", xPos[x_pos] + 38, yPos[y_pos] + 9, 25, 25, 25 * parseInt(digit_array[0]), 0).setScale(.3)
+            GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/numbers.png", xPos[x_pos] + 38, yPos[y_pos] + 9, 25, 25, 25 * parseInt(digit_array[0]), 0).setScale(.3)
             L_Stat++
-            GUI_STATS.addTexturedRect(L_Stat, "iob:textures/customgui/numbers.png", xPos[x_pos] + 48, yPos[y_pos] + 9, 25, 25, 25 * parseInt(digit_array[1]), 0).setScale(.3)
+            GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/numbers.png", xPos[x_pos] + 48, yPos[y_pos] + 9, 25, 25, 25 * parseInt(digit_array[1]), 0).setScale(.3)
         }
 
 
@@ -87,7 +84,7 @@ function createScores(e) {
             swim_x = 66 - (9 * 5)
             swim_y = 87
         }
-        GUI_STATS.addTexturedRect(L_Stat, "iob:textures/customgui/aquatic_point.png", swim_x + (swim_speed * 9), swim_y, 256, 256).setScale(.031)
+        GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/aquatic_point.png", swim_x + (swim_speed * 9), swim_y, 256, 256).setScale(.031)
     }
     for (var empty_swim_speed = getScore("swmspd"); empty_swim_speed < 10; empty_swim_speed++) {
         L_Stat++
@@ -95,7 +92,7 @@ function createScores(e) {
             swim_x = 66 - (9 * 5)
             swim_y = 87
         }
-        GUI_STATS.addTexturedRect(L_Stat, "iob:textures/customgui/perks/empty_slot.png", swim_x + (empty_swim_speed * 9), swim_y, 256, 256).setScale(.031)
+        GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/perks/empty_slot.png", swim_x + (empty_swim_speed * 9), swim_y, 256, 256).setScale(.031)
     }
     var lung_x = 145
     var lung_y = 97
@@ -105,7 +102,7 @@ function createScores(e) {
             lung_x = 145 - (9 * 5)
             lung_y = 87
         }
-        GUI_STATS.addTexturedRect(L_Stat, "iob:textures/customgui/aquatic_point.png", lung_x + (lung_cap * 9), lung_y, 256, 256).setScale(.031)
+        GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/aquatic_point.png", lung_x + (lung_cap * 9), lung_y, 256, 256).setScale(.031)
     }
     for (var empty_lung_cap = player.storeddata.get("airDecreaseRate"); empty_lung_cap < 10; empty_lung_cap++) {
         L_Stat++
@@ -113,7 +110,7 @@ function createScores(e) {
             lung_x = 145 - (9 * 5)
             lung_y = 87
         }
-        GUI_STATS.addTexturedRect(L_Stat, "iob:textures/customgui/perks/empty_slot.png", lung_x + (empty_lung_cap * 9), lung_y, 256, 256).setScale(.031)
+        GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/perks/empty_slot.png", lung_x + (empty_lung_cap * 9), lung_y, 256, 256).setScale(.031)
     }
 }
 
@@ -135,16 +132,16 @@ function createValues() {
 
     var percentage = (player.storeddata.get("totalExperiencePoints") - previousXPThreshold) / (xpThreshold - previousXPThreshold)
     if (player.getExpLevel() < 10) {
-        GUI_STATS.addTexturedRect(200, "iob:textures/customgui/numbers.png", 207, 28, 25, 25, 25 * player.getExpLevel(), 0)
+        GUI_STATS.addTexturedRect(id("level_number"), "iob:textures/customgui/large_numbers/" + player.getExpLevel() + ".png", 207, 28, 255, 256).setScale(.1)
     }
     else {
         var digit_array = player.getExpLevel().toString()
-        GUI_STATS.addTexturedRect(200, "iob:textures/customgui/numbers.png", 203, 28, 25, 25, 25 * parseInt(digit_array[0]), 0)
-        GUI_STATS.addTexturedRect(256, "iob:textures/customgui/numbers.png", 213, 28, 25, 25, 25 * parseInt(digit_array[1]), 0)
+        GUI_STATS.addTexturedRect(id("level_number"), "iob:textures/customgui/large_numbers/" + digit_array[0] + ".png", 203, 28, 256, 256).setScale(.1)
+        GUI_STATS.addTexturedRect(id("level_number2"), "iob:textures/customgui/large_numbers/" + digit_array[1] + ".png", 213, 28, 256, 256).setScale(.1)
     }
-    GUI_STATS.addTexturedRect(201, "iob:textures/customgui/empty_level_bar.png", 205, 65, 256, 256).setScale(0.3)
-    GUI_STATS.addTexturedRect(202, "iob:textures/customgui/full_level_bar.png", 205, 65, 104 * percentage, 256).setScale(0.3)
-    GUI_STATS.addLabel(203, "    ", 206, 60, 25, 10).setHoverText(player.storeddata.get("totalExperiencePoints") + " / " + xpThreshold)
+    GUI_STATS.addTexturedRect(id("level_bar_empty"), "iob:textures/customgui/empty_level_bar.png", 205, 65, 256, 256).setScale(0.3)
+    GUI_STATS.addTexturedRect(id("level_bar"), "iob:textures/customgui/full_level_bar.png", 205, 65, 104 * percentage, 256).setScale(0.3)
+    GUI_STATS.addLabel(id("level_bat_hover"), "    ", 206, 60, 25, 10).setHoverText(player.storeddata.get("totalExperiencePoints") + " / " + xpThreshold)
 
 
 }
@@ -154,22 +151,22 @@ var temporary_stat_values = {}
 function createUpgradeButtons() {
     var xint = 0
     var yint = 0
-    GUI_STATS.addTexturedRect(900, "iob:textures/customgui/attribute_points_available.png", -70, 30, 256, 256).setScale(.3)
+    GUI_STATS.addTexturedRect(id("att_points_avail"), "iob:textures/customgui/attribute_points_available.png", -70, 30, 256, 256).setScale(.3)
 
     if (getScore("AttrPoints") < 10) {
-        GUI_STATS.addTexturedRect(901, "iob:textures/customgui/numbers.png", -40, 42, 25, 25, 25 * getScore("AttrPoints"), 0).setScale(0.5)
+        GUI_STATS.addTexturedRect(id("att_point_num"), "iob:textures/customgui/numbers.png", -40, 42, 25, 25, 25 * getScore("AttrPoints"), 0).setScale(0.5)
     }
     else {
         var digit_array = getScore("AttrPoints").toString()
-        GUI_STATS.addTexturedRect(901, "iob:textures/customgui/numbers.png", -45, 42, 25, 25, 25 * parseInt(digit_array[0]), 0).setScale(0.5)
-        GUI_STATS.addTexturedRect(906, "iob:textures/customgui/numbers.png", -37, 42, 25, 25, 25 * parseInt(digit_array[1]), 0).setScale(0.5)
+        GUI_STATS.addTexturedRect(id("att_point_num"), "iob:textures/customgui/numbers.png", -45, 42, 25, 25, 25 * parseInt(digit_array[0]), 0).setScale(0.5)
+        GUI_STATS.addTexturedRect(id("att_point_num2"), "iob:textures/customgui/numbers.png", -37, 42, 25, 25, 25 * parseInt(digit_array[1]), 0).setScale(0.5)
     }
     for (var i = 0; i < 9; i++) {
         if (temporary_stat_values[statsStringArray[i]] < 5 && getScore("AttrPoints")) {
-            GUI_STATS.addTexturedButton(20 + i, '', xPos[xint] + 45, yPos[yint], 8, 8, "iob:textures/customgui/add.png", 0, 0)
+            GUI_STATS.addTexturedButton(id("add" + i), '', xPos[xint] + 45, yPos[yint], 8, 8, "iob:textures/customgui/add.png", 0, 0)
         }
         if (temporary_stat_values[statsStringArray[i]] > getScore(statsStringArray[i] + "Base")) {
-            GUI_STATS.addTexturedButton(30 + i, '', xPos[xint] + 54, yPos[yint], 8, 8, "iob:textures/customgui/minus.png", 0, 0)
+            GUI_STATS.addTexturedButton(id("subtract" + i) + 1000, '', xPos[xint] + 54, yPos[yint], 8, 8, "iob:textures/customgui/minus.png", 0, 0)
         }
         if (yint < 2) { yint++ }
         else {
@@ -178,7 +175,7 @@ function createUpgradeButtons() {
         }
     }
     if (unsavedChangesMode) {
-        GUI_STATS.addButton(902, "Confirm Changes", -70, 60, 40, 20)
+        GUI_STATS.addButton(id("confirm"), "Confirm Changes", -70, 60, 40, 20)
     }
 }
 
@@ -186,18 +183,19 @@ function createUpgradeButtons() {
 
 function customGuiButton(e) {
     if (e.player.getCustomGui() != GUI_STATS) {
-        perkGuiButton(e)
         aquacustomGuiButton(e)
         return
     }
+
     for (var i = 0; i < 9; i++) {
-        if (e.buttonId == 20 + i) {
+        if (e.buttonId == id("add" + i)) {
             temporary_stat_values[statsStringArray[i]] += 1
             addToScore("AttrPoints", -1)
             unsavedChangesMode = true
             createStatsScreen(e)
+
         }
-        if (e.buttonId == 30 + i) {
+        if (e.buttonId == id("subtract" + i) + 1000) {
             temporary_stat_values[statsStringArray[i]] -= 1
             addToScore("AttrPoints", 1)
             if (getScore("AttrPoints") == e.player.storeddata.get("originalAttPts")) {
@@ -208,7 +206,7 @@ function customGuiButton(e) {
 
         }
     }
-    if (e.buttonId == 902) {
+    if (e.buttonId == id("confirm")) {
         e.player.storeddata.put("originalAttPts", 0)
         for (var i = 0; i < 9; i++) {
             setScore(statsStringArray[i] + "Base", temporary_stat_values[statsStringArray[i]])

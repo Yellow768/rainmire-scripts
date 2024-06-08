@@ -23,7 +23,7 @@ var roll_locked = false
 function attributeCheck_Dialog(e) {
     original_text = e.dialog.text
     check_dialog_id = e.dialog.id
-    var dialogJsonAsText = readFileAsString("saves\\world\\customnpcs\\dialogs\\" + e.dialog.getCategory().getName() + "\\" + e.dialog.id + ".json")
+    var dialogJsonAsText = readFileAsString(e.API.getLevelDir() + "\\dialogs\\" + e.dialog.getCategory().getName() + "\\" + e.dialog.id + ".json")
     dialogJsonAsText = dialogJsonAsText.replace(/b,/g, ",")
     dialogJsonAsText = dialogJsonAsText.replace(/L,/g, ",")
     dialogJsonAsText = dialogJsonAsText.replace(/\n/g, "")

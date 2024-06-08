@@ -65,7 +65,6 @@ function tick(e) {
 
 
 function applyStatusEffect(e, target, type, length) {
-
     target.trigger(450, [target])
     target.trigger(type, [target, length])
 }

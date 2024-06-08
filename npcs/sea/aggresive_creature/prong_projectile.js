@@ -29,3 +29,5 @@ function interact(e) {
     e.npc.setMotionZ(d[2])
 }
 
+
+

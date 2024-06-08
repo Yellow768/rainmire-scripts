@@ -12,6 +12,25 @@ function init(e) {
         e.block.world.spawnParticle("minecraft:enchanted_hit", e.block.x, e.block.y, e.block.z, .7, .7, .7, .002, 8)
         e.block.timers.forceStart(2, 20, true)
     }
+    e.block.getTextPlane2().setRotationX(90)
+    e.block.getTextPlane3().setRotationX(270)
+    e.block.getTextPlane4().setRotationY(90)
+    e.block.getTextPlane5().setRotationY(180)
+    e.block.getTextPlane6().setRotationY(270)
+
+    var nE = e.block.world.getClosestEntity(e.block.pos, 5, 1)
+    if (nE != null && nE.gamemode == 1) {
+        self.setModel(self.getStoreddata().get("model"))
+        self.setIsPassible(false)
+        e.block.getTextPlane().setText("𐌱")
+        e.block.getTextPlane2().setText("𐌱")
+        e.block.getTextPlane3().setText("𐌱")
+        e.block.getTextPlane4().setText("𐌱")
+        e.block.getTextPlane5().setText("𐌱")
+        e.block.getTextPlane6().setText("𐌱")
+        e.block.getTextPlane().setText("𐌱")
+        active = false
+    }
 
 }
 
@@ -41,7 +60,7 @@ function interact(e) {
 }
 
 function neighborChanged(e) {
-    if (e.block.world.getBlock(e.changedPos).name == "minecraft:air" && active) {
+    if (e.block.world.getBlock(e.changedPos).name == "customnpcs:npcscripted" && e.block.world.getBlock(e.changedPos).getModel() == "barrier" && active) {
         destroySelf(e, true)
     }
 }
@@ -57,7 +76,16 @@ function destroySelf(e, playSound) {
 
     self.world.spawnParticle("minecraft:cloud", self.x, self.y, self.z, .5, 1, .5, .01, 20)
     self.world.spawnParticle("minecraft:campfire_cosy_smoke", self.x, self.y + 1, self.z, .5, 1, .5, .05, 10)
-    self.remove()
+    self.setModel("barrier")
+    self.setIsPassible(true)
+    self.getTextPlane().setText("")
+    self.getTextPlane2().setText("")
+    self.getTextPlane3().setText("")
+    self.getTextPlane4().setText("")
+    self.getTextPlane5().setText("")
+    self.getTextPlane6().setText("")
+    self.getTextPlane().setText("")
+    active = false
 }
 
 
@@ -83,6 +111,7 @@ function trigger(e) {
     }
     if (e.id == 3) {
         self.setModel(e.arguments[0])
+        self.storeddata.put("model", e.arguments[0])
     }
 }
 

@@ -107,3 +107,6 @@ function clamp(val, min, max) {
 }
 
 
+function pp(e, message) {
+    e.player.message(message)
+}

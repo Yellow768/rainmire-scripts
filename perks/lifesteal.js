@@ -14,3 +14,4 @@ function perk_lifesteal(e) {
     }
 
 }
+function lifesteal_timers(e) { }

@@ -15,3 +15,5 @@ function perk_levitate(e, cost) {
 
 
 }
+
+function levitate_timers(e) { }

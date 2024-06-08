@@ -20,56 +20,80 @@ var perkReplenishingThreshold = 5
 var currentReplensihingLevel = 0
 
 
-var selected_perk_array = []
-var collected_perk_array = []
-var selected_bad_perk_array = []
-var collected_bad_perk_array = []
+var selected_powers = {
+    0: null,
+    1: null,
+    2: null,
+    3: null,
+    4: null
+}
+var collected_powers = []
+var selected_dampeners = {
+    0: null,
+    1: null,
+    2: null,
+    3: null,
+    4: null
+}
+var collected_dampeners = []
 
 var player
 var reduce = false
+var api = Java.type('noppes.npcs.api.NpcAPI').Instance();
+load(api.getLevelDir() + "/scripts/ecmascript/boiler/id_generator.js");
 
+
+
+/*
+Okay, I hate the way this is made, how can we do it better
+
+The collected powers and dampeners can remain in an array
+Selected powers should be an object that knows which slot it is.
+timers should eval activate a <name_of_perk>_timers function
+
+
+*/
 
 function init(e) {
 
     player = e.player
 
-    //e.player.storeddata.put("selected_bad_perk_array", "[]")
-    //e.player.storeddata.put("collected_bad_perk_array", "[]")
-    if (!e.player.storeddata.has("selected_perk_array")) {
-        e.player.storeddata.put("selected_perk_array", "[]")
-        e.player.storeddata.put("collected_perk_array", "[]")
-        e.player.storeddata.put("selected_bad_perk_array", "[]")
-        e.player.storeddata.put("collected_bad_perk_array", "[]")
-    }
-    selected_perk_array = JSON.parse(e.player.storeddata.get("selected_perk_array"))
-    selected_bad_perk_array = JSON.parse(e.player.storeddata.get("selected_bad_perk_array"))
-    collected_perk_array = JSON.parse(e.player.storeddata.get("collected_perk_array"))
-    collected_bad_perk_array = JSON.parse(e.player.storeddata.get("collected_bad_perk_array"))
 
-    e.player.storeddata.put("selected_perk_array", JSON.stringify(selected_perk_array))
-    e.player.storeddata.put("selected_bad_perk_array", JSON.stringify(selected_bad_perk_array))
-    e.player.storeddata.put("collected_perk_array", JSON.stringify(collected_perk_array))
-    e.player.storeddata.put("collected_bad_perk_array", JSON.stringify(collected_bad_perk_array))
+    if (!e.player.storeddata.has("selected_powers")) {
+        e.player.storeddata.put("selected_powers", JSON.stringify(selected_powers))
+        e.player.storeddata.put("collected_powers", "[]")
+        e.player.storeddata.put("selected_dampeners", JSON.stringify(selected_dampeners))
+        e.player.storeddata.put("collected_dampeners", "[]")
+    }
+    selected_powers = JSON.parse(e.player.storeddata.get("selected_powers"))
+    selected_dampeners = JSON.parse(e.player.storeddata.get("selected_dampeners"))
+    collected_powers = JSON.parse(e.player.storeddata.get("collected_powers"))
+    collected_dampeners = JSON.parse(e.player.storeddata.get("collected_dampeners"))
+
+    e.player.storeddata.put("selected_powers", JSON.stringify(selected_powers))
+    e.player.storeddata.put("selected_dampeners", JSON.stringify(selected_dampeners))
+    e.player.storeddata.put("collected_powers", JSON.stringify(collected_powers))
+    e.player.storeddata.put("collected_dampeners", JSON.stringify(collected_dampeners))
     setUpVals(e)
-    good_perks.p_companion_buff = { id: "companion_buff", type: 0, name: "Encouragement!", cost: 12 - Math.floor((getScore("Charm") + getScore("Empathy") + getScore("Suggestion"))) / 2, description: "Scream out a battle cry and rally your friends! Give your companions a health boost. The cost is lowered depending on your Heart Skills. Cost: " + String(12 - Math.floor((getScore("Charm") + getScore("Empathy") + getScore("Suggestion")) / 2)) }
     e.player.timers.forceStart(PERK_VISUAL_FEEDBACK_TIMER, 0, true)
+    loadIds(e.player.world)
 }
 
 function trigger(e) {
     if (e.id == 200) /*Establish Perk Arays*/ {
-        selected_perk_array = JSON.parse(player.storeddata.get("selected_perk_array"))
-        collected_perk_array = JSON.parse(player.storeddata.get("collected_perk_array"))
-        selected_bad_perk_array = JSON.parse(player.storeddata.get("selected_bad_perk_array"))
-        collected_bad_perk_array = JSON.parse(player.storeddata.get("collected_bad_perk_array"))
+        selected_powers = JSON.parse(player.storeddata.get("selected_powers"))
+        selected_dampeners = JSON.parse(player.storeddata.get("selected_dampeners"))
+        collected_powers = JSON.parse(player.storeddata.get("collected_powers"))
+        collected_dampeners = JSON.parse(player.storeddata.get("collected_dampeners"))
     }
     if (e.id == 210) /*Grant New Perk*/ {
         if (eval("good_perks." + e.arguments[0]) != undefined) {
-            if (collected_perk_array.indexOf(e.arguments[0]) != -1) {
+            if (collected_powers.indexOf(e.arguments[0]) != -1) {
                 player.message("&eYou have already found this power")
                 return
             }
-            collected_perk_array.push(e.arguments[0])
-            player.storeddata.put("collected_perk_array", JSON.stringify(collected_perk_array))
+            collected_powers.push(e.arguments[0])
+            player.storeddata.put("collected_powers", JSON.stringify(collected_powers))
             return
         }
         player.message(e.arguments[0] + " does not exist")
@@ -78,12 +102,12 @@ function trigger(e) {
 
     if (e.id == 220) /*Grant New Bad Perk*/ {
         if (eval("dampening_perks." + e.arguments[0]) != undefined) {
-            if (collected_bad_perk_array.indexOf(e.arguments[0]) != -1) {
+            if (collected_dampeners.indexOf(e.arguments[0]) != -1) {
                 player.message("&5You have already found this dampening perk")
                 return
             }
-            collected_bad_perk_array.push(e.arguments[0])
-            player.storeddata.put("collected_bad_perk_array", JSON.stringify(collected_bad_perk_array))
+            collected_dampeners.push(e.arguments[0])
+            player.storeddata.put("collected_dampeners", JSON.stringify(collected_dampeners))
             return
 
         }
@@ -94,14 +118,15 @@ function trigger(e) {
     }
 }
 
+
 function doesNotHavePerk(perk) {
-    for (var i = 0; i < collected_perk_array.length; i++) {
-        if (collected_perk_array[i].id == perk.id) {
+    for (var i = 0; i < collected_powers.length; i++) {
+        if (collected_powers[i].id == perk.id) {
             return false
         }
     }
-    for (var i = 0; i < collected_bad_perk_array.length; i++) {
-        if (collected_bad_perk_array[i].id == perk.id) {
+    for (var i = 0; i < collected_dampeners.length; i++) {
+        if (collected_dampeners[i].id == perk.id) {
             return false
         }
     }
@@ -109,6 +134,11 @@ function doesNotHavePerk(perk) {
 }
 
 function timer(e) {
+    for (var i = 0; i < Object.keys(selected_powers).length; i++) {
+        if (selected_powers[i] != null) {
+            eval(selected_powers[i] + "_timers(e)")
+        }
+    }
     switch (e.id) {
         case PERK_VISUAL_FEEDBACK_TIMER:
             if (getScore("using") > 0) {
@@ -145,12 +175,7 @@ function timer(e) {
                 e.player.setMotionY(0)
             }
             break;
-        case GROUNDPOUND_VALIDITY_TIMER:
-            if (isGroundPoundValid(e)) {
-                activateGroundPound(e)
-                e.player.timers.stop(768051)
-            }
-            break;
+
         case LEVITATE_TIMER:
             perk_levitate(e, good_perks.levitate.cost)
             break;
@@ -171,10 +196,6 @@ function timer(e) {
             break;
         case REHYDRATE_TIMER:
             setScore("restore_hydrate", 0)
-            break;
-        case DASH_TIMER:
-            e.player.removeTag("isDashing")
-            //e.player.world.playSoundAt(e.player.pos, "minecraft:weather.rain", .2, 1)
             break;
         case HURRICANE_TIMER:
             e.player.removeTag("hurricaneActive")
@@ -303,7 +324,6 @@ function keyPressed(e) {
         switch (e.key) {
             case keyBinds.key_perk1:
                 executePerk(e, 0)
-
                 break;
             case keyBinds.key_perk2:
                 executePerk(e, 1)
@@ -356,7 +376,7 @@ function keyReleased(e) {
 }
 
 function executePerk(e, index) {
-    if (selected_perk_array[index] == undefined) {
+    if (selected_powers[index] == undefined) {
         return
     }
     if (getScore("good_perk_debt") > getScore("bad_perk_debt")) {
@@ -364,55 +384,17 @@ function executePerk(e, index) {
         e.player.world.playSoundAt(e.player.pos, "minecraft:entity.guardian.hurt", .4, 1)
         return
     }
-    var cost = eval("good_perks." + selected_perk_array[index] + ".cost")
-    switch (eval("good_perks." + selected_perk_array[index] + ".id")) {
-        case "groundpound":
-            perk_groundPound(e, cost)
-            break;
-        case "dash":
-            perk_dash(e, cost)
-            break;
+    var cost = eval("good_perks." + selected_powers[index] + ".cost")
+    eval("perk_" + good_perks[selected_powers[index]].id + "(e,cost)")
+    switch (eval("good_perks." + selected_powers[index] + ".id")) {
         case "levitate":
             perk_levitate(e, cost)
             e.player.timers.forceStart(LEVITATE_TIMER, 20, true)
-            break;
-        case "resurface":
-            perk_resurface(e, cost)
-            break;
-        case "barter":
-            perk_barter(e, cost)
-            break;
-        case "summon":
-            perk_summon(e, cost)
-            break;
-        case "companion_buff":
-            perk_companion_buff(e, cost)
-            break;
-        case "hurricane":
-            perk_hurricane(e, cost)
-            break;
-        case "animal_lover":
-            perk_animal_lover(e, cost)
-            break;
-        case "reoxygenate":
-            perk_oxygenate(e, cost)
-            break;
-        case "electric_eel":
-            perk_electric_eel(e, cost)
-            break;
-        case "icicle":
-            perk_icicle(e, cost)
-            break;
-        case "refraction":
-            perk_invisibility(e, cost)
             break;
         case "revenge_attack":
             e.player.addTag("collectingRevenge")
             displayTitle(e, "Collecting Backsplash", 'blue')
             e.player.world.playSoundAt(e.player.pos, "minecraft:item.bucket.fill_lava", 1, 1.4)
-            break;
-        case "flood_lockpick":
-            perk_flood_lockpick(e, cost)
             break;
         case "lifesteal":
             switch (e.player.hasTag("lifesteal")) {
@@ -426,22 +408,16 @@ function executePerk(e, index) {
                     break;
             }
             break;
-        case "ripple_effect":
-            perk_ripple(e, cost)
-            break;
-        case "repair":
-            perk_repair(e, cost)
-            break;
     }
 }
 
 
 
 function disablePerk(e, index) {
-    if (selected_perk_array[index] == undefined) {
+    if (selected_powers[index] == undefined) {
         return
     }
-    switch (eval("good_perks." + selected_perk_array[index] + ".id")) {
+    switch (eval("good_perks." + selected_powers[index] + ".id")) {
         case "levitate":
             executeCommand("/attribute " + e.player.name + " forge:entity_gravity base set 0.08")
             e.player.timers.stop(LEVITATE_TIMER)
@@ -593,6 +569,8 @@ function rangedLaunched(e) {
             e.player.removeItem("arrow", 1)
         }
     }
+    if (e.player.hasTag("perfectAimActive")) perfect_aim_ranged_launched(e)
+
 }
 function summonArrowInFrontOfPlayer(e) {
     var angle = e.player.getRotation()

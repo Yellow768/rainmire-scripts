@@ -2,11 +2,11 @@ var lastLightBlockPos
 var lastLightWasWater = false
 function init(e) {
     lastLightBlockPos = e.npc.pos
-    e.npc.timers.forceStart(1, 1, true)
+    e.npc.timers.forceStart(987001, 1, true)
 }
 
 function timer(e) {
-    if (e.id == 1) {
+    if (e.id == 987001) {
         if (lastLightBlockPos == e.npc.pos) {
             return
         }

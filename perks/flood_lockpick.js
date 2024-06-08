@@ -13,3 +13,5 @@ function perk_flood_lockpick(e, cost) {
     e.player.playSound("item.bucket.fill", 1, 1)
     displayTitle(e, "You form a lockpick shape out of water", '#00FFFF')
 }
+
+function flood_lockpick_timers(e) { }

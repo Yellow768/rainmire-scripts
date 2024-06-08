@@ -30,6 +30,16 @@ function perk_groundPound(e, cost) {
 
 }
 
+
+function groundpound_timers(e) {
+    if (e.id == GROUNDPOUND_VALIDITY_TIMER) {
+        if (isGroundPoundValid(e)) {
+            activateGroundPound(e)
+            e.player.timers.stop(768051)
+        }
+    }
+}
+
 function startDownwardMotion(e) {
 
     e.player.world.playSoundAt(e.player.pos, "variedcommodities:magic.shot", 1, 1)

@@ -304,7 +304,7 @@ declare class NpcAPI {
 	getIDamageSource(damagesource: DamageSource): IDamageSource;
 	stringToNbt(str: String): INbt;
 	createMail(sender: String, subject: String): IPlayerMail;
-	createCustomGui(id: Number, width: Number, height: Number, pauseGame: boolean): ICustomGui;
+	createCustomGui(id: Number, width: Number, height: Number, pauseGame: boolean, player: IPlayer): ICustomGui;
 	/**
 	 * Get player data even if they are offline
 	 */
@@ -1075,8 +1075,11 @@ declare class INPCDisplay {
 	setBossColor(color: Number): void;
 	setModel(model: String): void;
 	getModel(): String;
-	setHasHitbox(bo: boolean): void;
-	getHasHitbox(): boolean;
+	setHitboxState(type: int): void;
+	/**
+	 * (0=Normal, 1=None, 2=Solid)
+	 */
+	getHitboxState(): int;
 }
 
 declare class INPCInventory {
@@ -2254,16 +2257,16 @@ declare namespace RoleEvent {
 	}
 
 	class TradeFailedEvent extends RoleEvent {
-		sold: IItemStack|null;
-		currency1: IItemStack|null;
-		currency2: IItemStack|null;
+		sold: IItemStack | null;
+		currency1: IItemStack | null;
+		currency2: IItemStack | null;
 		receiving;
 	}
 
 	class TraderEvent extends RoleEvent {
-		sold: IItemStack|null;
-		currency1: IItemStack|null;
-		currency2: IItemStack|null;
+		sold: IItemStack | null;
+		currency1: IItemStack | null;
+		currency2: IItemStack | null;
 	}
 
 	class TransporterUnlockedEvent extends RoleEvent {

@@ -4,7 +4,6 @@ function aquacustomGuiButton(e) {
     if (e.player.getCustomGui() == aquaticUpgradePurchasingGUI) {
         if (e.buttonId == 1) {
             player.storeddata.put("airDecreaseRate", parseInt(player.storeddata.get("airDecreaseRate")) + 1)
-            player.message(player.storeddata.get("airDecreaseRate"))
             giveBack = false
             player.closeGui()
             player.playSound("minecraft:block.respawn_anchor.charge", 1, 1)
@@ -31,7 +30,8 @@ function aquacustomGuiButton(e) {
         }
         if (e.buttonId == 4) {
             player.closeGui()
-
+            executeCommand('/summon minecraft:item ' + player.x + ' ' + player.y + ' ' + player.z + ' {Item:{id:"aquamirae:esca",Count:1b,tag:{display:{Lore:[\'{"italic":false,"color":"white","extra":[{"text":""},{"color":"dark_aqua","text":"Use at a Power or Dampening Remnant"}],"text":""}\', \'{"italic":false,"color":"white","extra":[{"text":""},{"color":"dark_aqua","text":"to obtain a perk. Or ingest it to"}],"text":""}\', \'{"italic":false,"color":"white","extra":[{"text":""},{"color":"dark_aqua","text":"enhance your aquatic abilities"}],"text":""}\'],Name:\'{"italic":false,"extra":[{"text":""},{"underlined":true,"obfuscated":true,"color":"aqua","text":"a"},{"underlined":true,"color":"aqua","text":"Remnant Vessel"},{"underlined":true,"obfuscated":true,"color":"aqua","text":"K"}],"text":""}\'}}}}')
+            player.playSound("minecraft:entity.llama.spit", 1, 1)
         }
     }
 }

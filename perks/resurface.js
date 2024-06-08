@@ -57,3 +57,6 @@ function stopSurfacing(e) {
     e.player.timers.forceStart(REMOVE_RESURFACED_TIMER, 40, false)
     e.player.addTag("resurfaced")
 }
+
+
+function resurface_timers(e) { }

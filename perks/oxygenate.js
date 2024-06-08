@@ -18,3 +18,6 @@ function perk_oxygenate(e, cost) {
     e.player.timers.forceStart(OXYGENATE_TIMER, 600, false)
 
 }
+
+
+function oxygenate_timers(e) { }
