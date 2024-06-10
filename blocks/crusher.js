@@ -1,7 +1,18 @@
 var in_crush_position = false
 
 function init(e) {
-    e.npc.timers.forceStart(id("crusher"), e.npc.getStats().getRanged().getDelayMin(), false)
+    in_crush_position = e.npc.getStats().getRanged().getHasAimAnimation()
+    switch (in_crush_position) {
+        case false:
+            e.npc.timers.forceStart(id("crusher"), e.npc.getStats().getRanged().getDelayMax(), false)
+            e.npc.setMotionY(2)
+            break;
+        case true:
+            e.npc.timers.forceStart(id("crusher"), e.npc.getStats().getRanged().getDelayMin(), false)
+            e.npc.setMotionY(-2)
+            break;
+
+    }
 }
 
 function timer(e) {

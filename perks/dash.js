@@ -70,11 +70,13 @@ function dash_timers(e) {
             //e.player.world.playSoundAt(e.player.pos, "minecraft:weather.rain", .2, 1)
             break;
         case id("DASH_COLLISION_CHECK"):
-            dashCheckForCollision(e)
+            if (e.player.isSneaking()) {
+                e.player.removeTag("isDashing")
+                e.player.timers.stop(id("DASH_COLLISION_CHECK"))
+                e.player.timers.stop(id("DASH_TIMER"))
+                e.player.setMotionX(0)
+                e.player.setMotionZ(0)
+            }
             break;
     }
-}
-
-function dashCheckForCollision(e) {
-
 }
