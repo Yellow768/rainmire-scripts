@@ -33,7 +33,7 @@ function shrink(e) {
 
 function tick(e) {
     if (e.npc.inWater()) {
-        e.npc.ai.setNavigationType(2)
+        e.npc.ai.setNavigationType(1)
     }
 
     if (!e.npc.inWater()) {

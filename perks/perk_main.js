@@ -337,6 +337,7 @@ function keyPressed(e) {
             case keyBinds.key_perk5:
                 executePerk(e, 4)
                 break;
+
         }
 
     }
@@ -462,10 +463,10 @@ function tick(e) {
     }
     if (e.player.inWater()) {
         if (e.player.world.getBiomeName(e.player.x, e.player.z) == "minecraft:ocean") {
-            perkReplenishingThreshold = 4
+            perkReplenishingThreshold = 2
         }
         else {
-            perkReplenishingThreshold = 2
+            perkReplenishingThreshold = 0
         }
         currentReplensihingLevel++
         if (currentReplensihingLevel >= perkReplenishingThreshold && getScore("perk_power") < getScore("max_perk_power")) {
