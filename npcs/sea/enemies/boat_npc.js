@@ -7,7 +7,7 @@ function init(e) {
 function tick(e) {
     boat = e.npc.getMount()
     if (e.npc.getAttackTarget() != null && boat != null && e.npc.getAttackTarget().pos.distanceTo(e.npc.pos) > 2.3) {
-        var angle = GetPlayerRotation(boat, e.npc.getAttackTarget())
+        var angle = GetAngleTowardsEntity(boat, e.npc.getAttackTarget())
         var d = FrontVectors(boat, angle, 0, 1, 0)
         boat.setMotionX(d[0])
         boat.setMotionZ(d[2])
@@ -33,7 +33,7 @@ function timer(e) {
     e.npc.timers.forceStart(1, getRandomInt(20, 180), false)
 }
 
-function GetPlayerRotation(npc, player) {
+function GetAngleTowardsEntity(npc, player) {
     var dx = npc.getX() - player.getX();
     var dz = player.getZ() - npc.getZ();
     if (dz >= 0) {

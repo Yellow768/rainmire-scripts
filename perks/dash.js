@@ -33,6 +33,7 @@ function perk_dash(e, cost) {
     }
     var d
     var deftnessModifier = (getScore("Deftness")) / 4
+    e.player.timers.forceStart(id("DASH_COLLISION_CHECK"), 0, true)
     if (e.player.getMCEntity().m_5842_()) {
         d = FrontVectors(e.player, direction, -e.player.pitch, 1.6 + deftnessModifier, false)
     }
@@ -51,7 +52,7 @@ function perk_dash(e, cost) {
         e.player.setMotionZ(d[2])
     }
     e.player.timers.forceStart(id("DASH_TIMER"), 15, false)
-    e.player.timers.forceStart(id("DASH_COLLISION_CHECK"), 0, true)
+
     e.player.addTag("isDashing")
     e.player.world.playSoundAt(e.player.pos, "minecraft:item.bucket.empty", 1, 1)
     e.player.world.playSoundAt(e.player.pos, "variedcommodities:magic.shot", 1, 1)

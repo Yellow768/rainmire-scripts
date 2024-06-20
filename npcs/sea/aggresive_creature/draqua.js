@@ -21,7 +21,7 @@ function timer(e) {
         var rotation = e.npc.rotation
         var pitch = 0
         if (e.npc.getAttackTarget()) {
-            rotation = GetPlayerRotation(e.npc, e.npc.getAttackTarget())
+            rotation = GetAngleTowardsEntity(e.npc, e.npc.getAttackTarget())
             var difference = e.npc.getAttackTarget().y - e.npc.y
             pitch = 0 + (10 * difference)
             if (pitch > 90) pitch = 90

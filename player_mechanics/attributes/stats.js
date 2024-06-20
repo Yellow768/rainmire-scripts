@@ -13,7 +13,7 @@ function init(e) {
 
 function login(e) {
 	justLoggedIn = true
-	e.player.timers.start(20, 10, false)
+	e.player.timers.start(id("changeJustLoggedIn"), 10, false)
 }
 
 

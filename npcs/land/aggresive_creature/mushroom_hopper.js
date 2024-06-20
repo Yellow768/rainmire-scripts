@@ -104,7 +104,7 @@ function timer(e) {
             var angle = e.npc.rotation
             if (e.npc.getAttackTarget() != null) {
                 distanceToJump = e.npc.pos.distanceTo(e.npc.getAttackTarget().pos) / 4.5
-                angle = GetPlayerRotation(e.npc, e.npc.getAttackTarget())
+                angle = GetAngleTowardsEntity(e.npc, e.npc.getAttackTarget())
             }
 
             var d = FrontVectors(e.npc, angle, 0, distanceToJump, 0)

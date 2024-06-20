@@ -127,6 +127,7 @@ var lastClickedSlot = null
 
 function customGuiSlotClicked(e) {
     lastClickedSlot = e.slot
+    e.player.message(e.player.tempdata.get("canEditPerks"))
     if (!e.player.tempdata.get("canEditPerks")) { e.setCanceled(true); return }
     if (e.clickType == "CLONE") { e.setCanceled(true) }
     if (e.slotId >= 0 && e.slotId <= 19) {

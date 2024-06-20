@@ -19,7 +19,7 @@ function init(e) {
 function timer(e) {
 	attrbiuteCheck_timer(e)
 	switch (e.id) {
-		case 20:
+		case id("changeJustLoggedIn"):
 			justLoggedIn = false
 			break;
 		case 30:

@@ -3,6 +3,16 @@ var keyMode = false
 var keyBinds
 
 function init(e) {
+
+    if (!e.player.world.storeddata.has("ids")) {
+        e.player.world.storeddata.put("ids", JSON.stringify({
+            counter: 1,
+            ids: {},
+            lookup: {}
+        }))
+    }
+
+    e.player.world.tempdata.put("ids", JSON.parse(e.player.world.storeddata.get("ids")))
     if (e.player.storeddata.get("helpMessage") == 1) {
         e.player.message("&dDeveloper Tools On. Type &6!devHelp &dfor a list of functions")
     }
@@ -30,7 +40,13 @@ function init(e) {
 
 }
 
+function login(e) {
 
+}
+
+function logout(e) {
+    e.player.world.storeddata.put("ids", JSON.stringify(e.world.tempdata.get("ids")))
+}
 
 function keyPressed(e) {
     if (keybindMode) {
@@ -201,6 +217,17 @@ function chat(e) {
         case "!ua":
             e.player.timers.forceStart(7, 0, false)
             break;
+        case "!god":
+            var god_mode = e.player.storeddata.get("godmode")
+            if (god_mode != 1) {
+                e.player.storeddata.put("godmode", 1)
+                e.player.message("&eGod mode turned &aon")
+            }
+            if (god_mode == 1) {
+                e.player.storeddata.put("godmode", 0)
+                e.player.message("&eGod mode turned &coff")
+            }
+            break;
         default:
             e.setCanceled(false)
     }
@@ -240,7 +267,11 @@ function chat(e) {
 
 
 
-
+function damaged(e) {
+    if (e.player.storeddata.get("godmode") == 1) {
+        e.setCanceled(true)
+    }
+}
 
 
 
@@ -392,6 +423,7 @@ function fullyHeal() {
     player.setHealth(player.getMaxHealth())
     player.getMCEntity().m_20301_(300)
     player.storeddata.put("currentAir", 300)
+    setScore("perk_power", getScore("max_perk_power"))
     player.message("&aYou have been fully healed")
 }
 

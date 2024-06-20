@@ -54,12 +54,12 @@ function tempPut(entity, key, value) {
 function DoKnockback(npc, targ, kb, kbVert) {
     targ.setMotionY(kbVert)
     if (kb < 1) {
-        var d = FrontVectors(npc, GetPlayerRotation(npc, targ), 0, kb, 0)
+        var d = FrontVectors(npc, GetAngleTowardsEntity(npc, targ), 0, kb, 0)
         targ.setMotionX(d[0])
         targ.setMotionZ(d[2])
         return;
     }
-    targ.knockback(kb, GetPlayerRotation(npc, targ))
+    targ.knockback(kb, GetAngleTowardsEntity(npc, targ))
 }
 
 
@@ -76,11 +76,11 @@ function TrueDistanceCoord(x1, y1, z1, x2, y2, z2) {
     return R;
 }
 
-function GetPlayerRotation(npc, player) {
+function GetAngleTowardsEntity(source, target) {
 
-    var dx = npc.getX() - player.getX();
+    var dx = source.getX() - target.getX();
 
-    var dz = player.getZ() - npc.getZ();
+    var dz = target.getZ() - source.getZ();
 
     if (dz >= 0) {
 

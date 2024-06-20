@@ -1,12 +1,15 @@
+
+
 function calculateDamage(baseDamage, entity, source) {
 
     var damage
     var EPF = 0
-    if (entity.type == EntitiesType.PLAYER) {
+    if (entity.type == 1) {
         if (source) {
-            if (entity.getMCEntity().m_21254_() && canSeeEntity(entity, source, 150)) {
+            if (entity.getMCEntity().m_21254_() && canSeeEntity(e, entity, source, 150)) {
                 entity.world.playSoundAt(entity.pos, "minecraft:item.shield.block", 1, Math.random() + .4)
                 entity.getOffhandItem().setDamage(entity.getOffhandItem().getDamage() + baseDamage)
+                return 0
             }
         }
         var defencePoints = 0
@@ -30,11 +33,11 @@ function calculateDamage(baseDamage, entity, source) {
         var protectionEnchantment = Math.min(EPF, 20) / 25
 
         damage = baseDamage * (1 - (Math.min(20, Math.max(defencePoints / 5, defencePoints - ((4 * baseDamage) / totalToughness + 8)))) / 25)
-        entity.message(baseDamage)
         damage -= damage * protectionEnchantment
 
+
     }
-    if (entity.type == EntitiesType.NPC) {
+    if (entity.type == 2) {
         damage = baseDamage * entity.getStats().getResistance(0)
     }
 

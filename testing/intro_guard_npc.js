@@ -33,7 +33,7 @@ function trigger(e) {
 function timer(e) {
     if (e.id == id("sayWhatName")) {
         e.npc.say("Prisoner, what's your name?")
-        e.npc.rotation = GetPlayerRotation(npc, npc.tempdata.get("player"))
+        e.npc.rotation = GetAngleTowardsEntity(npc, npc.tempdata.get("player"))
         e.npc.pitch = 45
     }
     if (e.id == id("navigateToFirstCorner")) {

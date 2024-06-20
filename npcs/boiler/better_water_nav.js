@@ -26,7 +26,7 @@ function targetLost(e) {
 function timer(e) {
     if (e.id == id("properWaterNav"))
         if (e.npc.getAttackTarget()) {
-            var dir = GetPlayerRotation(e.npc, e.npc.getAttackTarget())
+            var dir = GetAngleTowardsEntity(e.npc, e.npc.getAttackTarget())
             e.npc.rotation = dir
             var d = FrontVectors(e.npc, dir, e.npc.y - e.npc.getAttackTarget().y, e.npc.storeddata.get("navSpeed") / 10, 0)
             var offsetX = d[0]

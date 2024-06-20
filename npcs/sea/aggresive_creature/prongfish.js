@@ -1,9 +1,11 @@
 var i = 0
 function init(e) {
+
     e.npc.timers.stop(10)
     e.npc.timers.stop(20)
-    e.npc.timers.stop(15)
     e.npc.display.setSize(5)
+    e.npc.timers.forceStart(id("prongfish_projectile"), 0, true)
+
 }
 
 function target(e) {
@@ -13,15 +15,14 @@ function target(e) {
 function targetLost(e) {
     e.npc.timers.stop(10)
     e.npc.timers.stop(20)
-    e.npc.timers.stop(15)
     e.npc.display.setSize(5)
 }
 
 function died(e) {
     e.npc.timers.stop(10)
     e.npc.timers.stop(20)
-    e.npc.timers.stop(15)
 }
+var projectile_array = []
 
 function timer(e) {
     if (e.id == 10) {
@@ -33,20 +34,39 @@ function timer(e) {
     if (e.id == 20) {
         e.npc.display.setSize(5)
         e.npc.updateClient()
-        for (var i = 0; i < 9; i++) {
+        for (var layer = 0; layer < 3; layer++) {
+            var layer_angles = [45, 0, -45]
+            for (var i = 0; i < 4; i++) {
+                var pos = FrontVectors(e.npc, e.npc.rotation + (90 * i), layer_angles[layer], 1, 0)
+                var projectile = e.npc.shootItem(e.npc.x + pos[0], e.npc.y + pos[1], e.npc.z + pos[3], e.npc.world.createItem("golden_sword", 1), 100)
+                projectile.setHasGravity(false)
+                var nbt = projectile.getEntityNbt()
+                nbt.setBoolean("NoGravity", true)
+                projectile.setEntityNbt(nbt)
+                projectile.rotation = e.npc.rotation + (90 * i)
+                projectile.tempdata.put("direction", pos)
+                projectile.tempdata.put("time", 0)
+                projectile_array.push(projectile)
 
-            var pos = FrontVectors(e.npc, e.npc.rotation + (50 * i), getRandomInt(-90, 90), 1, 0)
-            var prong = e.API.getClones().spawn(e.npc.x + pos[0], e.npc.y, e.npc.z + pos[2], 3, "Prong Projectile", e.npc.world)
-            prong.setMotionX(pos[0])
-            prong.setMotionY(pos[1] / 2)
-            prong.setMotionZ(pos[2])
-            prong.rotation = e.npc.rotation + (30 * i) + 90
-            prong.updateClient()
-            e.npc.timers.stop(15)
-            e.npc.timers.forceStart(10, getRandomInt(20, 120), false)
+            }
         }
+        e.npc.timers.forceStart(10, getRandomInt(20, 120), false)
         e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.puffer_fish.blow_out", 1, 1)
         e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.bee.sting", 1, 1)
+    }
+    if (e.id == id("prongfish_projectile")) {
+        for (var i = 0; i < projectile_array.length; i++) {
+            var p = projectile_array[i]
+            p.setMotionX(p.tempdata.get("direction")[0])
+            p.setMotionY(p.tempdata.get("direction")[1])
+            p.setMotionZ(p.tempdata.get("direction")[2])
+            if (p.tempdata.get("time") >= 30 || !p.inWater()) {
+                p.kill()
+                projectile_array.splice(i, 1)
+                return
+            }
+            p.tempdata.put("time", p.tempdata.get("time") + 1)
+        }
     }
 }
 

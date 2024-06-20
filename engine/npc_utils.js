@@ -88,16 +88,11 @@ function openClonerGui(e) {
     CLONER_GUI.addTextField(id("clone_tab"), 50, 80, 100, 25)
     CLONER_GUI.addLabel(id("clone_name_label"), "Name", 0, 50, 1, 1)
     CLONER_GUI.addLabel(id("clone_tab_label"), "Tab", 0, 80, 1, 1)
-    CLONER_GUI.addButton(id("set_button"), "Set", 50, 120, 50, 15)
+    CLONER_GUI.addButton(id("set_button"), "Set", 50, 120, 50, 15).setOnPress(function (gui, t) { setCloneName() })
     e.player.showCustomGui(CLONER_GUI)
 }
 
-/**
- * @param {CustomGuiEvent.ButtonEvent} e
- */
-function customGuiButton(e) {
-    if (e.buttonId == id("set_button")) { setCloneName() }
-}
+
 function setCloneName(e) {
     player.storeddata.put("clone_name", CLONER_GUI.getComponent(id("clone_name")).getText())
     player.storeddata.put("clone_tab", CLONER_GUI.getComponent(id("clone_tab")).getText())

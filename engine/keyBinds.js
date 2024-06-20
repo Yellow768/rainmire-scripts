@@ -93,7 +93,7 @@ function editKeyBind(e) {
 function assignKey(e) {
     if (keybindMode) {
         var keyBinds = JSON.parse(e.player.world.storeddata.get(e.player.name + "keyBindsJSON"))
-        keyBinds[idname(rebindingID)] = e.key
+        e.player.message(idname(rebindingID))
         keybindMode = false
         KEYBIND_GUI.getComponent(rebindingID).setLabel(GLFWKeys[e.key])
         KEYBIND_GUI.update()

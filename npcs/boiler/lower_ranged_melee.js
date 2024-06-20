@@ -31,7 +31,7 @@ function collide(e) {
 
         }
         else {
-            var d = FrontVectors(e.npc, GetPlayerRotation(e.npc, e.entity), 0, distance / e.npc.getAi().getWalkingSpeed())
+            var d = FrontVectors(e.npc, GetAngleTowardsEntity(e.npc, e.entity), 0, distance / e.npc.getAi().getWalkingSpeed())
             e.npc.setMotionX(d[0])
             e.npc.setMotionZ(d[2])
         }
