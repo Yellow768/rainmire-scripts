@@ -16,11 +16,11 @@ function escapeRegex(string) {
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+    return Math.floor((Math.random() * (max - min + 1) + min));
 }
 
 function getRandomFloat(min, max) {
-    return Math.random() * (max - min) + min; // The maximum is exclusive and the minimum is inclusive
+    return Math.random() * (max - min + 1) + min;
 }
 
 function FrontVectors(entity, dr, dp, distance, mode) {
@@ -70,6 +70,19 @@ function TrueDistanceCoord(x1, y1, z1, x2, y2, z2) {
     var dy = y1 - y2
 
     var dz = z1 - z2
+
+    var R = Math.pow((dx * dx + dy * dy + dz * dz), 0.5)
+
+    return R;
+}
+
+function TrueDistanceEntities(entity, target) {
+
+    var dx = entity.x - target.x
+
+    var dy = entity.y - target.y
+
+    var dz = entity.z - target.z
 
     var R = Math.pow((dx * dx + dy * dy + dz * dz), 0.5)
 
