@@ -27,7 +27,7 @@ slash.cone = 120
 slash.duration = 15
 slash.min_range = 2
 slash.chance = 60
-slash.hitbox_delay = 2
+slash.func = function () { npc.timers.forceStart(id("slash_attack")) }
 slash.hitbox_func = function () { npc.getAttackTarget().knockback(1, GetAngleTowardsEntity(npc, npc.getAttackTarget())) }
 
 
@@ -48,20 +48,73 @@ leap.range = 2
 leap.duration = 40
 leap.min_range = 10
 leap.chance = 20
+leap.start_func = function () { npc.timers.forceStart(id("leap_attack_launch"), 8, false) }
+
+
+
+function timer(e) {
+    switch (e.id) {
+        case id("decide_attack"):
+            decideAttack(e)
+            break;
+        case id("hitbox"):
+            activateHitbox(current_attack)
+            break;
+        case id("attack_end"):
+            isAttacking = false
+            e.npc.ai.setWalkingSpeed(7)
+            break;
+        case id("movementDecision"):
+            makeMovementDecision(e)
+            break;
+        case id("spin_attack_loop"):
+            spinAttackMotion(e)
+            break;
+        case id("checkForOnGround"):
+            if (e.npc.getMCEntity().m_20096_()) {
+                e.npc.timers.stop(id("checkForOnGround"))
+                e.npc.timers.start(id("stunned"), 120, false)
+            }
+            break;
+        case id("stunned"):
+            endStun(e)
+            break;
+        case id("spin_end"):
+            e.npc.timers.stop(id("spin_attack_loop"))
+            e.npc.ai.setWalkingSpeed(7)
+            e.npc.storeddata.remove("spin_angle")
+            isSpinAttacking = false
+            break;
+        case id("leap_attack_launch"):
+            var d = FrontVectors(e.npc, GetAngleTowardsEntity(e.npc, e.npc.getAttackTarget()), 0, getDistanceToTarget() / 4, 0)
+            e.npc.setMotionY(.3)
+            e.npc.setMotionX(d[0])
+            e.npc.setMotionZ(d[2])
+            e.npc.setMoveStrafing(0)
+            e.npc.timers.stop(id("movementDecision"))
+            e.npc.world.playSoundAt(e.npc.pos, "quark:entity.pickarang.clank", .2, .2)
+            e.npc.world.playSoundAt(e.npc.pos, "customnpcs:misc.swosh", .7, .7)
+            break;
+    }
+}
+
+
 
 var attacks = [leap, slash, upslash]
 
-function activateHitbox(attack) {
+function activateBasicHitbox(attack) {
     if (!npc.getAttackTarget()) return
-    if (TrueDistanceEntities(npc, npc.getAttackTarget()) < attack.range) {
+    if (isTargetInHitbox(target, attack)) {
         var damage = calculateDamage(attack.damage, npc.getAttackTarget(), npc)
         npc.getAttackTarget().damage(damage)
         if (damage) { attack.hitbox_func() }
     }
 }
 
+
+
 function isTargetInHitbox(target, attack) {
-    return (TrueDistanceEntities(npc, target) && canSeeEntity(source, entity, cone))
+    return (TrueDistanceEntities(npc, target) < attack.range && canSeeEntity(npc, target, attack.fov))
 }
 
 var isAttacking = false
@@ -213,51 +266,7 @@ function startAttackDuration(e, duration) {
 
 
 
-function timer(e) {
-    switch (e.id) {
-        case id("decide_attack"):
-            decideAttack(e)
-            break;
-        case id("hitbox"):
-            activateHitbox(current_attack)
-            break;
-        case id("attack_end"):
-            isAttacking = false
-            e.npc.ai.setWalkingSpeed(7)
-            break;
-        case id("movementDecision"):
-            makeMovementDecision(e)
-            break;
-        case id("spin_attack_loop"):
-            spinAttackMotion(e)
-            break;
-        case id("checkForOnGround"):
-            if (e.npc.getMCEntity().m_20096_()) {
-                e.npc.timers.stop(id("checkForOnGround"))
-                e.npc.timers.start(id("stunned"), 120, false)
-            }
-            break;
-        case id("stunned"):
-            endStun(e)
-            break;
-        case id("spin_end"):
-            e.npc.timers.stop(id("spin_attack_loop"))
-            e.npc.ai.setWalkingSpeed(7)
-            e.npc.storeddata.remove("spin_angle")
-            isSpinAttacking = false
-            break;
-        case id("leap_attack_launch"):
-            var d = FrontVectors(e.npc, GetAngleTowardsEntity(e.npc, e.npc.getAttackTarget()), 0, getDistanceToTarget() / 4, 0)
-            e.npc.setMotionY(.3)
-            e.npc.setMotionX(d[0])
-            e.npc.setMotionZ(d[2])
-            e.npc.setMoveStrafing(0)
-            e.npc.timers.stop(id("movementDecision"))
-            e.npc.world.playSoundAt(e.npc.pos, "quark:entity.pickarang.clank", .2, .2)
-            e.npc.world.playSoundAt(e.npc.pos, "customnpcs:misc.swosh", .7, .7)
-            break;
-    }
-}
+
 
 
 

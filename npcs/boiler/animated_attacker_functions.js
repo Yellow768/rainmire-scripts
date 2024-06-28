@@ -52,7 +52,7 @@ function getDistanceToTarget() {
 }
 
 
-function Attack(animation, damage, range, fov, duration, hitbox_delay, min_distance, max_distance, chance, start_func, hitbox_func, sound) {
+function Attack(animation, damage, range, fov, duration, hitbox_delay, min_distance, max_distance, chance, func) {
     this.animation = animation || ""
     this.damage = damage || 0
     this.range = range || 1
@@ -61,10 +61,7 @@ function Attack(animation, damage, range, fov, duration, hitbox_delay, min_dista
     this.min_distance = min_distance || 0
     this.max_distance = max_distance || 2
     this.chance = chance || 100
-    this.start_func = start_func || function () { }
-    this.hitbox_func = hitbox_func || function () { }
-    this.hitbox_delay = hitbox_delay || 20
-    this.sound = sound
+    this.func = func || function () { }
 }
 
 function sortAttacksByWeightedChance() {

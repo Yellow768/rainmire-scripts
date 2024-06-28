@@ -34,13 +34,20 @@ function perk_dash(e, cost) {
     var d
     var deftnessModifier = (getScore("Deftness")) / 4
     e.player.timers.forceStart(id("DASH_COLLISION_CHECK"), 0, true)
-    if (e.player.getMCEntity().m_5842_()) {
+    if (e.player.getMount()) {
+        d = FrontVectors(e.player, e.player.getMount().getRotation(), 0, 1.6 + deftnessModifier, false)
+    }
+    else if (e.player.getMCEntity().m_5842_()) {
         d = FrontVectors(e.player, direction, -e.player.pitch, 1.6 + deftnessModifier, false)
     }
     else {
         d = FrontVectors(e.player, direction, 7, 1.6 + deftnessModifier, false)
     }
-
+    if (e.player.getMount()) {
+        e.player.getMount().setMotionY(d[1])
+        e.player.getMount().setMotionX(d[0])
+        e.player.getMount().setMotionZ(d[2])
+    }
     if (!e.player.getMCEntity().m_20096_()) {
         e.player.setMotionY(d[1] / 1.55)
         e.player.setMotionX(d[0] / 1.55)

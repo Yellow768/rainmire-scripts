@@ -493,23 +493,6 @@ function interact(e) {
 }
 
 function damaged(e) {
-
-    if (groundPounding) {
-        e.setCanceled(true)
-        if (e.damageSource.getType() == "fall") {
-            activateGroundPound(e)
-            if (jumpBoostLevel > -1) {
-                e.player.addPotionEffect(8, 25555, jumpBoostLevel, true)
-                jumpBoostLevel = -1
-            }
-        }
-        else {
-            e.player.setMotionY(.6)
-            e.player.timers.forceStart(768050, 1, false)
-        }
-
-
-    }
     if (e.player.hasTag("noLevitateFallDamage") && e.damageSource.type == "fall") {
         e.setCanceled(true)
         return

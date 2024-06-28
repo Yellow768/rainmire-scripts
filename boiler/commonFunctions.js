@@ -78,15 +78,7 @@ function TrueDistanceCoord(x1, y1, z1, x2, y2, z2) {
 
 function TrueDistanceEntities(entity, target) {
 
-    var dx = entity.x - target.x
-
-    var dy = entity.y - target.y
-
-    var dz = entity.z - target.z
-
-    var R = Math.pow((dx * dx + dy * dy + dz * dz), 0.5)
-
-    return R;
+    return TrueDistanceCoord(entity.x, entity.y, entity.z, target.x, target.y, target.z)
 }
 
 function GetAngleTowardsEntity(source, target) {
@@ -122,4 +114,8 @@ function clamp(val, min, max) {
 
 function pp(e, message) {
     e.player.message(message)
+}
+
+function isOnGround(entity) {
+    return entity.getMCEntity().m_20096_()
 }
