@@ -58,6 +58,7 @@ function dash(e) {
         e.player.setMotionZ(d[2])
     }
     e.player.timers.forceStart(id("DASH_TIMER"), 15, false)
+    e.player.timers.forceStart(id("dash_visual_effects"), 0, true)
 
     e.player.addTag("isDashing")
     e.player.world.playSoundAt(e.player.pos, "minecraft:item.bucket.empty", 1, 1)
@@ -74,6 +75,7 @@ function dash_timers(e) {
         case id("DASH_TIMER"):
             e.player.removeTag("isDashing")
             e.player.timers.stop(id("DASH_COLLISION_CHECK"))
+            e.player.timers.stop(id("dash_visual_effects"))
             //e.player.world.playSoundAt(e.player.pos, "minecraft:weather.rain", .2, 1)
             break;
         case id("DASH_COLLISION_CHECK"):
@@ -85,5 +87,13 @@ function dash_timers(e) {
                 e.player.setMotionZ(0)
             }
             break;
+        case id("dash_visual_effects"):
+            var angle = e.player.getRotation()
+            var dx = -Math.sin(angle * Math.PI / 180)
+            var dz = Math.cos(angle * Math.PI / 180)
+            // e.player.world.spawnParticle("cloud", e.player.x, e.player.y + 1, e.player.z, 0.1, .1, 0.1, .01, 5)
+            e.player.world.spawnParticle("bubble_pop", e.player.x - dx, e.player.y + 1, e.player.z - dz, 0.1, .1, 0.1, .01, 50)
+            e.player.world.spawnParticle("falling_water", e.player.x - dx, e.player.y + 1, e.player.z - dz, 0.1, .2, 0.1, 1, 5)
+            break
     }
 }

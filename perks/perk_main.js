@@ -276,32 +276,7 @@ function timer(e) {
 }
 
 
-function attemptToUseHydration(e, cost) {
-    if (e.player.hasTag("conservationist") && getScore("good_perk_debt") >= getScore("bad_perk_debt")) {
-        cost = Math.floor(cost / 2)
-    }
-    if (e.player.gamemode == 1) {
-        return true
-    }
-    if (getScore("perk_power") < cost) {
-        if (e.player.hasTag("blood_cost")) {
-            var cdamage = cost - getScore("perk_power")
-            if (getScore("perk_power") > 0) {
-                addToScore("using", getScore("perk_power"))
-            }
-            e.player.damage(cdamage / 2)
-            e.player.world.spawnParticle("falling_lava", e.player.x, e.player.y + 1, e.player.z, .3, .4, .3, 1, 200)
-            e.player.playSound("upgrade_aquatic:entity.pike.death", 1, 1)
-            return true
-        }
-        displayNotEnoughpower(e, cost)
-        return false
-    }
-    addToScore("using", cost)
 
-
-    return true
-}
 
 function displayNotEnoughpower(e) {
     e.player.world.spawnParticle("supplementaries:air_burst", e.player.x, e.player.y, e.player.z, .4, .2, .4, .07, 8)

@@ -41,10 +41,6 @@ function init(e) {
 }
 
 
-function logout(e) {
-    e.player.world.storeddata.put("ids", JSON.stringify(e.world.tempdata.get("ids")))
-}
-
 function keyPressed(e) {
     if (keybindMode) {
         assignKey(e)

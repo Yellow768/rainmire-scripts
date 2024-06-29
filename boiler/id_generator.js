@@ -10,13 +10,16 @@ function resetIds() {
         ids: {},
         lookup: {}
     }
-    world.storeddata.put("ids", JSON.stringify(_IDS))
     world.tempdata.put("ids", _IDS)
 }
 
 function id(name) {
     if (!world.tempdata.has("ids")) {
-        world.tempdata.put("ids", JSON.parse(world.storeddata.get("ids")))
+        world.tempdata.put("ids", {
+            counter: 1,
+            ids: {},
+            lookup: {}
+        })
     }
     _IDS = world.tempdata.get("ids")
     if (!name) {
