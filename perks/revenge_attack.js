@@ -1,6 +1,6 @@
 function perk_revenge_attack(e, cost) {
     if (e.player.hasTag("collectingRevenge")) {
-        if (!attemptToUsePerkPower(e, 2)) { return }
+        if (!attemptToUseHydration(e, 2)) { return }
         if (!e.player.tempdata.has("revengeDamage")) { e.player.tempdata.put("revengeDamage", 0) }
         e.player.tempdata.put("revengeDamage", e.player.tempdata.get("revengeDamage") + 1)
         e.player.world.playSoundAt(e.player.pos, "minecraft:item.bucket.fill_fish", 1, 1)

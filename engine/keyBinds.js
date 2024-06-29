@@ -7,61 +7,59 @@ var defaultKeyBinds = {
     "key_nightvision": 78,
     "key_gamemode": 71,
     "key_heal": 72,
-    "key_command": 77,
     "key_stats": 88,
     "key_reload": 79,
-    "key_brushes": 86,
     "key_copyCoordinates": 90,
     "key_summonMount": 82,
-    "key_perk1": 90,
-    "key_perk2": 88,
-    "key_perk3": 67,
-    "key_perk4": 86,
-    "key_perk5": 66,
+    "key_icicle": 86,
+    "key_levitate": 32,
+    "key_dash": 67,
     "key_breath": 89,
-    "key_escape_dialog": 80
 
 }
 
 
 
 function showKeybindGUI(e) {
-    var keyBinds = JSON.parse(e.player.world.storeddata.get(e.player.name + "keyBindsJSON"))
-    var keyBindsKeys = Object.keys(keyBinds)
-
+    var keyBinds = JSON.parse(e.player.storeddata.get("keyBindsJSON"))
     var horizontalPos = 60
     var verticalPos = 10
     var horizontalSize = 25
     var verticalSize = 20
     KEYBIND_GUI = e.API.createCustomGui(id("KEYBIND_GUI"), 256, 256, false, e.player)
-    KEYBIND_GUI.addLabel(id("GUI_Title"), "Custom Keybinds", 100, -5, 1, 1)
-
-    KEYBIND_GUI.addButton(id(keyBindsKeys[4]), GLFWKeys[keyBinds.key_stats], horizontalPos, verticalPos, horizontalSize, verticalSize)
-    KEYBIND_GUI.addButton(id(keyBindsKeys[8]), GLFWKeys[keyBinds.key_summonMount], horizontalPos + 180, verticalPos, horizontalSize, verticalSize)
-    KEYBIND_GUI.addButton(id(keyBindsKeys[0]), GLFWKeys[keyBinds.key_nightvision], horizontalPos, verticalPos + 60, horizontalSize, verticalSize)
-    KEYBIND_GUI.addButton(id(keyBindsKeys[1]), GLFWKeys[keyBinds.key_gamemode], horizontalPos, verticalPos + 90, horizontalSize, verticalSize)
-    KEYBIND_GUI.addButton(id(keyBindsKeys[2]), GLFWKeys[keyBinds.key_heal], horizontalPos, verticalPos + 120, horizontalSize, verticalSize)
-    KEYBIND_GUI.addButton(id(keyBindsKeys[3]), GLFWKeys[keyBinds.key_command], horizontalPos + 180, verticalPos + 120, horizontalSize, verticalSize)
-    KEYBIND_GUI.addButton(id(keyBindsKeys[5]), GLFWKeys[keyBinds.key_reload], horizontalPos + 180, verticalPos + 150, horizontalSize, verticalSize)
-    KEYBIND_GUI.addButton(id(keyBindsKeys[6]), GLFWKeys[keyBinds.key_brushes], horizontalPos + 180, verticalPos + 60, horizontalSize, verticalSize)
-    KEYBIND_GUI.addButton(id(keyBindsKeys[7]), GLFWKeys[keyBinds.key_copyCoordinates], horizontalPos + 180, verticalPos + 90, horizontalSize, verticalSize)
-    KEYBIND_GUI.addButton(id(keyBindsKeys[9]), GLFWKeys[keyBinds.key_perk1], horizontalPos - 10, verticalPos + 200, horizontalSize, verticalSize)
-    KEYBIND_GUI.addButton(id(keyBindsKeys[10]), GLFWKeys[keyBinds.key_perk2], horizontalPos + 20, verticalPos + 200, horizontalSize, verticalSize)
-    KEYBIND_GUI.addButton(id(keyBindsKeys[11]), GLFWKeys[keyBinds.key_perk3], horizontalPos + 50, verticalPos + 200, horizontalSize, verticalSize)
-    KEYBIND_GUI.addButton(id(keyBindsKeys[12]), GLFWKeys[keyBinds.key_perk4], horizontalPos + 80, verticalPos + 200, horizontalSize, verticalSize)
-    KEYBIND_GUI.addButton(id(keyBindsKeys[13]), GLFWKeys[keyBinds.key_perk5], horizontalPos + 110, verticalPos + 200, horizontalSize, verticalSize)
-    KEYBIND_GUI.addButton(id(keyBindsKeys[14]), GLFWKeys[keyBinds.key_breath], horizontalPos + 180, verticalPos + 30, horizontalSize, verticalSize)
-    KEYBIND_GUI.addButton(id("Default"), "Set to default", horizontalPos, verticalPos + 230, 140, 20)
+    KEYBIND_GUI.addLabel(id("GUI_Title"), "Custom Keybinds", 100, -5, 1, 1, 0xffffff)
 
     KEYBIND_GUI.addLabel(id("L_Stats"), "Stats Screen:", horizontalPos - 80, verticalPos + 10, 1, 1, 0xffffff)
-    KEYBIND_GUI.addLabel(id("L_summonMount"), "Summon Mount:", horizontalPos + 100, verticalPos + 10, 1, 1, 0xffffff)
-    KEYBIND_GUI.addLabel(id("L_Nightvision"), "Nightvision:", horizontalPos - 80, verticalPos + 70, 1, 1, 0xffffff)
-    KEYBIND_GUI.addLabel(id("L_Gamemode"), "Gamemode:", horizontalPos - 80, verticalPos + 100, 1, 1, 0xffffff)
-    KEYBIND_GUI.addLabel(id("L_Heal"), "Fully heal:", horizontalPos - 80, verticalPos + 130, 1, 1, 0xffffff)
-    KEYBIND_GUI.addLabel(id("L_Command"), "Cmnd Feedback:", horizontalPos + 80, verticalPos + 130, 1, 1, 0xffffff)
+    KEYBIND_GUI.addLabel(id("L_summonMount"), "Summon Mount:", horizontalPos - 80, verticalPos + 40, 1, 1, 0xffffff)
+    KEYBIND_GUI.addLabel(id("L_Dash"), "Dash:", horizontalPos - 80, verticalPos + 70, 1, 1, 0xffffff)
+    KEYBIND_GUI.addLabel(id("L_Levitate"), "Levitate:", horizontalPos - 80, verticalPos + 100, 1, 1, 0xffffff)
+    KEYBIND_GUI.addLabel(id("L_Icicle"), "Icicle:", horizontalPos - 80, verticalPos + 130, 1, 1, 0xffffff)
+
+
+    KEYBIND_GUI.addButton(id("key_stats"), GLFWKeys[keyBinds.key_stats], horizontalPos, verticalPos, horizontalSize, verticalSize)
+    KEYBIND_GUI.addButton(id("key_summonMount"), GLFWKeys[keyBinds.key_summonMount], horizontalPos, verticalPos + 30, horizontalSize, verticalSize)
+    KEYBIND_GUI.addButton(id("key_dash"), GLFWKeys[keyBinds.key_dash], horizontalPos, verticalPos + 60, horizontalSize, verticalSize)
+    KEYBIND_GUI.addButton(id("key_levitate"), GLFWKeys[keyBinds.key_levitate], horizontalPos, verticalPos + 90, horizontalSize, verticalSize)
+    KEYBIND_GUI.addButton(id("key_icicle"), GLFWKeys[keyBinds.key_icicle], horizontalPos, verticalPos + 120, horizontalSize, verticalSize)
+
+
+
+
+    KEYBIND_GUI.addButton(id("key_nightvision"), GLFWKeys[keyBinds.key_nightvision], horizontalPos + 180, verticalPos + 60, horizontalSize, verticalSize)
+    KEYBIND_GUI.addButton(id("key_gamemode"), GLFWKeys[keyBinds.key_gamemode], horizontalPos + 180, verticalPos + 90, horizontalSize, verticalSize)
+    KEYBIND_GUI.addButton(id("key_heal"), GLFWKeys[keyBinds.key_heal], horizontalPos + 180, verticalPos + 120, horizontalSize, verticalSize)
+    KEYBIND_GUI.addButton(id("key_reload"), GLFWKeys[keyBinds.key_reload], horizontalPos + 180, verticalPos + 150, horizontalSize, verticalSize)
+
+    KEYBIND_GUI.addButton(id("key_breath"), GLFWKeys[keyBinds.key_breath], horizontalPos + 180, verticalPos + 30, horizontalSize, verticalSize)
+    KEYBIND_GUI.addButton(id("Default"), "Set to default", horizontalPos, verticalPos + 230, 140, 20)
+
+
+
+    KEYBIND_GUI.addLabel(id("L_Nightvision"), "Nightvision:", horizontalPos + 80, verticalPos + 70, 1, 1, 0xffffff)
+    KEYBIND_GUI.addLabel(id("L_Gamemode"), "Gamemode:", horizontalPos + 80, verticalPos + 100, 1, 1, 0xffffff)
+    KEYBIND_GUI.addLabel(id("L_Heal"), "Fully heal:", horizontalPos + 80, verticalPos + 130, 1, 1, 0xffffff)
     KEYBIND_GUI.addLabel(id("L_Reload"), "Reload Scripts:", horizontalPos + 80, verticalPos + 160, 1, 1, 0xffffff)
-    KEYBIND_GUI.addLabel(id("L_Brushes"), "Show Brushes:", horizontalPos + 80, verticalPos + 70, 1, 1, 0xffffff)
-    KEYBIND_GUI.addLabel(id("L_CopyCoords"), "Copy Coordinates:", horizontalPos + 80, verticalPos + 100, 1, 1, 0xffffff)
+
     KEYBIND_GUI.addLabel(id("L_Breath"), "Toggle Breath:", horizontalPos + 80, verticalPos + 40, 1, 1, 0xffffff)
     e.player.showCustomGui(KEYBIND_GUI)
 }
@@ -72,7 +70,7 @@ function customGuiButton(e) {
         editKeyBind(e)
     }
     else {
-        e.player.world.storeddata.put(e.player.name + "keyBindsJSON", JSON.stringify(defaultKeyBinds))
+        e.player.storeddata.put("keyBindsJSON", JSON.stringify(defaultKeyBinds))
         showKeybindGUI(e)
     }
 }
@@ -92,12 +90,13 @@ function editKeyBind(e) {
 
 function assignKey(e) {
     if (keybindMode) {
-        var keyBinds = JSON.parse(e.player.world.storeddata.get(e.player.name + "keyBindsJSON"))
+        var keyBinds = JSON.parse(e.player.storeddata.get("keyBindsJSON"))
         e.player.message(idname(rebindingID))
+        keyBinds[idname(rebindingID)] = e.key
         keybindMode = false
         KEYBIND_GUI.getComponent(rebindingID).setLabel(GLFWKeys[e.key])
         KEYBIND_GUI.update()
-        e.player.world.storeddata.put(e.player.name + "keyBindsJSON", JSON.stringify(keyBinds))
+        e.player.storeddata.put("keyBindsJSON", JSON.stringify(keyBinds))
     }
 }
 

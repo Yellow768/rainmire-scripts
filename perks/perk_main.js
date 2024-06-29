@@ -276,7 +276,7 @@ function timer(e) {
 }
 
 
-function attemptToUsePerkPower(e, cost) {
+function attemptToUseHydration(e, cost) {
     if (e.player.hasTag("conservationist") && getScore("good_perk_debt") >= getScore("bad_perk_debt")) {
         cost = Math.floor(cost / 2)
     }

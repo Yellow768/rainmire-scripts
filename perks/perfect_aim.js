@@ -10,7 +10,7 @@ function perk_perfect_aim(e, cost) {
 }
 
 function perfect_aim_ranged_launched(e) {
-    if (!attemptToUsePerkPower(e, good_perks["perfect_aim"].cost)) return
+    if (!attemptToUseHydration(e, good_perks["perfect_aim"].cost)) return
     e.player.timers.start(id("findArrowForPerfectAim"), 0, false)
     e.player.world.playSoundAt(e.player.pos, "minecraft:ambient.underwater.enter", .6, 1)
     //e.player.world.playSoundAt(e.player.pos, "minecraft:item.bucket.empty", .6, .7)

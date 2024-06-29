@@ -18,6 +18,7 @@ function init(e) {
 
 function timer(e) {
 	attrbiuteCheck_timer(e)
+	dash_timers(e)
 	switch (e.id) {
 		case id("changeJustLoggedIn"):
 			justLoggedIn = false
@@ -278,7 +279,10 @@ function keyPressed(e) {
 		case keyBinds.key_stats:
 			e.player.tempdata.put("canEditPerks", e.player.gamemode == 1)
 			createStatsScreen(e, true)
-
+			break;
+		case keyBinds.key_dash:
+			dash(e)
+			pp(e, "test")
 			break;
 	}
 }

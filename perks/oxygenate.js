@@ -6,7 +6,7 @@ function perk_oxygenate(e, cost) {
         displayTitle(e, "This power is resting", "red")
         return
     }
-    if (!attemptToUsePerkPower(e, cost)) {
+    if (!attemptToUseHydration(e, cost)) {
         return
     }
     e.player.addTag("oxygenating")

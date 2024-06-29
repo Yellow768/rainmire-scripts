@@ -1,5 +1,5 @@
 function perk_invisibility(e, cost) {
-    if (!attemptToUsePerkPower(e, cost)) {
+    if (!attemptToUseHydration(e, cost)) {
         disablePerk(e, "refraction")
         return
     }

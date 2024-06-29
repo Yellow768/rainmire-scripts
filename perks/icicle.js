@@ -5,7 +5,7 @@ function perk_icicle(e, cost) {
         playFailure(e)
         return
     }
-    if (!attemptToUsePerkPower(e, cost)) {
+    if (!attemptToUseHydration(e, cost)) {
         return
     }
     if (e.player.tempdata.has("iciclePos")) {

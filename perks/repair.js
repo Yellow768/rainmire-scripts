@@ -3,7 +3,7 @@ function perk_repair(e, cost) {
         e.player.message("&cThis item's already been repaired or does not need to be repaired")
         return
     }
-    if (!attemptToUsePerkPower(e, cost)) {
+    if (!attemptToUseHydration(e, cost)) {
         return
     }
     var repairAmount = 30 + (Math.random() * 10) * getScore("Knowledge")

@@ -3,7 +3,7 @@ function perk_levitate(e, cost) {
     if (e.player.inWater()) {
         return
     }
-    if (!attemptToUsePerkPower(e, cost)) {
+    if (!attemptToUseHydration(e, cost)) {
         executeCommand("/attribute " + e.player.name + " forge:entity_gravity base set 0.08")
         e.player.removeTag("levitating")
         executeCommand("stopsound " + e.player.name + " weather minecraft:weather.rain")

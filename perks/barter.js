@@ -12,7 +12,7 @@ function perk_barter(e, cost) {
 
             break;
         case false:
-            if (!attemptToUsePerkPower(e, cost)) {
+            if (!attemptToUseHydration(e, cost)) {
                 return
             }
             e.player.addTag("readyToBarter")

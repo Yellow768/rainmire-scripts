@@ -2,7 +2,7 @@ function perk_electric_eel(e, cost) {
     if (!e.player.inWater()) {
         return
     }
-    if (!attemptToUsePerkPower(e, cost)) {
+    if (!attemptToUseHydration(e, cost)) {
         return
     }
     var nE = e.player.world.getNearbyEntities(e.player.pos, 15, 2)

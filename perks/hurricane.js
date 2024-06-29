@@ -5,7 +5,7 @@ function perk_hurricane(e, cost) {
         e.player.world.playSoundAt(e.player.pos, "minecraft:entity.guardian.hurt", .4, 1)
         return
     }
-    if (!attemptToUsePerkPower(e, cost)) {
+    if (!attemptToUseHydration(e, cost)) {
         return
     }
     e.player.tempdata.put("hurricane_block", block.pos)

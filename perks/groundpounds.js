@@ -13,7 +13,7 @@ function perk_groundpound(e, cost) {
     if (flyingUp || e.player.getMotionY() == noVelocity) {
         return
     }
-    if (!attemptToUsePerkPower(e, cost)) {
+    if (!attemptToUseHydration(e, cost)) {
         return
     }
     flyingUp = true

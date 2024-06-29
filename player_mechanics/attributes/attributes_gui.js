@@ -1,7 +1,6 @@
 var GUI_STATS
-var statsStringArray = ["Charm", "Empathy", "Suggestion", "Grit", "Brawn", "Deftness", "Logic", "Perception", "Knowledge"]
-var xPos = [16, 79, 142]
-var yPos = [15, 35, 54]
+var xPos = [20, 88, 156]
+var yPos = [30, 38, 54]
 
 var unsavedChangesMode = false
 
@@ -41,66 +40,70 @@ function createScores(e) {
     var L_Stat = 500
     updateStats(e)
     var x_pos = -1
-    var y_pos = 0
-    for (var i = 0; i < 9; i++) {
-        if (i % 3 == 0) {
-            y_pos = 0
-            x_pos += 1
-        }
+    for (var i = 0; i < 3; i++) {
+        x_pos += 1
         L_Stat++
 
         var value = getScore(statsStringArray[i] + "Base")
         if (unsavedChangesMode) value = temporary_stat_values[statsStringArray[i]]
 
         for (var j = 0; j < value; j++) {
+            var current_stat_y = yPos[0]
+            var current_stat_x = xPos[x_pos]
+            if (j >= 5) {
+                current_stat_y = yPos[1]
+                current_stat_x -= 45
+            }
             L_Stat++
-            GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/attribute_point.png", xPos[x_pos] + (j * 9), yPos[y_pos], 256, 256).setScale(.031)
+            GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/attribute_point.png", current_stat_x + (j * 9), current_stat_y, 256, 256).setScale(.031)
         }
-        for (var j = value; j < 5; j++) {
+        for (var j = value; j < 10; j++) {
+            var current_stat_y = yPos[0]
+            var current_stat_x = xPos[x_pos]
+            if (j >= 5) {
+                current_stat_y = yPos[1]
+                current_stat_x -= 45
+            }
             L_Stat++
-            GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/perks/empty_slot.png", xPos[x_pos] + (j * 9), yPos[y_pos], 256, 256).setScale(.031)
+            GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/perks/empty_slot.png", current_stat_x + (j * 9), current_stat_y, 256, 256).setScale(.031)
         }
 
         L_Stat++
         if (value < 10) {
-            GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/numbers.png", xPos[x_pos] + 45, yPos[y_pos] + 9, 25, 25, 25 * (getScore(statsStringArray[i])), 0).setScale(.3)
+            GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/numbers.png", xPos[x_pos] + 36, yPos[0] - 10, 25, 25, 25 * (getScore(statsStringArray[i])), 0).setScale(.3)
         }
         else {
             var digit_array = value.toString()
-            GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/numbers.png", xPos[x_pos] + 38, yPos[y_pos] + 9, 25, 25, 25 * parseInt(digit_array[0]), 0).setScale(.3)
+            GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/numbers.png", xPos[x_pos] + 38, yPos[0] + 9, 25, 25, 25 * parseInt(digit_array[0]), 0).setScale(.3)
             L_Stat++
-            GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/numbers.png", xPos[x_pos] + 48, yPos[y_pos] + 9, 25, 25, 25 * parseInt(digit_array[1]), 0).setScale(.3)
+            GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/numbers.png", xPos[x_pos] + 48, yPos[0] + 9, 25, 25, 25 * parseInt(digit_array[1]), 0).setScale(.3)
         }
-
-
-
-        y_pos += 1
     }
-    var swim_x = 66
-    var swim_y = 97
+    var swim_x = 51
+    var swim_y = 60
     for (var swim_speed = 0; swim_speed < getScore("swmspd"); swim_speed++) {
         L_Stat++
         if (swim_speed >= 5) {
-            swim_x = 66 - (9 * 5)
-            swim_y = 87
+            swim_x = 51 - (9 * 5)
+            swim_y = 69
         }
         GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/aquatic_point.png", swim_x + (swim_speed * 9), swim_y, 256, 256).setScale(.031)
     }
     for (var empty_swim_speed = getScore("swmspd"); empty_swim_speed < 10; empty_swim_speed++) {
         L_Stat++
         if (empty_swim_speed >= 5) {
-            swim_x = 66 - (9 * 5)
-            swim_y = 87
+            swim_x = 51 - (9 * 5)
+            swim_y = 69
         }
         GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/perks/empty_slot.png", swim_x + (empty_swim_speed * 9), swim_y, 256, 256).setScale(.031)
     }
     var lung_x = 145
-    var lung_y = 97
+    var lung_y = 60
     for (var lung_cap = 0; lung_cap < player.storeddata.get("airDecreaseRate"); lung_cap++) {
         L_Stat++
         if (lung_cap >= 5) {
             lung_x = 145 - (9 * 5)
-            lung_y = 87
+            lung_y = 69
         }
         GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/aquatic_point.png", lung_x + (lung_cap * 9), lung_y, 256, 256).setScale(.031)
     }
@@ -108,7 +111,7 @@ function createScores(e) {
         L_Stat++
         if (empty_lung_cap >= 5) {
             lung_x = 145 - (9 * 5)
-            lung_y = 87
+            lung_y = 69
         }
         GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/perks/empty_slot.png", lung_x + (empty_lung_cap * 9), lung_y, 256, 256).setScale(.031)
     }
@@ -123,10 +126,6 @@ function createValues() {
             previousXPThreshold += 50 + ((i - 1) * 50)
         }
     }
-
-    var speedAttribute = (.04 + (getScore("Deftness") * .03)) * 43.1
-    var speedString = speedAttribute.toString()
-
     var swimSpeed = 5.612 * (1 + (0.5 * getScore("swmspd")))
     var swimString = swimSpeed.toString()
 

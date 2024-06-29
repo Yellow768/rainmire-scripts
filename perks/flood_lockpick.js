@@ -6,7 +6,7 @@ function perk_flood_lockpick(e, cost) {
         addToScore("perk_power", cost)
         return
     }
-    if (!attemptToUsePerkPower(e, cost)) {
+    if (!attemptToUseHydration(e, cost)) {
         return
     }
     e.player.addTag("flood_lockpick")

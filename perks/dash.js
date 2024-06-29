@@ -1,8 +1,8 @@
 
 var direction
 
-function perk_dash(e, cost) {
-    if (!attemptToUsePerkPower(e, cost)) {
+function dash(e) {
+    if (!attemptToUseHydration(e, 3)) {
         return
     }
     direction = e.player.getRotation()
@@ -32,16 +32,15 @@ function perk_dash(e, cost) {
         }
     }
     var d
-    var deftnessModifier = (getScore("Deftness")) / 4
     e.player.timers.forceStart(id("DASH_COLLISION_CHECK"), 0, true)
     if (e.player.getMount()) {
-        d = FrontVectors(e.player, e.player.getMount().getRotation(), 0, 1.6 + deftnessModifier, false)
+        d = FrontVectors(e.player, e.player.getMount().getRotation(), 0, 1.6, false)
     }
     else if (e.player.getMCEntity().m_5842_()) {
-        d = FrontVectors(e.player, direction, -e.player.pitch, 1.6 + deftnessModifier, false)
+        d = FrontVectors(e.player, direction, -e.player.pitch, 1.6, false)
     }
     else {
-        d = FrontVectors(e.player, direction, 7, 1.6 + deftnessModifier, false)
+        d = FrontVectors(e.player, direction, 7, 1.6, false)
     }
     if (e.player.getMount()) {
         e.player.getMount().setMotionY(d[1])

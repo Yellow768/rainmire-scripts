@@ -1,5 +1,5 @@
 function perk_companion_buff(e, cost) {
-    if (!attemptToUsePerkPower(e, cost)) {
+    if (!attemptToUseHydration(e, cost)) {
         return
     }
 

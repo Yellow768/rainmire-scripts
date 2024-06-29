@@ -1,3 +1,7 @@
+var API = Java.type('noppes.npcs.api.NpcAPI').Instance();
+load(API.getLevelDir() + "/scripts/ecmascript/boiler/commonFunctions.js");
+load(API.getLevelDir() + "/scripts/ecmascript/boiler/id_generator.js");
+
 var player
 var NAME_GUI
 var guard_npc
@@ -98,7 +102,7 @@ function broken(e) {
 }
 
 function timer(e) {
-    if (e.id == id("triggerGuardIntro")) {
+    if (e.id == id("triggerGuardIntro") && guard_npc) {
         guard_npc.trigger(id("enterPlayerCell"))
         e.player.timers.forceStart(id("showNameGui"), 140, false)
     }

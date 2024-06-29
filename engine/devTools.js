@@ -30,8 +30,8 @@ function init(e) {
         e.player.storeddata.put("helpMessage", 0)
     }
     e.player.playSound("minecraft:block.note_block.chime", e.player.storeddata.get("uiPlayChime"), 1)
-    if (e.player.world.storeddata.get(e.player.name + "keyBindsJSON") == undefined) {
-        e.player.world.storeddata.put(e.player.name + "keyBindsJSON", JSON.stringify(defaultKeyBinds))
+    if (!e.player.storeddata.has("keyBindsJSON")) {
+        e.player.storeddata.put("keyBindsJSON", JSON.stringify(defaultKeyBinds))
     }
     e.player.tempdata.put("currentOpponents", [])
     executeCommand("/stopsound " + e.player.name + " record iob:music.battle.drums")
@@ -40,9 +40,6 @@ function init(e) {
 
 }
 
-function login(e) {
-
-}
 
 function logout(e) {
     e.player.world.storeddata.put("ids", JSON.stringify(e.world.tempdata.get("ids")))
@@ -53,12 +50,9 @@ function keyPressed(e) {
         assignKey(e)
         return
     }
-    var keyBinds = JSON.parse(e.player.world.storeddata.get(e.player.name + "keyBindsJSON"))
+    var keyBinds = JSON.parse(e.player.storeddata.get("keyBindsJSON"))
     if (keyMode) {
         e.player.message(e.key)
-    }
-    if (e.key == keyBinds.key_escape_dialog) {
-        e.API.executeCommand(e.player.world, "noppes dialog show " + e.player + name + " 218 Free")
     }
     if (e.openGui == '') {
 
@@ -78,15 +72,6 @@ function keyPressed(e) {
             case keyBinds.key_reload:
                 executeCommand('/tellraw @a {"text":"CUSTOMNPCS: Reloading Scripts (This may take a bit! Expect lag!)","color":"yellow"}')
                 executeCommand("noppes script reload")
-                executeCommand("kubejs reload server_scripts")
-                executeCommand("kubejs reload client_scripts")
-                executeCommand("kubejs reload startup_scripts")
-                break;
-            case keyBinds.key_brushes:
-                listBrushPresets()
-                break;
-            case keyBinds.key_copyCoordinates:
-                copyCoordinates()
                 break;
             case keyBinds.key_breath:
                 switch (e.player.getPotionEffect(13)) {

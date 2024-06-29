@@ -1,4 +1,4 @@
-var statsStringArray = ["Charm", "Empathy", "Suggestion", "Grit", "Brawn", "Deftness", "Logic", "Perception", "Knowledge"]
+var statsStringArray = ["Heart", "Body", "Mind"]
 
 var justLoggedIn = false
 
@@ -34,7 +34,7 @@ function setUpVals(e) {
 	updateStats(e)
 
 	e.player.setHealth(e.player.getMaxHealth())
-	if (hasScore("Deftness") == false) {
+	if (hasScore("Body") == false) {
 		for (var i = 0; i < statsStringArray.length; i++) {
 			setScore(statsStringArray[i] + "Base", 1)
 			setScore(statsStringArray[i] + "Mod", 0)
@@ -61,28 +61,21 @@ function levelUp(e) {
 
 
 function updateStats(e) {
-	for (var i = 0; i < 9; i++) {
+	for (var i = 0; i < 3; i++) {
 		setScore(statsStringArray[i], getScore(statsStringArray[i] + "Base") + getScore(statsStringArray[i] + "Mod"))
 		if (getScore(statsStringArray[i]) < 1) {
 			setScore(statsStringArray[i], 1)
 		}
 	}
-	if (player.hasTag("glass_frame")) {
-		setScore("Grit", 1)
-	}
-	var sumOfHnM = getScore("Charm") + getScore("Empathy") + getScore("Suggestion") + getScore("Logic") + getScore("Perception") + getScore("Knowledge")
-	setScore("max_perk_power", sumOfHnM + getScore("perk_power_mod"))
 	if (player.hasTag("Intro")) {
 		setScore("max_perk_power", 0)
 	}
 	if (getScore("perk_power") > getScore("max_perk_power")) {
 		setScore("perk_power", getScore("max_perk_power"))
 	}
-	var health = 4 * (getScore("Grit") + 1)
-	var damage = +1 + (2 * (getScore("Brawn") - 1))
+	var health = 4 * player.getExpLevel()
 	if (!player.hasTag("Intro")) {
 		executeCommand("attribute " + player.name + " minecraft:generic.max_health base set " + health)
-		executeCommand("attribute " + player.name + " minecraft:generic.attack_damage base set " + damage)
 	}
 	else {
 		executeCommand("attribute " + player.name + " minecraft:generic.max_health base set 20")
@@ -115,8 +108,8 @@ function handlePlayerMovementSpeed(e) {
 		return
 	}
 	//Define Speed Values
-	var sprint_speed = .08 + (0.04 * (getScore("Deftness") - 1))
-	var walk_speed = .08 + (0.01 * (getScore("Deftness") - 1))
+	var sprint_speed = .08 + (0.04 * (getScore("SprintSpeed")))
+	var walk_speed = 1
 	var swim_sprint_speed = getScore("swmspd")
 	var swim_walk_speed = 1 + (0.25 * getScore("swmspd"))
 	if (e.player.inWater() && e.player.world.getBlock(e.player.pos).name == "minecraft:water") {
@@ -124,12 +117,7 @@ function handlePlayerMovementSpeed(e) {
 		if (e.player.world.getBlock(e.player.pos).getProperty("level") == 7) walk_speed += 1
 	}
 	if (e.player.hasTag("winded")) {
-		sprint = sprint = .08 + (0.02 * (getScore("Deftness") - 1))
-	}
-	if (e.player.hasTag("usingBow")) {
-		walk_speed = .4 + (0.01 * (getScore("Deftness") - 1))
-		swim_walk_speed = 1.4 + (0.25 * getScore("swmspd"))
-
+		sprint = sprint = .08 + (0.02 * (getScore("SprintSpeed") - 1))
 	}
 	//Apply them
 	if (e.player.hasTag("paralyzed")) {
@@ -157,28 +145,27 @@ function applyArmorAttributeModifiers(e) {
 	var fromItem = e.arguments[1]
 	var toItem = e.arguments[2]
 	var slot = e.arguments[3]
-	var attributes = ["Charm", "Empathy", "Suggestion", "Brawn", "Grit", "Deftness", "Logic", "Perception", "Knowledge"]
-	for (var i = 0; i < attributes.length; i++) {
-		if (fromItem.nbt.has(attributes[i])) {
+	for (var i = 0; i < statsStringArray.length; i++) {
+		if (fromItem.nbt.has(statsStringArray[i])) {
 			if (fromItem.isWearable()) {
 				if (slot == "HEAD" || slot == "CHEST" || slot == "LEGS" || slot == "FEET") {
-					addToScore(attributes[i] + "Mod", -fromItem.nbt.getInteger(attributes[i]))
+					addToScore(statsStringArray[i] + "Mod", -fromItem.nbt.getInteger(statsStringArray[i]))
 				}
 
 			}
 			else {
-				addToScore(attributes[i] + "Mod", -fromItem.nbt.getInteger(attributes[i]))
+				addToScore(statsStringArray[i] + "Mod", -fromItem.nbt.getInteger(statsStringArray[i]))
 			}
 			i
 		}
-		if (toItem.nbt.has(attributes[i])) {
+		if (toItem.nbt.has(statsStringArray[i])) {
 			if (toItem.isWearable()) {
 				if (slot == "HEAD" || slot == "CHEST" || slot == "LEGS" || slot == "FEET") {
-					addToScore(attributes[i] + "Mod", toItem.nbt.getInteger(attributes[i]))
+					addToScore(statsStringArray[i] + "Mod", toItem.nbt.getInteger(statsStringArray[i]))
 				}
 			}
 			else {
-				addToScore(attributes[i] + "Mod", toItem.nbt.getInteger(attributes[i]))
+				addToScore(statsStringArray[i] + "Mod", toItem.nbt.getInteger(statsStringArray[i]))
 			}
 		}
 	}
@@ -204,27 +191,7 @@ function statTriggers(e) {
 
 
 
-function dialog(e) {
-	if (e.player.hasTag("social_anxiety")) {
-		for (var i = 0; i < 9; i++) {
-			addToScore(statsStringArray[i] + "Mod", -1)
-		}
-		displayTitle(e, "You're starting to sweat", '#E441C3')
-		updateStats(e)
-	}
 
-}
-
-function dialogClose(e) {
-	if (e.player.hasTag("social_anxiety")) {
-		for (var i = 0; i < 9; i++) {
-			addToScore(statsStringArray[i] + "Mod", 1)
-		}
-		displayTitle(e, "That wasn't so bad", '#E441C3')
-		updateStats(e)
-	}
-
-}
 
 function died(e) {
 	for (var i = 0; i < statsStringArray.length; i++) {
@@ -232,7 +199,6 @@ function died(e) {
 	}
 }
 
-//
 
 
 function handlePlayerAirSupply(e) {

@@ -19,7 +19,7 @@ function perk_resurface(e, cost) {
             surfaceBlock = e.player.pos.offset(1, i)
         }
     }
-    if (!attemptToUsePerkPower(e, cost) || !canSurface) {
+    if (!attemptToUseHydration(e, cost) || !canSurface) {
         return
     }
     isSurfacing = true

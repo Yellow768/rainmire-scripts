@@ -1,6 +1,6 @@
 var summoned = []
 function perk_summon(e, cost) {
-    if (!attemptToUsePerkPower(e, cost)) {
+    if (!attemptToUseHydration(e, cost)) {
         return
     }
     var block = e.player.rayTraceBlock(8, true, true)

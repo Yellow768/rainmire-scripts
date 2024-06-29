@@ -3,7 +3,7 @@ function perk_animal_lover(e, cost) {
         executeCommand('/title ' + e.player.name + ' actionbar {"text":"You are still secreting pheremones","color":"#25EE9A"}')
         return
     }
-    if (!attemptToUsePerkPower(e, cost)) {
+    if (!attemptToUseHydration(e, cost)) {
         return
     }
 
