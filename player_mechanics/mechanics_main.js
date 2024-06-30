@@ -6,10 +6,10 @@ function init(e) {
 
 	e.player.timers.forceStart(768200, 40, true)
 	e.player.timers.forceStart(id("updateHydrationData"), 0, true)
-
+	e.player.timers.forceStart(id("hydration_replenishing"), 0, true)
+	powers_init(e)
 	initPerkItems(e)
 	setUpVals(e)
-
 }
 
 
@@ -18,7 +18,7 @@ function init(e) {
 
 function timer(e) {
 	attrbiuteCheck_timer(e)
-	dash_timers(e)
+	powers_timers(e)
 	switch (e.id) {
 		case id("changeJustLoggedIn"):
 			justLoggedIn = false
@@ -49,9 +49,7 @@ function timer(e) {
 			player.tempdata.put("canEditPerks", true)
 			createStatsScreen(e)
 			break;
-		case 7:
-			openAquaticGUI()
-			break;
+
 
 		case id("updateSelectedPerks"):
 			updateSelectedPerks()
@@ -268,18 +266,11 @@ function dialog(e) {
 	cantAttack = true
 }
 
-var isMovingBackwards
-var isMovingForward
-var isMovingLeft
-var isMovingRight
+
 
 function keyPressed(e) {
 	var keyBinds = JSON.parse(e.player.world.storeddata.get(e.player.name + "keyBindsJSON"))
 	if (e.openGui) { return }
-	if (e.key == 87) { isMovingForward = true }
-	if (e.key == 65) { isMovingLeft = true }
-	if (e.key == 83) { isMovingBackwards = true }
-	if (e.key == 68) { isMovingRight = true }
 	switch (e.key) {
 		case keyBinds.key_summonMount:
 			handleMountInput(e)
@@ -287,18 +278,15 @@ function keyPressed(e) {
 		case keyBinds.key_stats:
 			e.player.tempdata.put("canEditPerks", e.player.gamemode == 1)
 			createStatsScreen(e, true)
-			break;
-		case keyBinds.key_dash:
-			dash(e)
+			break
+		default:
+			powers_keyPressed(e)
 			break;
 	}
 }
 
 function keyReleased(e) {
-	if (e.key == 87) { isMovingForward = false }
-	if (e.key == 65) { isMovingLeft = false }
-	if (e.key == 83) { isMovingBackwards = false }
-	if (e.key == 68) { isMovingRight = false }
+	powers_keyReleased(e)
 }
 
 
@@ -330,6 +318,10 @@ function toss(e) {
 }
 
 function damaged(e) {
+	if (e.player.hasTag("noLevitateFallDamage") && e.damageSource.type == "fall") {
+		e.setCanceled(true)
+		return
+	}
 	e.player.storeddata.put("DeathPosX", e.player.x)
 	e.player.storeddata.put("DeathPosY", e.player.y)
 	e.player.storeddata.put("DeathPosZ", e.player.z)
@@ -360,79 +352,3 @@ function broken(e) {
 	}
 }
 
-function attemptToUseHydration(e, cost) {
-	if (e.player.hasTag("conservationist") && getScore("good_perk_debt") >= getScore("bad_perk_debt")) {
-		cost = Math.floor(cost / 2)
-	}
-	if (e.player.gamemode == 1) {
-		return true
-	}
-	if (getScore("perk_power") < cost) {
-		if (e.player.hasTag("blood_cost")) {
-			var cdamage = cost - getScore("perk_power")
-			if (getScore("perk_power") > 0) {
-				addToScore("using", getScore("perk_power"))
-			}
-			e.player.damage(cdamage / 2)
-			e.player.world.spawnParticle("falling_lava", e.player.x, e.player.y + 1, e.player.z, .3, .4, .3, 1, 200)
-			e.player.playSound("upgrade_aquatic:entity.pike.death", 1, 1)
-			return true
-		}
-		displayNotEnoughpower(e, cost)
-		return false
-	}
-	addToScore("using", cost)
-
-
-	return true
-} function attemptToUseHydration(e, cost) {
-	if (e.player.hasTag("conservationist") && getScore("good_perk_debt") >= getScore("bad_perk_debt")) {
-		cost = Math.floor(cost / 2)
-	}
-	if (e.player.gamemode == 1) {
-		return true
-	}
-	if (getScore("perk_power") < cost) {
-		if (e.player.hasTag("blood_cost")) {
-			var cdamage = cost - getScore("perk_power")
-			if (getScore("perk_power") > 0) {
-				addToScore("using", getScore("perk_power"))
-			}
-			e.player.damage(cdamage / 2)
-			e.player.world.spawnParticle("falling_lava", e.player.x, e.player.y + 1, e.player.z, .3, .4, .3, 1, 200)
-			e.player.playSound("upgrade_aquatic:entity.pike.death", 1, 1)
-			return true
-		}
-		displayNotEnoughpower(e, cost)
-		return false
-	}
-	addToScore("using", cost)
-
-
-	return true
-} function attemptToUseHydration(e, cost) {
-	if (e.player.hasTag("conservationist") && getScore("good_perk_debt") >= getScore("bad_perk_debt")) {
-		cost = Math.floor(cost / 2)
-	}
-	if (e.player.gamemode == 1) {
-		return true
-	}
-	if (getScore("perk_power") < cost) {
-		if (e.player.hasTag("blood_cost")) {
-			var cdamage = cost - getScore("perk_power")
-			if (getScore("perk_power") > 0) {
-				addToScore("using", getScore("perk_power"))
-			}
-			e.player.damage(cdamage / 2)
-			e.player.world.spawnParticle("falling_lava", e.player.x, e.player.y + 1, e.player.z, .3, .4, .3, 1, 200)
-			e.player.playSound("upgrade_aquatic:entity.pike.death", 1, 1)
-			return true
-		}
-		displayNotEnoughpower(e, cost)
-		return false
-	}
-	addToScore("using", cost)
-
-
-	return true
-}

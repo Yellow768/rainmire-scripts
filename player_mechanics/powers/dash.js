@@ -1,6 +1,9 @@
 
 var direction
 
+
+
+
 function dash(e) {
     if (!attemptToUseHydration(e, 3)) {
         return
@@ -73,19 +76,11 @@ var delay = 0
 function dash_timers(e) {
     switch (e.id) {
         case id("DASH_TIMER"):
+
             e.player.removeTag("isDashing")
             e.player.timers.stop(id("DASH_COLLISION_CHECK"))
             e.player.timers.stop(id("dash_visual_effects"))
             //e.player.world.playSoundAt(e.player.pos, "minecraft:weather.rain", .2, 1)
-            break;
-        case id("DASH_COLLISION_CHECK"):
-            if (e.player.isSneaking()) {
-                e.player.removeTag("isDashing")
-                e.player.timers.stop(id("DASH_COLLISION_CHECK"))
-                e.player.timers.stop(id("DASH_TIMER"))
-                e.player.setMotionX(0)
-                e.player.setMotionZ(0)
-            }
             break;
         case id("dash_visual_effects"):
             var angle = e.player.getRotation()

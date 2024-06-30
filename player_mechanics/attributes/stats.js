@@ -109,7 +109,7 @@ function handlePlayerMovementSpeed(e) {
 	}
 	//Define Speed Values
 	var sprint_speed = .08 + (0.04 * (getScore("SprintSpeed")))
-	var walk_speed = 1
+	var walk_speed = 0.08
 	var swim_sprint_speed = getScore("swmspd")
 	var swim_walk_speed = 1 + (0.25 * getScore("swmspd"))
 	if (e.player.inWater() && e.player.world.getBlock(e.player.pos).name == "minecraft:water") {
@@ -129,7 +129,7 @@ function handlePlayerMovementSpeed(e) {
 		executeCommand("attribute " + e.player.name + " minecraft:generic.movement_speed base set " + sprint_speed)
 		executeCommand("/attribute " + e.player.name + " forge:swim_speed base set " + swim_sprint_speed)
 	}
-	if (!e.player.isSprinting()) {
+	if (!e.player.isSprinting() && !e.player.hasTag("levitating")) {
 		executeCommand("attribute " + e.player.name + " forge:swim_speed base set " + swim_walk_speed)
 		executeCommand("attribute " + e.player.name + " minecraft:generic.movement_speed base set " + walk_speed)
 	}

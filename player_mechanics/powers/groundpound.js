@@ -4,20 +4,21 @@ var flyingUp = false
 var initialY = 0
 var jumpBoostLevel = -1
 
-function perk_groundpound(e, cost) {
+
+
+function groundpound(e) {
     var cost = 3
 
     if (groundPounding) {
         return
     }
-    if (flyingUp || e.player.getMotionY() == noVelocity) {
+    if (flyingUp || e.player.getMotionY() == noVelocity || e.player.inWater()) {
         return
     }
-    if (!attemptToUseHydration(e, cost)) {
+    if (!attemptToUseHydration(e, 4)) {
         return
     }
     flyingUp = true
-
     //e.player.world.spawnParticle("minecraft:bubble_pop", e.player.x, e.player.y + 1, e.player.z, .4, .2, .4, 0, 300)
     //e.player.world.spawnParticle("minecraft:falling_water", e.player.x, e.player.y + 1, e.player.z, .1, .1, .1, 0, 300)
     e.player.world.playSoundAt(e.player.pos, "variedcommodities:magic.charge", .2, 1)
@@ -27,13 +28,14 @@ function perk_groundpound(e, cost) {
         executeCommand("effect clear " + e.player.name + " jump_boost")
     }
     startDownwardMotion(e)
-    e.player.timers.forceStart(GROUNDPOUND_VALIDITY_TIMER, 0, true)
+    e.player.timers.forceStart(id("groundpound_validity_timer"), 0, true)
+    e.player.timers.stop(id("dash_visual_effects"))
 
 }
 
 
 function groundpound_timers(e) {
-    if (e.id == GROUNDPOUND_VALIDITY_TIMER) {
+    if (e.id == id("groundpound_validity_timer")) {
         e.player.world.spawnParticle("minecraft:bubble_pop", e.player.x, e.player.y - 1, e.player.z, 0.1, 0.5, 0.1, 0, 150)
         if (isGroundPoundValid(e)) {
             activateGroundPound(e)
@@ -61,7 +63,6 @@ function groundpound_timers(e) {
 }
 
 function startDownwardMotion(e) {
-
     e.player.world.playSoundAt(e.player.pos, "variedcommodities:magic.shot", 1, 1)
     e.player.setMotionY(-4)
     groundPounding = true
@@ -136,7 +137,7 @@ function activateGroundPound(e) {
         }
     }); var H = new HankThread(); H.start();
     e.player.damage(0.0000001)
-    e.player.timers.stop(GROUNDPOUND_VALIDITY_TIMER)
+    e.player.timers.stop(id("groundpound_validity_timer"))
 }
 
 
