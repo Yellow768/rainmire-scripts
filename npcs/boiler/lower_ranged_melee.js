@@ -24,7 +24,10 @@ function collide(e) {
         var distance = TrueDistanceCoord(e.npc.x, e.npc.y, e.npc.z, e.entity.x, e.entity.y, e.entity.z)
 
         if (distance < 1.2) {
-            e.entity.damage(calculateDamage(melee.getStrength(), e.entity))
+            var damage = calculateDamage(melee.getStrength(), e.entity, e.npc)
+            e.entity.damage(damage)
+            if (e.entity.type == 2 && damage > 0) e.entity.setAttackTarget(e.npc)
+
             e.npc.getTimers().start(id("lowMeleeRangeDelay"), melee.getDelay(), false)
             DoKnockback(e.npc, e.entity, melee.getKnockback() + 1, .2)
             e.entity.addPotionEffect(melee.getEffectType(), melee.getEffectTime(), melee.getEffectStrength(), false)

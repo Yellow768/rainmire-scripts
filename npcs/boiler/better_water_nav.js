@@ -7,13 +7,20 @@ function init(e) {
     }
 }
 
+function damaged(e) {
+    e.npc.tempdata.put("lastDamage", e.npc.getAge())
+}
+
+
+
 function target(e) {
+    if (!e.npc.isAlive()) return
     if (e.npc.ai.getWalkingSpeed() != 0) {
         e.npc.storeddata.put("navSpeed", e.npc.ai.getWalkingSpeed())
 
     }
     e.npc.ai.setWalkingSpeed(0)
-    e.npc.timers.forceStart(id("properWaterNav"), 1, true)
+    e.npc.timers.forceStart(id("properWaterNav"), 0, true)
 }
 
 function targetLost(e) {
@@ -22,13 +29,16 @@ function targetLost(e) {
 
 }
 
+function died(e) {
+    e.npc.timers.stop(id("properWaterNav"))
+}
 
 function timer(e) {
     if (e.id == id("properWaterNav"))
-        if (e.npc.getAttackTarget()) {
+        if (e.npc.getAttackTarget() && TrueDistanceEntities(e.npc, e.npc.getAttackTarget()) > 3 && e.npc.getAge() - e.npc.tempdata.get("lastDamage") > 10) {
             var dir = GetAngleTowardsEntity(e.npc, e.npc.getAttackTarget())
             e.npc.rotation = dir
-            var d = FrontVectors(e.npc, dir, e.npc.y - e.npc.getAttackTarget().y, e.npc.storeddata.get("navSpeed") / 10, 0)
+            var d = FrontVectors(e.npc, dir, e.npc.y - e.npc.getAttackTarget().y, e.npc.storeddata.get("navSpeed") / 20, 0)
             var offsetX = d[0]
             var offsetY = d[1]
             var offsetZ = d[2]
@@ -42,12 +52,14 @@ function timer(e) {
             if (e.npc.world.getBlock(e.npc.pos.add(0, -offsetY * 1.5, 0)).name == "minecraft:water") {
                 e.npc.setMotionY(-d[1] * 10)
             }
-            if ((e.npc.world.getBlock(e.npc.pos.add(offsetX, 0, offsetZ)).name == "minecraft:water") && e.npc.inWater()) {
-                e.npc.setMotionX(d[0])
-                e.npc.setMotionZ(d[2])
+            if (Math.abs(Math.abs(e.npc.z) - Math.abs(e.npc.getAttackTarget().z)) > 1.5 || Math.abs(Math.abs(e.npc.x) - Math.abs(e.npc.getAttackTarget().x)) > 1) {
+                if ((e.npc.world.getBlock(e.npc.pos.add(offsetX, 0, offsetZ)).name == "minecraft:water") && e.npc.inWater()) {
+                    e.npc.setMotionX(d[0])
+                    e.npc.setMotionZ(d[2])
+                }
             }
         }
-    if (!e.npc.inWater()) {
+    if (!e.npc.getMCEntity().m_5842_()) {
         e.npc.setMotionY(-.2)
     }
 }

@@ -2,14 +2,17 @@ var API = Java.type('noppes.npcs.api.NpcAPI').Instance();
 var scoreboard, playerName
 var reduce = false
 var world = API.getIWorld("overworld")
-function tickEventPlayerTickEvent(e) {
+function playerDestroyItemEvent(event) {
+    var player = API.getIEntity(event.event.entity)
+    if (player.tempdata.get("perk_tags").indexOf("collateral_damage") != -1) {
+        player.damage(6)
+    }
+}
 
-    var noppesPlayer = API.getIEntity(e.event.player)
-    scoreboard = noppesPlayer.world.getScoreboard()
-    playerName = noppesPlayer.name
-    if (noppesPlayer.hasTag("onIcicle")) {
-        noppesPlayer.setMotionY(0)
-        noppesPlayer.y = noppesPlayer.y
+function livingKnockBackEvent(e) {
+    var player = API.getIEntity(e.event.entity)
+    if (player.tempdata.has("perk_tags") && player.tempdata.get("perk_tags").indexOf("bouncy") != -1) {
+        e.event.setStrength(e.event.getStrength() + 1.2)
     }
 }
 

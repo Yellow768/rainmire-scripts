@@ -1,4 +1,4 @@
-var radius, attribute, target, storeddata_string, command, GUI, block, storeddata_array
+var radius, attribute, current_target, storeddata_string, command, GUI, block, storeddata_array
 
 
 function init(e) {
@@ -17,7 +17,7 @@ function init(e) {
     }
     radius = e.block.storeddata.get("radius")
     attribute = e.block.storeddata.get("attribute")
-    target = e.block.storeddata.get("target")
+    current_target = e.block.storeddata.get("target")
     storeddata_string = e.block.storeddata.get("storeddata")
     command = e.block.storeddata.get("command")
     storeddata_array = JSON.parse('[' + storeddata_string + ' ]')
@@ -27,7 +27,7 @@ function interact(e) {
     GUI = e.API.createCustomGui(1, 256, 256, false, e.player)
     GUI.addTextField(1, 100, 0, 50, 20).setCharacterType(1).setText(radius)
     GUI.addTextField(2, 100, 40, 150, 20).setText(attribute)
-    GUI.addTextField(3, 100, 80, 50, 20).setCharacterType(1).setText(target)
+    GUI.addTextField(3, 100, 80, 50, 20).setCharacterType(1).setText(current_target)
     GUI.addTextField(4, 100, 120, 150, 20).setText(storeddata_string)
     GUI.addTextField(5, 100, 160, 300, 20).setText(command)
     GUI.addLabel(6, "Radius", 0, 0, 155, 20, 0xffffff)
@@ -66,7 +66,7 @@ function tick(e) {
                 validPlayer = false
             }
         }
-        if (!scoreboard.hasPlayerObjective(nE[i].name, attribute) || scoreboard.getPlayerScore(nE[i].name, attribute) < target) {
+        if (!scoreboard.hasPlayerObjective(nE[i].name, attribute) || scoreboard.getPlayerScore(nE[i].name, attribute) < current_target) {
             validPlayer = false
 
 
@@ -97,7 +97,7 @@ function customGuiButton(e) {
     block.storeddata.put("command", GUI.getComponent(5).getText())
     radius = block.storeddata.get("radius")
     attribute = block.storeddata.get("attribute")
-    target = block.storeddata.get("target")
+    current_target = block.storeddata.get("target")
     storeddata_string = block.storeddata.get("storeddata")
     command = block.storeddata.get("command")
     storeddata_array = JSON.parse('["' + storeddata_string + ' "]')

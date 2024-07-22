@@ -1,4 +1,5 @@
 var API = Java.type('noppes.npcs.api.NpcAPI').Instance();
+load(API.getLevelDir() + "/scripts/ecmascript/boiler/id_generator.js");
 
 var esca_interval = 0
 
@@ -13,7 +14,7 @@ function livingEntityUseItemEventFinish(event) {
     }
 
     var item = API.getIItemStack(event.event.item)
-    if (item.name.indexOf("esca") != -1) player.trigger(7, [])
+    if (item.name.indexOf("esca") != -1) player.trigger(id("upgrade_aquatic_gui"), [])
     if (item.name == "minecraft:potion") {
         var nbt = item.getItemNbt()
         var potion_type = nbt.getCompound("tag").getString("Potion")

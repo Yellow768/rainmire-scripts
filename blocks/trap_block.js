@@ -1,4 +1,4 @@
-var radius, target, command, GUI, block, explosion_size, model, revealed
+var radius, current_target, command, GUI, block, explosion_size, model, revealed
 
 
 function init(e) {
@@ -19,7 +19,7 @@ function init(e) {
     }
     radius = e.block.storeddata.get("radius")
     model = e.block.storeddata.get("model")
-    target = e.block.storeddata.get("target")
+    current_target = e.block.storeddata.get("target")
     revealed = e.block.storeddata.get("revealed")
     command = e.block.storeddata.get("command")
     explosion_size = e.block.storeddata.get("explosion_size")
@@ -32,7 +32,7 @@ function interact(e) {
     GUI = e.API.createCustomGui(1, 256, 256, false, e.player)
     GUI.addTextField(1, 100, 0, 50, 20).setCharacterType(1).setText(radius)
     GUI.addTextField(2, 100, 40, 150, 20).setText(model)
-    GUI.addTextField(3, 100, 80, 50, 20).setCharacterType(1).setText(target)
+    GUI.addTextField(3, 100, 80, 50, 20).setCharacterType(1).setText(current_target)
     GUI.addTextField(4, 100, 120, 150, 20).setText(explosion_size)
     GUI.addTextField(5, 100, 160, 300, 20).setText(command)
     GUI.addLabel(6, "Radius", 0, 0, 155, 20, 0xffffff)
@@ -73,13 +73,13 @@ function tick(e) {
             var die_1 = getRandomInt(1, 7)
             var die_2 = getRandomInt(1, 7)
             var perception = scoreboard.getPlayerScore(nE[i].name, "Perception")
-            if (target <= die_1 + die_2 + perception) {
+            if (current_target <= die_1 + die_2 + perception) {
                 revealed = 1
                 e.block.storeddata.put("revealed", revealed)
                 e.block.setModel(model)
                 e.block.setLight(1)
-                e.block.executeCommand('/tellraw @a {"text":"' + nE[i].name + ' noticed a trap! (' + dice[die_1] + ' + ' + dice[die_2] + ' + ' + perception + ' >= ' + target + ')","color":"aqua"}')
-                e.block.executeCommand('xp add ' + nE[i].name + ' ' + target * 2)
+                e.block.executeCommand('/tellraw @a {"text":"' + nE[i].name + ' noticed a trap! (' + dice[die_1] + ' + ' + dice[die_2] + ' + ' + perception + ' >= ' + current_target + ')","color":"aqua"}')
+                e.block.executeCommand('xp add ' + nE[i].name + ' ' + current_target * 2)
                 e.block.executeCommand("/particle alexsmobs:worm_portal ~ ~ ~ .2 .2 .2 .2 10")
                 e.block.world.playSoundAt(e.block.pos, "iob:ui.trap_disabled", 1, 1)
             }
@@ -124,7 +124,7 @@ function customGuiButton(e) {
     block.storeddata.put("command", GUI.getComponent(5).getText())
     radius = block.storeddata.get("radius")
     model = block.storeddata.get("model")
-    target = block.storeddata.get("target")
+    current_target = block.storeddata.get("target")
     explosion_size = block.storeddata.get("explosion_size")
     command = block.storeddata.get("command")
     block.setModel(model)

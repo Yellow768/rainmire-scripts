@@ -1,4 +1,4 @@
-//Main Script
+
 
 var Thread = Java.type("java.lang.Thread");
 var NpcAPI = Java.type("noppes.npcs.api.NpcAPI").Instance();

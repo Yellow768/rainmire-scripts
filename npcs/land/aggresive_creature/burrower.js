@@ -12,7 +12,7 @@ function init(e) {
 
 function target(e) {
     if (stunned || npc.storeddata.get("hasStatusEffect")) return
-    e.npc.timers.start(id("beginBurrow"), getRandomInt(40, 120), false)
+    e.npc.timers.forceStart(id("beginBurrow"), getRandomInt(40, 120), false)
 }
 
 function died(e) {
@@ -45,7 +45,7 @@ function disableAttacks() {
 
 function beginBurrow() {
     if (npc.inWater()) {
-        npc.timers.start(id("beginBurrow"), getRandomInt(40, 120), false)
+        npc.timers.forceStart(id("beginBurrow"), getRandomInt(40, 120), false)
         return
     }
     npc.display.setVisible(1)
@@ -79,7 +79,7 @@ function timer(e) {
         e.npc.world.playSoundAt(e.npc.pos, "block.sand.break", 1, 1)
         e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.wither.break_block", .2, .2)
         e.npc.world.playSoundAt(e.npc.pos, "minecraft:block.shroomlight.break", 1, 1)
-        e.npc.timers.start(id("beginBurrow"), getRandomInt(40, 80), false)
+        e.npc.timers.forceStart(id("beginBurrow"), getRandomInt(40, 80), false)
         var entities = e.npc.world.getNearbyEntities(e.npc.pos, 2, 5)
         for (var i = 0; i < entities.length; i++) {
             if (entities[i] != e.npc) {
@@ -114,7 +114,7 @@ function trigger(e) {
     if (e.id == 1 && burrowing) {
         revealBurrower()
         disableAttacks()
-        npc.timers.start(id("revertPanickedState"), 60, false)
+        npc.timers.forceStart(id("revertPanickedState"), 60, false)
         npc.setMotionY(.8)
         npc.ai.setWalkingSpeed(3)
         npc.ai.setRetaliateType(1)

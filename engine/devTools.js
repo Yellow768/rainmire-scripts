@@ -1,9 +1,9 @@
 //Developer Tools
 var keyMode = false
 var keyBinds
+var statsStringArray = ["Heart", "Body", "Mind"]
 
 function init(e) {
-
     if (!e.player.world.storeddata.has("ids")) {
         e.player.world.storeddata.put("ids", JSON.stringify({
             counter: 1,
@@ -35,7 +35,7 @@ function init(e) {
     }
     e.player.tempdata.put("currentOpponents", [])
     executeCommand("/stopsound " + e.player.name + " record iob:music.battle.drums")
-    setUpVals(e)
+    registerScoreboardPlayer(e)
     e.player.timers.forceStart(909820, 0, true)
 
 }
@@ -196,7 +196,7 @@ function chat(e) {
             e.player.message("&dObservation Blocks Visibility Toggled")
             break;
         case "!ua":
-            e.player.timers.forceStart(7, 0, false)
+            e.player.trigger(id("upgrade_aquatic_gui"), [])
             break;
         case "!god":
             var god_mode = e.player.storeddata.get("godmode")
@@ -208,6 +208,18 @@ function chat(e) {
                 e.player.storeddata.put("godmode", 0)
                 e.player.message("&eGod mode turned &coff")
             }
+            break;
+        case "!infiniteHydration":
+            toggleInfiniteHydration()
+            break;
+        case "!ih":
+            toggleInfiniteHydration()
+            break;
+        case "!ignorePerkDebt":
+            toggleIgnorePerkDebt()
+            break;
+        case "!ipd":
+            toggleIgnorePerkDebt()
             break;
         default:
             e.setCanceled(false)
@@ -423,8 +435,8 @@ function forceLevelUp() {
 }
 
 function resetStats() {
-    var statsStringArray = ["Charm", "Empathy", "Suggestion", "Brawn", "Grit", "Deftness", "Logic", "Perception", "Knowledge"]
-    for (var i = 0; i < 9; i++) {
+
+    for (var i = 0; i < 3; i++) {
         setScore(statsStringArray[i] + "Base", 1)
         setScore(statsStringArray[i] + "Mod", 0)
         setScore(statsStringArray[i], 1)
@@ -435,7 +447,7 @@ function resetStats() {
     setScore("AttrPoints", 0)
     setScore("PerkPoints", 0)
     setScore("swmspd", 1)
-    setScore("breath", 1)
+    player.storeddata.put("airDecreaseRate", 1)
     player.storeddata.put("originalAttPts", 0)
 
     player.removeTag("levelUp")
@@ -455,7 +467,6 @@ function giveAttributePoints(amount) {
 }
 
 function applyAttributeModifier(e, attribute, value) {
-    var statsStringArray = ["Charm", "Empathy", "Suggestion", "Brawn", "Grit", "Deftness", "Logic", "Perception", "Knowledge"]
     var isValidAttribute = false
     for (var i = 0; i < statsStringArray.length; i++) {
         if (statsStringArray[i] == attribute) {
@@ -851,15 +862,43 @@ function toggleInitMessage(e) {
 }
 
 function givePerk(message) {
-    player.trigger(210, [message])
+    player.trigger(id("grant_new_perk"), [message])
 }
 
 function giveDampener(message) {
-    player.trigger(220, [message])
+    player.trigger(id("grant_new_dampener"), [message])
 }
 
 function tick(e) {
     if (e.player.hasTag("displayMode")) {
         executeCommand('/title ' + e.player.name + ' actionbar {"text":"Display Mode Active. type !display to disable.","color":"yellow"}')
+    }
+}
+
+function toggleInfiniteHydration() {
+    if (!player.storeddata.has("infiniteHydration")) player.storeddata.put("infiniteHydration", 0)
+    if (player.storeddata.get("infiniteHydration") == 1) {
+        player.storeddata.put("infiniteHydration", 0)
+        player.message("&eInfinite Hydration turned &coff")
+        return
+    }
+    else {
+        player.storeddata.put("infiniteHydration", 1)
+        player.message("&eInfinite Hydration turned &aon")
+        return
+    }
+
+}
+
+function toggleIgnorePerkDebt() {
+    if (!player.storeddata.has("ignorePerkDebt")) {
+        player.storeddata.put("ignorePerkDebt", 1)
+        player.message("&eIgnore Perk Debt turned &aon")
+        return
+    }
+    else {
+        player.storeddata.remove("ignorePerkDebt")
+        player.message("&eIgnore Perk Debt turned &coff")
+        return
     }
 }

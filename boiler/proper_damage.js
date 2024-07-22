@@ -1,12 +1,12 @@
 
 
-function calculateDamage(baseDamage, entity, source) {
-
+function calculateDamage(baseDamage, entity, source, knockback) {
+    if (knockback == undefined) knockback = -1
     var damage
     var EPF = 0
     if (entity.type == 1) {
         if (source) {
-            if (entity.getMCEntity().m_21254_() && canSeeEntity(e, entity, source, 150)) {
+            if (entity.getMCEntity().m_21254_() && canSeeEntity(entity, source, 150)) {
                 entity.world.playSoundAt(entity.pos, "minecraft:item.shield.block", 1, Math.random() + .4)
                 entity.getOffhandItem().setDamage(entity.getOffhandItem().getDamage() + baseDamage)
                 return 0
@@ -35,13 +35,12 @@ function calculateDamage(baseDamage, entity, source) {
         damage = baseDamage * (1 - (Math.min(20, Math.max(defencePoints / 5, defencePoints - ((4 * baseDamage) / totalToughness + 8)))) / 25)
         damage -= damage * protectionEnchantment
 
-
     }
     if (entity.type == 2) {
         damage = baseDamage * entity.getStats().getResistance(0)
     }
 
-
+    if (damage && knockback != -1) { entity.knockback(knockback, GetAngleTowardsEntity(source, entity)) }
     return damage
 
 }

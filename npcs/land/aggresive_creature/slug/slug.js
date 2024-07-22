@@ -28,7 +28,7 @@ function timer(e) {
     var d = FrontVectors(e.npc, e.npc.rotation, 0, 1, 0)
     var block_pos = e.npc.pos.subtract(d[0], -d[1], d[2])
     if (e.id == 1) {
-        e.npc.executeCommand('/summon area_effect_cloud ' + block_pos.x + ' ' + block_pos.y + ' ' + block_pos.z + ' {Particle:"dust 0.5 0.78 0.12 1",Potion:awkward,Radius:.6,Duration:100,Effects:[{Id:2,Duration:60,Amplifier:4,ShowParticles:0b}],HasVisualFire:1b}')
+        e.npc.executeCommand('/summon area_effect_cloud ' + block_pos.x + ' ' + block_pos.y + ' ' + block_pos.z + ' {Particle:"dust 0.5 0.78 0.12 1",Potion:awkward,Radius:1,Duration:100,Effects:[{Id:2,Duration:60,Amplifier:4,ShowParticles:0b}],HasVisualFire:1b}')
 
     }
     if (e.id == 2) {
@@ -38,9 +38,9 @@ function timer(e) {
         if (e.npc.getAttackTarget() == null) return
         e.npc.ai.setWalkingSpeed(0)
         e.npc.ai.setRetaliateType(3)
-        e.npc.timers.start(4, 20, true)
-        e.npc.timers.start(5, 60, false)
-        e.npc.timers.start(6, 0, true)
+        e.npc.timers.forceStart(4, 20, true)
+        e.npc.timers.forceStart(5, 60, false)
+        e.npc.timers.forceStart(6, 0, true)
         e.npc.timers.stop(7)
         e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.silverfish.death", 1, .5)
         e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.spider.death", 1, .2)
@@ -48,7 +48,7 @@ function timer(e) {
     if (e.id == 4) {
         e.npc.display.setSize(e.npc.display.getSize() + 2)
         e.npc.updateClient()
-        e.npc.timers.start(10, 1, false)
+        e.npc.timers.forceStart(10, 1, false)
         e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.puffer_fish.blow_out", 1, .5)
         e.npc.world.playSoundAt(e.npc.pos, "minecraft:item.honey_bottle.drink", 1, .5)
 
@@ -57,17 +57,17 @@ function timer(e) {
     if (e.id == 10) {
         e.npc.display.setSize(e.npc.display.getSize() - 1)
         e.npc.updateClient()
-        e.npc.timers.start(11, 1, false)
+        e.npc.timers.forceStart(11, 1, false)
     }
     if (e.id == 11) {
         e.npc.display.setSize(e.npc.display.getSize() + 1)
         e.npc.updateClient()
-        e.npc.timers.start(12, 0, false)
+        e.npc.timers.forceStart(12, 0, false)
     }
     if (e.id == 12) {
         e.npc.display.setSize(e.npc.display.getSize() - 1)
         e.npc.updateClient()
-        e.npc.timers.start(13, 0, false)
+        e.npc.timers.forceStart(13, 0, false)
     }
     if (e.id == 13) {
 
@@ -99,7 +99,7 @@ function timer(e) {
     }
     if (e.id == 7) {
         e.npc.ai.setRetaliateType(getRandomInt(0, 2))
-        e.npc.timers.start(7, getRandomInt(20, 60), false)
+        e.npc.timers.forceStart(7, getRandomInt(20, 60), false)
     }
     e.npc.clearPotionEffects()
 }
