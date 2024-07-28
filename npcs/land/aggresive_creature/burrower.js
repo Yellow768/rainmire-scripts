@@ -1,3 +1,10 @@
+var api = Java.type('noppes.npcs.api.NpcAPI').Instance();
+load(api.getLevelDir() + '/scripts/ecmascript/boiler/commonFunctions.js')
+load(api.getLevelDir() + '/scripts/ecmascript/boiler/id_generator.js')
+load(api.getLevelDir() + '/scripts/ecmascript/boiler/spawnCircularParticles.js')
+load(api.getLevelDir() + '/scripts/ecmascript/boiler/proper_damage.js')
+load(api.getLevelDir() + '/scripts/ecmascript/npcs/boiler/lower_ranged_melee.js')
+
 var npc
 var burrowing = false
 var stunned = false
@@ -7,7 +14,6 @@ var stunned = false
  */
 function init(e) {
     npc = e.npc
-
 }
 
 function target(e) {

@@ -85,6 +85,15 @@ function keyPressed(e) {
     }
 }
 
+
+
+
+
+
+
+
+
+
 function chat(e) {
     e.setCanceled(true)
     switch (e.message) {
@@ -221,6 +230,12 @@ function chat(e) {
         case "!ipd":
             toggleIgnorePerkDebt()
             break;
+        case "!copyCoordinates":
+            copyCoordinates()
+            break;
+        case "!cc":
+            copyCoordinates()
+            break;
         default:
             e.setCanceled(false)
     }
@@ -235,14 +250,6 @@ function chat(e) {
     if (e.message.indexOf("!applyAttributeModifier ") != -1) {
         applyAttributeModifier(e, e.message.split(' ')[1], e.message.split(' ')[2])
         e.setCanceled(true)
-    }
-    if (e.message.indexOf("!brushes") != -1) {
-        e.setCanceled(true)
-        runBrushCommand(e.message)
-    }
-    if (e.message.indexOf("!br ") != -1) {
-        e.setCanceled(true)
-        runBrushCommand(e.message)
     }
     if (e.message.indexOf("!setBreath ") != -1) {
         e.setCanceled(true)
@@ -284,8 +291,8 @@ function displayHelpMessage(page) {
     if (page == 1) {
         player.message("&a===Dev Help (1/3)===")
         player.message("&6!applyAttributeModifier <attribute> <value>: &rAdds an attribute modifer to the item in your hand")
-        player.message("&6!brushes &rOR &6!br: &rDisplays saved brushes. Type &6!br help&r for more commands")
         player.message("&6!bw: &rAdds/Removes 'Breakable' at the beginning of your held item name. Placing a 'Breakable' places a breakable version of that block")
+        player.message("&6!copyCoordinates || !cc: &rMessages you your current coordinates. Clicking it will copy to clipboard")
         player.message("&6!creativeStats || !cs: &rToggle whether Deftness affects you in creative mode")
         player.message("&6!devhelp: &rBrings this list up")
         player.message("&6!giveAttrPoints [number]: &rGive yourself an amount of attribute points")
@@ -296,12 +303,17 @@ function displayHelpMessage(page) {
     if (page == 2) {
         player.message("&a===Dev Help (2/3)===")
         player.message("&6!giveDampener <name>: &rUnlocks this dampener for you, if it exists")
+        player.message("&6!god: &rGod mode")
+        player.message("&6!ignorePerkDebt || !ipd: &rToggles whether good perks activate regardless of perk debt.")
+        player.message("&6!infiniteHydration || !ih: &rToggles whether hydration is drained upon using powers.")
         player.message("&6!itemDisplay: &rToggles item display mode. If on, right clicking with an item will place a display of it on the block")
         player.message("&6!keyBinds: &rBrings up GUI to edit key bindings")
         player.message("&6!levelUp: &rLevel up!")
         player.message("&6!resetStats: &rReset your level and attributes to base level")
+        player.message("&6!resetChecks: &rClear your passed and failed dialog checks.")
         player.message("&6!showKey : &rToggles show key mode. When on, key presses will return their key ID in chat (for scripting uses)")
         player.message("&6!setBreath <value>: &rSets your air decrease rate")
+        player.message("&6!toggleObservationBlockVisibility || !tobv: &rToggles whether observation blocks are visible")
         player.message("&6!toggleChime : &rToggles if the chime plays whenever the dev tools are reloaded")
         executeCommand('/tellraw @p ["",{"text":"(2/3)","color":"light_purple","clickEvent":{"action":"run_command","value":"/noppes script trigger 2"}},{"text":" << Prev Page","color":"gold","clickEvent":{"action":"run_command","value":"/noppes script trigger 4"}},{"text":" \\u0020"},{"text":"Next Page >>","color":"gold","clickEvent":{"action":"run_command","value":"/noppes script trigger 3"}}]')
         return
@@ -487,137 +499,6 @@ function applyAttributeModifier(e, attribute, value) {
 
 
 
-
-function runBrushCommand(message) {
-    var splitMessage = message.split(' ')
-    if (splitMessage[1] != undefined) {
-        switch (splitMessage[1]) {
-            case "save":
-                saveBrushPreset(message)
-                break;
-            case "list":
-                listBrushPresets(message)
-                break;
-            case "edit":
-                editBrushPreset(message)
-                break;
-            case "delete":
-                deleteBrushPreset(message)
-                break;
-            case "help":
-
-                player.message("&a==Brushes Commands==")
-                player.message("&6!br list &eOR &6!br: &rDisplays the list of saved brushes, which can be clicked on to apply")
-                player.message("&6!br save [name] [brush] : &r Saves a new brush preset")
-                player.message("&6!br edit [number] [brush] : &rReplaces the command of a saved brush")
-                player.message("&6!br delete [number] : &rDeletes a certain brush OR deletes all brushes if you use 'all' as the number")
-                break;
-            default:
-                player.message("&cUnrecognized command. Type &6!br help &cfor a list of commands")
-        }
-    }
-}
-
-
-
-function listBrushPresets(message) {
-    var brushes = JSON.parse(player.world.storeddata.get(player.name + "brushArray"))
-    var pages = Math.ceil(brushes.length / 10)
-    var singleTellRawElement
-    var fullTellRaw = ""
-    for (var i = 0; i < brushes.length; i++) {
-        singleTellRawElement = '{"text":"\\n[' + i + '.","color":"light_purple"},{"text":" ","bold":true,"color":"light_purple"},{"text":"' + brushes[i].name + '","color":"light_purple","clickEvent":{"action":"run_command","value":"' + brushes[i].command + '"},"hoverEvent":{"action":"show_text","contents":"Click to apply brush"}},{"text":" ","color":"light_purple"},{"text":"(?)","color":"yellow","clickEvent":{"action":"suggest_command","value":"' + brushes[i].command + '"},"hoverEvent":{"action":"show_text","contents":"' + brushes[i].command + '"}},{"text":"(T)","color":"yellow","clickEvent":{"action":"run_command","value":"/give ' + player.name + ' ' + brushes[i].tool + '"},"hoverEvent":{"action":"show_text","contents":"' + brushes[i].tool + '"}},{"text":"]","color":"light_purple"},{"text":" "}'
-        //'{"text":"[' + i + ': ' + brushes[i].name + '","color":"light_purple","clickEvent":{"action":"run_command","value":"' + brushes[i].command + '"}},{"text":" "},{"text":"(?)","color":"yellow","clickEvent":{"action":"suggest_command","value":"' + brushes[i].command + '"},"hoverEvent":{"action":"show_text","contents":"' + brushes[i].command + '"}},{"text":"]","color":"light_purple"},{"text":" "}'
-        fullTellRaw = fullTellRaw + ',' + singleTellRawElement
-    }
-    player.message("&e&nSaved Brushes:")
-    player.message(" ")
-
-    executeCommand('/tellraw ' + player.name + ' [""' + fullTellRaw + ']')
-
-
-
-}
-
-
-
-
-
-
-function saveBrushPreset(commandString) {
-    var splitCommandString = commandString.split(' ')
-    var brushes = JSON.parse(player.world.storeddata.get(player.name + "brushArray"))
-
-    if (splitCommandString[2] == undefined) {
-        player.message("&cUsage: !br save [name] args...")
-    }
-    else if (splitCommandString[2].indexOf('\\') != -1) {
-        player.message("&cSorry, you are not allowed to use \\ in the brush name")
-    }
-    else if (splitCommandString[3] == undefined) {
-        player.message("&cYou must define a command")
-    }
-    else {
-        var command = commandString.slice(commandString.indexOf(splitCommandString[2]) + splitCommandString[2].length + 1)
-        if (command[0] != "/") {
-            command = "/" + command
-        }
-        brushes.push({ "name": escapeRegex(splitCommandString[2]), "command": escapeRegex(command), "tool": player.getMainhandItem().getName() })
-        brushes.sort(compareSecondColumn)
-        player.world.storeddata.put(player.name + "brushArray", JSON.stringify(brushes))
-        player.message("&aNew Brush saved as " + splitCommandString[2] + " [" + command + "]")
-    }
-}
-
-function editBrushPreset(commandString) {
-    var splitCommandString = commandString.split(' ')
-    var brushes = JSON.parse(player.world.storeddata.get(player.name + "brushArray"))
-    var brushIndex = splitCommandString[2]
-    if (brushIndex == undefined || isNaN(brushIndex) || brushIndex > brushes.length || brushes[0] == undefined) {
-        player.message("&cSyntax Error: A valid number must be selected")
-    }
-    else if (splitCommandString[3] == undefined) {
-        player.message("&cBrush was not updated. You must define the command to replace.")
-    }
-    else {
-        var newCommand = commandString.slice(commandString.indexOf(brushIndex) + brushIndex.length + 1)
-        if (newCommand[0] != "/") {
-            newCommand = "/" + newCommand
-        }
-        brushes[brushIndex].command = escapeRegex(newCommand)
-        brushes.sort(compareSecondColumn)
-        player.world.storeddata.put(player.name + "brushArray", JSON.stringify(brushes))
-        player.message("&eBrush " + brushIndex + " [" + brushes[brushIndex].name + "] has been updated. NOTE! You need to run !br list again")
-    }
-}
-
-
-
-function deleteBrushPreset(commandString) {
-    var splitCommandString = commandString.split(' ')
-    var brushes = JSON.parse(player.world.storeddata.get(player.name + "brushArray"))
-    var deletionIndex = splitCommandString[2]
-    if (deletionIndex == undefined) {
-        player.message("&cYou must select a number to delete")
-    }
-    else if (deletionIndex == "all") {
-        brushes = []
-        player.world.storeddata.put(player.name + "brushArray", JSON.stringify(brushes))
-        player.message("&eAll brushes deleted")
-    }
-    else if (!isNaN(deletionIndex)) {
-        player.message("&eBrush " + deletionIndex + " [" + brushes[deletionIndex].name + "] deleted")
-        brushes.splice(deletionIndex, 1)
-        brushes.sort(compareSecondColumn)
-        player.world.storeddata.put(player.name + "brushArray", JSON.stringify(brushes))
-    }
-    else {
-        player.message("&cSyntax Error: You need to type either a number or 'all'")
-    }
-}
-
-
-
 function compareSecondColumn(a, b) {
     var nameA = a.name.toUpperCase(); // ignore upper and lowercase
     var nameB = b.name.toUpperCase(); // ignore upper and lowercase
@@ -659,7 +540,7 @@ function markImportant() {
 
 
 function copyCoordinates() {
-    executeCommand('/tellraw ' + player.name + ' ["",{"text":"Coordinates: ","color":"gold"},{"text":"' + Math.round(player.x) + ' ' + Math.round(player.y) + ' ' + Math.round(player.z) + '","bold":true,"color":"aqua","clickEvent":{"action":"copy_to_clipboard","value":"' + Math.round(player.x) + ' ' + Math.round(player.y) + ' ' + Math.round(player.z) + '"},"hoverEvent":{"action":"show_text","contents":["Copy"]}},{"text":" Click to copy to clipboard","color":"gold"}]')
+    executeCommand('/tellraw ' + player.name + ' ["",{"text":"Coordinates are","color":"gold"},{"text":" "},{"text":"' + Math.round(player.x) + ' ' + Math.round(player.y) + ' ' + Math.round(player.z) + '","color":"aqua","clickEvent":{"action":"copy_to_clipboard","value":"' + Math.round(player.x) + ' ' + Math.round(player.y) + ' ' + Math.round(player.z) + '"}},{"text":" || "},{"text":"' + Math.round(player.x) + ', ' + Math.round(player.y) + ', ' + Math.round(player.z) + '","color":"aqua","clickEvent":{"action":"copy_to_clipboard","value":"' + Math.round(player.x) + ', ' + Math.round(player.y) + ', ' + Math.round(player.z) + '"}},{"text":" . "},{"text":"Click either to copy","color":"gold"}]')
 
 }
 

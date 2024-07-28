@@ -129,3 +129,32 @@ function isTargetInHitbox(target, attack) {
 function startAttackDuration(e, duration) {
     e.npc.timers.forceStart(id("attack_end"), duration, false)
 }
+
+function meleeAttack(e) {
+    e.setCanceled(true)
+}
+
+function target(e) {
+    e.npc.timers.forceStart(1, 0, true)
+}
+
+function targetLost(e) {
+    e.npc.timers.stop(1)
+}
+
+function timer(e) {
+    if (e.id == 1) {
+        if (e.npc.getAttackTarget().pos.distanceTo(e.npc.pos) < 2) {
+            e.npc.timers.stop(1)
+            e.npc.timers.forceStart(2, 12, false)
+            var animBuilder = API.createAnimBuilder()
+            animBuilder.playOnce("attack")
+            npc.syncAnimationsForAll(animBuilder)
+        }
+        if (e.id == 2) {
+            if (e.npc.getAttackTarget().pos.distanceTo(e.npc.pos) < 2 && canSeeEntity(e.npc, e.npc.getAttackTarget(), 180)) {
+                e.npc.getAttackTarget().damage(2)
+            }
+        }
+    }
+}

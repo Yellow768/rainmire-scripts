@@ -39,4 +39,29 @@
         "description": "Load scoreboard script",
         "scope": "javascript,typescript"
     },
+    "LoadSpawnCircularParticles": {
+        "prefix": "rainmire:circle",
+        "body": [
+            "load(api.getLevelDir() + '/scripts/ecmascript/boiler/spawnCircularParticles.js')"
+        ],
+        "description": "Load circular partciles script",
+        "scope": "javascript,typescript"
+    },
+    "LoadProperDamage": {
+        "prefix": "rainmire:proper_damage",
+        "body": [
+            "load(api.getLevelDir() + '/scripts/ecmascript/boiler/proper_damage.js')"
+        ],
+        "description": "Load proper damage script",
+        "scope": "javascript,typescript"
+    },
+    "LoadLowerMelee": {
+        "prefix": "rainmire:lower_ranged_melee",
+        "body": [
+            "load(api.getLevelDir() + '/scripts/ecmascript/boiler/proper_damage.js')",
+            "load(api.getLevelDir() + '/scripts/ecmascript/npcs/boiler/lower_ranged_melee.js')"
+        ],
+        "description": "Load proper damage script",
+        "scope": "javascript,typescript"
+    },
 }
