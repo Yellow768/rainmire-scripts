@@ -14,15 +14,9 @@ var in_skillcheck_mode = false
 var all_bonuses = 0
 var attribute_paramaters
 var attributeColorsDict = {
-    "Empathy": "&c",
-    "Suggestion": "&c",
-    "Charm": "&c",
-    "Deftness": "&e",
-    "Grit": "&e",
-    "Brawn": "&e",
-    "Logic": "&b",
-    "Perception": "&b",
-    "Knowledge": "&b",
+    "Heart": "&c",
+    "Body": "&a",
+    "Mind": "&b"
 }
 var roll_locked = false
 

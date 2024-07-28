@@ -1,0 +1,42 @@
+{
+    "LoadAPI": {
+        "prefix": "rainmire:api",
+        "body": [
+            "var api = Java.type('noppes.npcs.api.NpcAPI').Instance();"
+        ],
+        "description": "Java types the customnpcs API",
+        "scope": "javascript,typescript"
+    },
+    "LoadScript": {
+        "prefix": "rainmire:load",
+        "body": [
+            "load(api.getLevelDir() + '/scripts/ecmascript/')"
+        ],
+        "description": "Generic preface for loading a script",
+        "scope": "javascript,typescript"
+    },
+    "LoadId": {
+        "prefix": "rainmire:id",
+        "body": [
+            "load(api.getLevelDir() + '/scripts/ecmascript/boiler/id_generator.js')"
+        ],
+        "description": "Load id_generator",
+        "scope": "javascript,typescript"
+    },
+    "LoadCommonFunctions": {
+        "prefix": "rainmire:common_functions",
+        "body": [
+            "load(api.getLevelDir() + '/scripts/ecmascript/boiler/commonFunctions.js')"
+        ],
+        "description": "Load id_generator",
+        "scope": "javascript,typescript"
+    },
+    "LoadScoreboard": {
+        "prefix": "rainmire:scoreboard",
+        "body": [
+            "load(api.getLevelDir() + '/scripts/ecmascript/boiler/scoreboard.js')"
+        ],
+        "description": "Load scoreboard script",
+        "scope": "javascript,typescript"
+    },
+}

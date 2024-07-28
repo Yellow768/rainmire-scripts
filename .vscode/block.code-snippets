@@ -180,5 +180,18 @@
         ],
         "description": "BlockEvent.TimerEvent",
         "scope": "javascript,typescript"
+    },
+    "BlockEvent.TriggerEvent": {
+        "prefix": "block:trigger",
+        "body": [
+            "/**",
+            " * @param {BlockEvent.TriggerEvent} e",
+            " */",
+            "function trigger(e){",
+            "    $0",
+            "}"
+        ],
+        "description": "BlockEvent.TriggerEvent",
+        "scope": "javascript,typescript"
     }
 }

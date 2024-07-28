@@ -42,6 +42,7 @@ function dash(e) {
     }
     else if (player.getMCEntity().m_5842_()) {
         d = FrontVectors(player, direction, -player.pitch, .8 * getScore("swmspd"), false)
+        e.player.timers.forceStart(id("is_player_underwater"), 0, true)
     }
     else {
         d = FrontVectors(player, direction, 7, 1.6, false)
@@ -64,6 +65,7 @@ function dash(e) {
     player.timers.forceStart(id("DASH_TIMER"), 15, false)
     player.timers.forceStart(id("dash_visual_effects"), 0, true)
 
+
     player.addTag("isDashing")
     player.world.playSoundAt(player.pos, "minecraft:item.bucket.empty", 1, 1)
     player.world.playSoundAt(player.pos, "variedcommodities:magic.shot", 1, 1)
@@ -81,6 +83,7 @@ function dash_timers(e) {
             player.removeTag("isDashing")
             player.timers.stop(id("DASH_COLLISION_CHECK"))
             player.timers.stop(id("dash_visual_effects"))
+            e.player.timers.stop(id("is_player_underwater"))
             //player.world.playSoundAt(player.pos, "minecraft:weather.rain", .2, 1)
             break;
         case id("dash_visual_effects"):
@@ -91,5 +94,11 @@ function dash_timers(e) {
             player.world.spawnParticle("bubble_pop", player.x - dx, player.y + 1, player.z - dz, 0.1, .1, 0.1, .01, 50)
             player.world.spawnParticle("falling_water", player.x - dx, player.y + 1, player.z - dz, 0.1, .2, 0.1, 1, 5)
             break
+        case id("is_player_underwater"):
+            if (!e.player.inWater()) {
+                e.player.setMotionY(0)
+                e.player.timers.stop(id("is_player_underwater"))
+            }
+
     }
 }

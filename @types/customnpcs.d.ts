@@ -1919,7 +1919,10 @@ declare namespace BlockEvent {
 	class TimerEvent extends BlockEvent {
 		id: Number;
 	}
-
+	class TriggerEvent extends BlockEvent {
+		id: Number;
+		arguments: Array;
+	}
 	class UpdateEvent extends BlockEvent {
 	}
 
@@ -2102,6 +2105,11 @@ declare namespace NpcEvent {
 	class TimerEvent extends NpcEvent {
 		id: Number;
 	}
+	class TriggerEvent extends NpcEvent {
+		id: Number;
+		arguments: Array;
+		entity: ICustomNpc;
+	}
 
 	class UpdateEvent extends NpcEvent {
 	}
@@ -2198,7 +2206,11 @@ declare namespace PlayerEvent {
 	class TimerEvent extends PlayerEvent {
 		id: Number;
 	}
-
+	class TriggerEvent extends NpcEvent {
+		id: Number;
+		arguments: Array;
+		entity: IPlayer;
+	}
 	class TossEvent extends PlayerEvent {
 		item: IItemStack;
 	}

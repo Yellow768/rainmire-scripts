@@ -72,7 +72,7 @@ function keyPressed(e) {
             case keyBinds.key_breath:
                 switch (e.player.getPotionEffect(13)) {
                     case -1:
-                        e.player.addPotionEffect(13, 10000, 1, false)
+                        executeCommand("/effect give " + player.name + " minecraft:water_breathing infinite 0 true")
                         e.player.message("&bWater Breathing &dturned &aon")
                         break;
                     default:
@@ -363,7 +363,7 @@ function toggleCommandFeedback() {
 function toggleNightVision() {
     switch (player.getPotionEffect(16)) {
         case -1:
-            player.addPotionEffect(16, 5555, 0, false)
+            executeCommand("/effect give " + player.name + " minecraft:night_vision infinite 0 true")
             player.message("&bNightvision turned on")
             break;
         default:
