@@ -15,6 +15,7 @@ var defaultKeyBinds = {
     "key_levitate": 32,
     "key_dash": 67,
     "key_breath": 89,
+    "key_npcTools": 90
 
 }
 
@@ -49,9 +50,13 @@ function showKeybindGUI(e) {
     KEYBIND_GUI.addButton(id("key_gamemode"), GLFWKeys[keyBinds.key_gamemode], horizontalPos + 180, verticalPos + 90, horizontalSize, verticalSize)
     KEYBIND_GUI.addButton(id("key_heal"), GLFWKeys[keyBinds.key_heal], horizontalPos + 180, verticalPos + 120, horizontalSize, verticalSize)
     KEYBIND_GUI.addButton(id("key_reload"), GLFWKeys[keyBinds.key_reload], horizontalPos + 180, verticalPos + 150, horizontalSize, verticalSize)
+    KEYBIND_GUI.addButton(id("key_npcTools"), GLFWKeys[keyBinds.key_npcTools], horizontalPos + 180, verticalPos + 180, horizontalSize, verticalSize)
 
     KEYBIND_GUI.addButton(id("key_breath"), GLFWKeys[keyBinds.key_breath], horizontalPos + 180, verticalPos + 30, horizontalSize, verticalSize)
-    KEYBIND_GUI.addButton(id("Default"), "Set to default", horizontalPos, verticalPos + 230, 140, 20)
+
+
+    KEYBIND_GUI.addButton(id("Default"), "Reset to default", -100, -40, 140, 20)
+    KEYBIND_GUI.addButton(id("Confirm"), "Confirm", 50, 220, 160, 20)
 
 
 
@@ -59,6 +64,7 @@ function showKeybindGUI(e) {
     KEYBIND_GUI.addLabel(id("L_Gamemode"), "Gamemode:", horizontalPos + 80, verticalPos + 100, 1, 1, 0xffffff)
     KEYBIND_GUI.addLabel(id("L_Heal"), "Fully heal:", horizontalPos + 80, verticalPos + 130, 1, 1, 0xffffff)
     KEYBIND_GUI.addLabel(id("L_Reload"), "Reload Scripts:", horizontalPos + 80, verticalPos + 160, 1, 1, 0xffffff)
+    KEYBIND_GUI.addLabel(id("L_npcTools"), "Toggle NPC Tools:", horizontalPos + 80, verticalPos + 190, 1, 1, 0xffffff)
 
     KEYBIND_GUI.addLabel(id("L_Breath"), "Toggle Breath:", horizontalPos + 80, verticalPos + 40, 1, 1, 0xffffff)
     e.player.showCustomGui(KEYBIND_GUI)
@@ -66,13 +72,17 @@ function showKeybindGUI(e) {
 
 
 function customGuiButton(e) {
-    if (e.buttonId != id("Default")) {
-        editKeyBind(e)
-    }
-    else {
+    if (e.buttonId == id("Default")) {
         e.player.storeddata.put("keyBindsJSON", JSON.stringify(defaultKeyBinds))
         showKeybindGUI(e)
     }
+    else if (e.buttonId == id("Confirm")) {
+        e.player.closeGui()
+    }
+    else {
+        editKeyBind(e)
+    }
+
 }
 
 function customGuiClosed(e) {

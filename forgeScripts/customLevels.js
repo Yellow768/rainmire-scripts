@@ -53,37 +53,24 @@ function runCommand(command) {
 
 }
 
-var xpEventChangeTriggerIteration = 0
 function playerXpEventXpChange(e) {
-	if (e.event.getAmount() > 0 && xpEventChangeTriggerIteration == 0) {
-		runCommand("xp add " + getPlayerName(e.event.getPlayer()) + " -" + e.event.getAmount() + " points");
-		addCustomXpValue(e.event.getPlayer(), e.event.getAmount())
+	if (e.event.getAmount() > 0) {
+		runCommand("xp add " + getPlayerName(e.event.getEntity()) + " -" + e.event.getAmount() + " points");
+		addCustomXpValue(e.event.getEntity(), e.event.getAmount())
 
-	}
-	xpEventChangeTriggerIteration++
-	if (xpEventChangeTriggerIteration == 5) {
-		xpEventChangeTriggerIteration = 0
 	}
 }
 
-var xpPickupEventTriggerIteration = 0
 function playerXpEventPickupXp(e) {
-	if (xpPickupEventTriggerIteration == 0) {
-		var xp = e.event.getOrb().f_20770_;
-		e.event.getOrb().f_20770_ = 0
-		addCustomXpValue(e.event.getPlayer(), xp)
-	}
-	xpPickupEventTriggerIteration++
-	if (xpPickupEventTriggerIteration == 5) {
-		xpPickupEventTriggerIteration = 0
-	}
+	var xp = e.event.getOrb().f_20770_;
+	e.event.getOrb().f_20770_ = 0
+	addCustomXpValue(e.event.getEntity(), xp)
 }
 
 
 function addCustomXpValue(forgePlayer, xpToAdd) {
 	var noppesPlayer = API.getIEntity(forgePlayer)
 	noppesPlayer.getStoreddata().put("totalExperiencePoints", noppesPlayer.getStoreddata().get("totalExperiencePoints") + xpToAdd)
-
 	if (getPlayerXP(forgePlayer) == NaN) {
 		setPlayerXP(forgePlayer, 0);
 	}
@@ -102,7 +89,10 @@ function addCustomXpValue(forgePlayer, xpToAdd) {
 function levelPlayerUp(player) {
 	addToPlayerXP(player, -1);
 	addToPlayerLevel(player, 1)
-	runCommand("tag " + getPlayerName(player) + " add LevelUp");
+	var noppesPlayer = API.getIEntity(player)
+	if (!noppesPlayer.hasTag("LevelUp")) {
+		noppesPlayer.addTag("LevelUp")
+	}
 }
 
 

@@ -81,6 +81,9 @@ function keyPressed(e) {
                         break;
                 }
                 break;
+            case keyBinds.key_npcTools:
+                toggleNPCTools()
+                break;
         }
     }
 }
@@ -236,6 +239,8 @@ function chat(e) {
         case "!cc":
             copyCoordinates()
             break;
+        case "!npctools":
+            toggleNPCTools()
         default:
             e.setCanceled(false)
     }
@@ -780,6 +785,57 @@ function toggleIgnorePerkDebt() {
     else {
         player.storeddata.remove("ignorePerkDebt")
         player.message("&eIgnore Perk Debt turned &coff")
+        return
+    }
+}
+
+function toggleNPCTools() {
+    if (player.hasTag("npcToolMode")) {
+        for (var i = 0; i < 9; i++) {
+            player.getInventory().setSlot(i, player.tempdata.get("saved_hotbar")[i])
+        }
+        player.removeTag("npcToolMode")
+        return
+    }
+    var spawner = player.world.createItem("slime_spawn_egg", 1)
+    var eraser = player.world.createItem("copper_ingot", 1)
+    var mover = player.world.createItem("recovery_compass", 1)
+    spawner.getNbt().putString("Tool", "Spawner")
+    eraser.getNbt().putString("Tool", "Eraser")
+    mover.getNbt().putString("Tool", "Mover")
+    spawner.setCustomName("§aSpawner")
+    eraser.setCustomName("§cEraser")
+    mover.setCustomName("§bMover")
+    var current_hotbar = []
+    for (var i = 0; i < 9; i++) {
+        current_hotbar.push(player.getInventory().getSlot(i))
+        player.getInventory().setSlot(i, player.world.createItem("air", 1))
+    }
+    player.tempdata.put("saved_hotbar", current_hotbar)
+    player.addTag("npcToolMode")
+    player.giveItem(spawner)
+    player.giveItem(mover)
+    player.giveItem(eraser)
+
+
+}
+
+function logout(e) {
+    if (player.hasTag("npcToolMode")) {
+        for (var i = 0; i < 9; i++) {
+            player.getInventory().setSlot(i, player.tempdata.get("saved_hotbar")[i])
+        }
+        player.removeTag("npcToolMode")
+        return
+    }
+}
+
+function died(e) {
+    if (player.hasTag("npcToolMode")) {
+        for (var i = 0; i < 9; i++) {
+            player.getInventory().setSlot(i, player.tempdata.get("saved_hotbar")[i])
+        }
+        player.removeTag("npcToolMode")
         return
     }
 }

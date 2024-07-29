@@ -20,9 +20,9 @@ function collide(e) {
         var distance = TrueDistanceCoord(e.npc.x, e.npc.y, e.npc.z, e.entity.x, e.entity.y, e.entity.z)
 
         if (distance < 1.2) {
-            var damage = calculateDamage(melee.getStrength(), e.entity, e.npc)
-            e.entity.damage(damage)
-            if (e.entity.type == 2 && damage > 0) e.entity.setAttackTarget(e.npc)
+            //var damage = calculateDamage(melee.getStrength(), e.entity, e.npc)
+            //e.entity.damage(damage)
+            damageFrom(e.entity, e.npc, melee.getStrength())
 
             e.npc.getTimers().start(id("lowMeleeRangeDelay"), melee.getDelay(), false)
             DoKnockback(e.npc, e.entity, melee.getKnockback() + 1, .2)
@@ -38,3 +38,8 @@ function collide(e) {
 }
 
 
+function damageFrom(targetEntity, srcEntity, amount) {
+    var source = srcEntity.getMCEntity().m_269291_()
+    var damageSource = source.m_269333_(srcEntity.getMCEntity())
+    targetEntity.getMCEntity().m_6469_(damageSource, amount)
+}
