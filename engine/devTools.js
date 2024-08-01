@@ -588,6 +588,19 @@ function timer(e) {
 
 function interact(e) {
     useNPCTool(e)
+    if (e.type == 1) {
+
+        if (e.player.getMainhandItem().name == "customnpcs:npcwand") {
+            if (e.target.getStoreddata().has("controller_npc")) {
+                var controller_npc = e.target.getTempdata().get("controller_npc")
+                var NoppesUtilServer = Java.type('noppes.npcs.NoppesUtilServer').class.static;
+                var EnumGuiType = Java.type('noppes.npcs.constants.EnumGuiType');
+                NoppesUtilServer.sendOpenGui(e.player.getMCEntity(), EnumGuiType.MainMenuDisplay, controller_npc.getMCEntity())
+                controller_npc.trigger(76802, [])
+                e.target.despawn()
+            }
+        }
+    }
     if (e.type == 2) {
         if (e.player.getMainhandItem().name == "customnpcs:npcwand") {
             e.player.tempdata.put("npc_placed", e.target.pos)
@@ -816,6 +829,9 @@ function toggleNPCTools() {
     player.giveItem(spawner)
     player.giveItem(mover)
     player.giveItem(eraser)
+    player.giveItem(player.world.createItem("customnpcs:npcwand", 1))
+    player.giveItem(player.world.createItem("customnpcs:npcscripter", 1))
+    player.giveItem(player.world.createItem("customnpcs:npcmobcloner", 1))
 
 
 }

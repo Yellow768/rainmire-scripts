@@ -10,7 +10,6 @@ function dash(e) {
         return
     }
     direction = player.getRotation()
-
     if (isMovingForward) {
         direction = player.getRotation()
     }
@@ -102,3 +101,6 @@ function dash_timers(e) {
 
     }
 }
+
+
+

@@ -23,6 +23,10 @@ function getRandomFloat(min, max) {
     return Math.random() * (max - min + 1) + min;
 }
 
+function getRandomElement(array) {
+    return array[getRandomInt(0, array.length - 1)]
+}
+
 function FrontVectors(entity, dr, dp, distance, mode) {
     if (!mode) mode = 0
     if (mode == 1) { var angle = dr + entity.getRotation(); var pitch = (-entity.getPitch() + dp) * Math.PI / 180; if (dp == 0) pitch = 0; }
@@ -86,6 +90,32 @@ function GetAngleTowardsEntity(source, target) {
     var dx = source.getX() - target.getX();
 
     var dz = target.getZ() - source.getZ();
+
+    if (dz >= 0) {
+
+        var angle = (Math.atan(dx / dz) * 180 / Math.PI);
+
+        if (angle < 0) {
+
+            angle = 360 + angle;
+        }
+    }
+
+    if (dz < 0) {
+
+        dz = -dz;
+
+        var angle = 180 - (Math.atan(dx / dz) * 180 / Math.PI);
+    }
+
+    return angle;
+}
+
+function GetAngleTowardsPosition(position1, position2) {
+
+    var dx = position1.getX() - position2.getX();
+
+    var dz = position1.getZ() - position2.getZ();
 
     if (dz >= 0) {
 

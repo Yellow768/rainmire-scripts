@@ -19,6 +19,7 @@ function useNPCTool(e) {
 }
 
 function moverFunctions(e) {
+    e.setCanceled(true)
     if (e.type == 0) {
         if (e.player.isSneaking()) {
             selected_npc = null
@@ -27,7 +28,12 @@ function moverFunctions(e) {
         }
         else {
             if (!selected_npc) return
-            var rt = e.player.rayTraceBlock(6, true, true)
+            if (!selected_npc.isAlive()) {
+                e.player.message("&bMover: &eNo selected NPC")
+                selected_npc = null
+                return
+            }
+            var rt = e.player.rayTraceBlock(6, false, true)
             if (!rt) return
             var pos = rt.getBlock().getPos().offset(rt.getSideHit())
             selected_npc.setHome(pos.x + .5, pos.y, pos.z + .5)
@@ -39,7 +45,7 @@ function moverFunctions(e) {
         }
     }
     if (e.type == 1) {
-        if (!selected_npc && e.target.type == 2) {
+        if ((!selected_npc || selected_npc.isAlive()) && e.target.type == 2) {
             selected_npc = e.target
             e.player.message("&bMover: &e" + e.target.name + " &aselected")
             return
@@ -56,7 +62,7 @@ function moverFunctions(e) {
         var pos = rt.getBlock().getPos().offset(rt.getSideHit())
         selected_npc.setHome(pos.x, pos.y, pos.z)
         selected_npc.setPos(pos)
-        e.player.message("&dMover: &e" + selected_npc.name + " moved to " + pos.x + " " + pos.y + " " + pos.z)
+        e.player.message("&bMover: &e" + selected_npc.name + " moved to " + pos.x + " " + pos.y + " " + pos.z)
     }
 }
 
@@ -66,7 +72,7 @@ function spawnerFunctions(e) {
     e.setCanceled(true)
     player = e.player
     if (e.type != 1) {
-        var rt = e.player.rayTraceBlock(6, true, true)
+        var rt = e.player.rayTraceBlock(6, false, true)
         if (!rt) { openClonerGui(e); return }
         var pos = rt.getBlock().getPos().offset(rt.getSideHit())
         if (e.player.storeddata.has("clone_name")) {

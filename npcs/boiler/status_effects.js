@@ -29,6 +29,7 @@ function trigger(e) {
             npc.storeddata.put("defaultMovingPathType", npc.ai.getMovingPathType())
             npc.storeddata.put("defaultMovingPathPause", npc.ai.getMovingPathPauses())
             npc.storeddata.put("defaultWalkingSpeed", npc.ai.getWalkingSpeed())
+            npc.storeddata.put("defaultNavigationType", npc.ai.getNavigationType())
             npc.storeddata.put("altered", 1)
         }
     }
@@ -100,6 +101,7 @@ function changeNPCStatus() {
     npc.ai.setMovingPathType(npc.storeddata.get("defaultMovingPathType"), npc.storeddata.get("defaultMovingPathPause"))
     npc.ai.setMovingType(npc.storeddata.get("defaultMovingType"))
     npc.ai.setWalkingSpeed(npc.storeddata.get("defaultWalkingSpeed"))
+    npc.ai.setNavigationType(npc.storeddata.get("defaultNavigationType"))
     if (statusMark == undefined) {
         statusMark = npc.addMark(0)
     }
@@ -128,6 +130,9 @@ function changeNPCStatus() {
         statusMark.setType(5)
         statusMark.setColor(16776960)
         npc.storeddata.put("hasStatusEffect", 1)
+        if (npc.ai.getNavigationType() == 1) {
+            npc.ai.setNavigationType(0)
+        }
     }
     statusMark.update()
     var curPos = npc.pos
