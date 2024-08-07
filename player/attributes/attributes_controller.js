@@ -67,3 +67,8 @@ function trigger(e) {
     perks_trigger(e)
     attributes_trigger(e)
 }
+
+
+function customGuiButton(e) {
+    attributes_customGuiButton(e)
+}

@@ -85,6 +85,7 @@ function createScores(e) {
         }
         else {
             var digit_array = value.toString()
+
             GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/numbers.png", xPos[x_pos] + 38, yPos[0] + 9, 25, 25, 25 * parseInt(digit_array[0]), 0).setScale(.3)
             L_Stat++
             GUI_STATS.addTexturedRect(id("stat_point" + L_Stat), "iob:textures/customgui/numbers.png", xPos[x_pos] + 48, yPos[0] + 9, 25, 25, 25 * parseInt(digit_array[1]), 0).setScale(.3)
@@ -172,17 +173,13 @@ function createUpgradeButtons() {
         GUI_STATS.addTexturedRect(id("att_point_num2"), "iob:textures/customgui/numbers.png", -37, 42, 25, 25, 25 * parseInt(digit_array[1]), 0).setScale(0.5)
     }
     for (var i = 0; i < 3; i++) {
-        if (temporary_stat_values[statsStringArray[i]] < 5 && getScore("AttrPoints")) {
+        if (temporary_stat_values[statsStringArray[i]] < 10 && getScore("AttrPoints")) {
             GUI_STATS.addTexturedButton(id("add" + i), '', xPos[xint] + 45, yPos[yint], 8, 8, "iob:textures/customgui/add.png", 0, 0)
         }
         if (temporary_stat_values[statsStringArray[i]] > getScore(statsStringArray[i] + "Base")) {
             GUI_STATS.addTexturedButton(id("subtract" + i) + 1000, '', xPos[xint] + 54, yPos[yint], 8, 8, "iob:textures/customgui/minus.png", 0, 0)
         }
-        if (yint < 2) { yint++ }
-        else {
-            xint++
-            yint = 0
-        }
+        xint++
     }
     if (unsavedChangesMode) {
         GUI_STATS.addButton(id("confirm"), "Confirm Changes", -70, 60, 40, 20)

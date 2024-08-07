@@ -32,9 +32,9 @@ function setScore(scoreBoardName, val) {
         world.broadcast("Scoreboard player not defined, setScore() cannot work")
         return
     }
-    if (scoreboard.hasPlayerObjective(playerName, scoreBoardName)) {
-        scoreboard.setPlayerScore(playerName, scoreBoardName, val)
-    }
+
+    scoreboard.setPlayerScore(playerName, scoreBoardName, val)
+
 }
 
 function addToScore(scoreBoardName, val) {

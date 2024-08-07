@@ -457,6 +457,7 @@ function forceLevelUp() {
 function resetStats() {
 
     for (var i = 0; i < 3; i++) {
+        player.message(statsStringArray[i] + "Mod")
         setScore(statsStringArray[i] + "Base", 1)
         setScore(statsStringArray[i] + "Mod", 0)
         setScore(statsStringArray[i], 1)
