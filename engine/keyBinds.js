@@ -15,7 +15,8 @@ var defaultKeyBinds = {
     "key_levitate": 32,
     "key_dash": 67,
     "key_breath": 89,
-    "key_npcTools": 90
+    "key_npcTools": 90,
+    "key_soundsMenu": 59
 
 }
 
@@ -53,6 +54,7 @@ function showKeybindGUI(e) {
     KEYBIND_GUI.addButton(id("key_npcTools"), GLFWKeys[keyBinds.key_npcTools], horizontalPos + 180, verticalPos + 180, horizontalSize, verticalSize)
 
     KEYBIND_GUI.addButton(id("key_breath"), GLFWKeys[keyBinds.key_breath], horizontalPos + 180, verticalPos + 30, horizontalSize, verticalSize)
+    KEYBIND_GUI.addButton(id("key_soundsMenu"), GLFWKeys[keyBinds.key_soundsMenu], horizontalPos + 180, verticalPos, horizontalSize, verticalSize)
 
 
     KEYBIND_GUI.addButton(id("Default"), "Reset to default", -100, -40, 140, 20)
@@ -65,6 +67,7 @@ function showKeybindGUI(e) {
     KEYBIND_GUI.addLabel(id("L_Heal"), "Fully heal:", horizontalPos + 80, verticalPos + 130, 1, 1, 0xffffff)
     KEYBIND_GUI.addLabel(id("L_Reload"), "Reload Scripts:", horizontalPos + 80, verticalPos + 160, 1, 1, 0xffffff)
     KEYBIND_GUI.addLabel(id("L_npcTools"), "Toggle NPC Tools:", horizontalPos + 80, verticalPos + 190, 1, 1, 0xffffff)
+    KEYBIND_GUI.addLabel(id("L_soundsMenu"), "Open Sound Finder:", horizontalPos + 80, verticalPos + 10, 1, 1, 0xffffff)
 
     KEYBIND_GUI.addLabel(id("L_Breath"), "Toggle Breath:", horizontalPos + 80, verticalPos + 40, 1, 1, 0xffffff)
     e.player.showCustomGui(KEYBIND_GUI)

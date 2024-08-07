@@ -17,6 +17,7 @@ function init(e) {
         e.block.storeddata.put("duration", 5)
         e.block.storeddata.put("size_w", 2)
         e.block.storeddata.put("size_h", 2)
+        e.block.storeddata.put("size_l", 2)
         e.block.storeddata.put("min_t", 0)
         e.block.storeddata.put("max_t", 15)
         e.block.storeddata.put("points", 100)

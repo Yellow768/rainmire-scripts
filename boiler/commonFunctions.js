@@ -184,3 +184,17 @@ function canSeeEntity(source, entity, cone) {
     //e.npc.say(seen)
     return seen
 }
+
+
+function louderPlaySoundAt(pos, max_distance, sound, volume, pitch) {
+    var sound_world = API.getIWorld("minecraft:overworld")
+    var nP = sound_world.getNearbyEntities(pos, max_distance, 1)
+    for (var i = 0; i < nP.length; i++) {
+        var percentage = (max_distance - pos.distanceTo(nP[i].pos)) / max_distance
+        var artificial_distance = Math.round(16 - (16 * percentage))
+        var angle = GetAngleTowardsPosition(pos, nP[i].pos)
+        var vector = FrontVectors(nP[i], angle, 0, artificial_distance, 0)
+        var new_pos = nP[i].pos.add(Math.round(vector[0]), Math.round(vector[1]), Math.round(vector[2]))
+        sound_world.playSoundAt(new_pos, sound, percentage, pitch)
+    }
+}

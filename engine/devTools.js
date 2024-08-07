@@ -84,6 +84,9 @@ function keyPressed(e) {
             case keyBinds.key_npcTools:
                 toggleNPCTools()
                 break;
+            case keyBinds.key_soundsMenu:
+                e.player.showSoundSelectionGUI()
+                break;
         }
     }
 }
