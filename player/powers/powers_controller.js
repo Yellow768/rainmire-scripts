@@ -157,7 +157,7 @@ function replenishHydrationIfInWater(e) {
             perkReplenishingThreshold = 15
         }
         else {
-            perkReplenishingThreshold = 15
+            perkReplenishingThreshold = 8
         }
         currentReplensihingLevel++
         if (currentReplensihingLevel >= perkReplenishingThreshold && getScore("perk_power") < getScore("max_perk_power")) {

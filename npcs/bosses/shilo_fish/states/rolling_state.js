@@ -64,6 +64,8 @@ state_rolling.timer = function (e) {
 
 
 state_rolling.collide = function (e) {
-    e.entity.damage(5)
-    DoKnockback(e.npc, e.entity, 2, 1)
+    if (TrueDistanceEntities(e.npc, e.entity) < 10) {
+        e.entity.damage(5)
+        DoKnockback(e.npc, e.entity, 2, 1)
+    }
 }

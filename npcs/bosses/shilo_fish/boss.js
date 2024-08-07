@@ -1,5 +1,6 @@
 var api = Java.type('noppes.npcs.api.NpcAPI').Instance();
 load(api.getLevelDir() + '/scripts/ecmascript/boiler/commonFunctions.js')
+load(api.getLevelDir() + '/scripts/ecmascript/boiler/proper_damage.js')
 load(api.getLevelDir() + '/scripts/ecmascript/npcs/boiler/fsm.js')
 load(api.getLevelDir() + '/scripts/ecmascript/npcs/bosses/shilo_fish/states/idle_state.js')
 load(api.getLevelDir() + '/scripts/ecmascript/npcs/bosses/shilo_fish/states/shooting_target_state.js')
@@ -67,6 +68,6 @@ function collide(e) {
 
 
 function died(e) {
-    StateMachine.transitionToState(StateMachine.current_state.name, "state_dead")
+    StateMachine.transitionToState(StateMachine.current_state.name, "state_dead", e)
 }
 

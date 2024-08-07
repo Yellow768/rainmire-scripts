@@ -22,12 +22,12 @@ state_crush_jumping.timer = function (e) {
     if (e.id == 3) {
         e.npc.executeCommand("particle cloud ~ ~-2 ~ .2 .2 .2 0 500 force")
         if (isOnGround(e.npc)) {
-            spawnParticleRing(e.npc.world, "block stone", e.npc.x, e.npc.y, e.npc.z, 1000, 13, 13, 0, 90)
-            e.npc.world.spawnParticle("cloud", e.npc.x, e.npc.y, e.npc.z, 13, 1, 13, 0.2, 400)
+            spawnParticleRing(e.npc.world, "block stone", e.npc.x, e.npc.y, e.npc.z, 1000, 9, 9, 0, 90)
+            e.npc.world.spawnParticle("cloud", e.npc.x, e.npc.y, e.npc.z, 5, 1, 9, 0.2, 400)
             louderPlaySoundAt(e.npc.pos, 50, "minecraft:entity.puffer_fish.sting", 1, .2)
             louderPlaySoundAt(e.npc.pos, 50, "minecraft:entity.warden.attack_impact", 1, .2)
             louderPlaySoundAt(e.npc.pos, 50, "supplementaries:item.bomb", 1, .2)
-            var nE = e.npc.world.getNearbyEntities(e.npc.pos, 13, 5)
+            var nE = e.npc.world.getNearbyEntities(e.npc.pos, 5, 5)
             for (var i = 0; i < nE.length; i++) {
                 if (nE[i] == e.npc) continue
                 DoKnockback(e.npc, nE[i], 16 - e.npc.pos.distanceTo(nE[i].pos), 1.5 - (e.npc.pos.distanceTo(nE[i].pos) / 4))
