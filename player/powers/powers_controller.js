@@ -152,20 +152,30 @@ function depleteHydrationWithDelta(e) {
 var currentReplensihingLevel = 0
 function replenishHydrationIfInWater(e) {
     var perkReplenishingThreshold
-    if (e.player.getMCEntity().m_20070_() /* Obf Method, isInRainOrWater*/) {
+
+    if (!e.player.getMCEntity().m_20070_() /* Obf Method, isInRainOrWater*/) {
+        perkReplenishingThreshold = 60
+    }
+    else {
         if (e.player.world.getBiomeName(e.player.x, e.player.z) == "minecraft:ocean") {
             perkReplenishingThreshold = 15
         }
         else {
             perkReplenishingThreshold = 8
         }
+    }
+    if (currentReplensihingLevel >= perkReplenishingThreshold && getScore("perk_power") < getScore("max_perk_power")) {
+        addToScore("perk_power", 1)
+        currentReplensihingLevel = 0
+        setScore("restore_hydrate", 1)
+        e.player.timers.forceStart(id("REHYDRATE_TIMER"), 4, false)
+    }
+    if (getScore("perk_power") < getScore("max_perk_power")) {
+
         currentReplensihingLevel++
-        if (currentReplensihingLevel >= perkReplenishingThreshold && getScore("perk_power") < getScore("max_perk_power")) {
-            addToScore("perk_power", 1)
-            currentReplensihingLevel = 0
-            setScore("restore_hydrate", 1)
-            e.player.timers.forceStart(id("REHYDRATE_TIMER"), 4, false)
-        }
+    }
+    else {
+        currentReplensihingLevel = 0
     }
 }
 
