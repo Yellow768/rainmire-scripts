@@ -141,6 +141,7 @@ function trigger(e) {
             item.setMotionX(getRandomFloat(-0.2, 0.2))
         }
         npc.timers.forceStart(76805, npc.getStats().getRespawnTime() * 20, false)
+        npc.timers.stop(id("check_mob_range"))
         real_mob = null
     }
     if (e.id == 76802) {
