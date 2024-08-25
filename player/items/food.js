@@ -13,7 +13,7 @@ function eatFood(e) {
         e.player.world.spawnParticle("heart", e.player.x, e.player.y + 1, e.player.z, .2, .5, .2, 0, 10)
 
     }
-    else addToScore("perk_power", Math.floor(foodLevel / 2))
+    else addToScore("perk_power", Math.floor(foodLevel))
 
     setScore("restore_hydrate", 1)
     e.player.timers.forceStart(id("REHYDRATE_TIMER"), 4, false)

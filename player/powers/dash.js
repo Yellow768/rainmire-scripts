@@ -5,7 +5,7 @@ var direction
 
 
 function dash(e) {
-    if (!attemptToUseHydration(3)) {
+    if (!attemptToUseHydration(2)) {
 
         return
     }
