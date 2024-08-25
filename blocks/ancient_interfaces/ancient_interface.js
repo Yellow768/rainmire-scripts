@@ -9,6 +9,8 @@ function init(e) {
     if (!e.block.storeddata.has("on")) { e.block.storeddata.put("on", 0); e.block.setGeckoTexture("iob:textures/block/ancient_interface_off.png") }
     if (!e.block.storeddata.has("onCommand")) { e.block.storeddata.put("onCommand", "") }
     if (!e.block.storeddata.has("offCommand")) { e.block.storeddata.put("offCommand", "") }
+    if (!e.block.storeddata.has("onlyOnce")) { e.block.storeddata.put("onlyOnce", 0) }
+    if (!e.block.storeddata.has("cooldown")) { e.block.storeddata.put("cooldown", 0) }
     e.block.setGeckoModel("iob:geo/block/ancient_interface.geo.json")
 }
 
@@ -18,32 +20,43 @@ function interact(e) {
         openEditingGui(e)
         return
     }
-
+    if (e.block.timers.has(500)) { e.player.playSound("quark:block.pipe.pickup", .2, .2); return }
     var on = e.block.storeddata.get("on")
     if (on == 0) {
         e.block.setGeckoTexture("iob:textures/block/ancient_interface_on.png")
         e.block.storeddata.put("on", 1)
         e.block.setLight(10)
-        if (e.block.storeddata.get("onCommand") != "") e.block.executeCommand(e.block.storeddata.get("onCommand"))
-        on_script(e)
         e.block.executeCommand("/particle minecraft:dust 0 1 1 1 " + (e.block.x + .5) + " " + (e.block.y + 1) + " " + (e.block.z + .5) + " .1 .1 .1 0 50")
         e.block.world.spawnParticle("enchant", e.block.x + .5, e.block.y + 1, e.block.z + .5, .2, .2, .2, 0, 25)
         e.block.world.playSoundAt(e.block.pos, "minecraft:block.beacon.activate", 1, .8)
+        if (!e.block.storeddata.get("onActivated")) {
+            if (e.block.storeddata.get("onCommand") != "") e.block.executeCommand(e.block.storeddata.get("onCommand"))
+            on_script(e)
+        }
+        if (e.block.storeddata.get("onlyOnce")) e.block.storeddata.put("onActivated", 1)
+        e.block.timers.start(500, e.block.storeddata.get("cooldown"), false)
         return
     }
     else {
         e.block.setGeckoTexture("iob:textures/block/ancient_interface_off.png")
         e.block.storeddata.put("on", 0)
-        if (e.block.storeddata.get("offCommand") != "") e.block.executeCommand(e.block.storeddata.get("offCommand"))
-        off_script(e)
+        if (!e.block.storeddata.get("offActivated")) {
+            if (e.block.storeddata.get("offCommand") != "") e.block.executeCommand(e.block.storeddata.get("offCommand"))
+            off_script(e)
+        }
+        if (e.block.storeddata.get("onlyOnce")) e.block.storeddata.put("offActivated", 1)
+
         e.block.world.spawnParticle("aquamirae:ghost_shine", e.block.x + .5, e.block.y + 1, e.block.z + .5, .2, .2, .2, 0, 5)
         e.block.world.playSoundAt(e.block.pos, "minecraft:block.beacon.deactivate", 1, .6)
         e.block.setLight(5)
+        e.block.timers.start(500, e.block.storeddata.get("cooldown"), false)
     }
 }
 
 
 function openEditingGui(e) {
+    e.block.storeddata.put("onActivated", 0)
+    e.block.storeddata.put("offActivated", 0)
     var GUI = e.API.createCustomGui(1, 256, 256, false, e.player)
     GUI.addLabel(1, "Ancient Interface Config", 60, -10, 256, 256, 0xffffff)
     GUI.addLabel(2, "Rotation", 0, 30, 256, 256, 0xffffff)
@@ -87,6 +100,24 @@ function openEditingGui(e) {
         e.block.storeddata.put("offCommand", t.getText())
     })
 
+    GUI.addTextField(50, 80, 120, 90, 10).setText(e.block.storeddata.get("cooldown")).setOnChange(function (gui, t) { e.block.storeddata.put("cooldown", t.getText()) }).setHoverText("Cooldown between interacts")
+
+    var onlyOnceLabel = ["False", "True"]
+    GUI.addButton(60, "False", 80, 150, 100, 25).setLabel(onlyOnceLabel[e.block.getStoreddata().get("onlyOnce")]).setOnPress(function (gui, t) {
+        switch (e.block.storeddata.get("onlyOnce")) {
+            case 0:
+                t.setLabel("True")
+                e.block.storeddata.put("onlyOnce", 1)
+                break;
+            case 1:
+                t.setLabel("False")
+                e.block.storeddata.put("onlyOnce", 0)
+                break;
+        }
+        GUI.update()
+    }).setHoverText("Toggle if commands are activated every time, or only once.")
+    GUI.addLabel(61, "Activate Once", 0, 155, 1, 1, 0xffffff)
+    GUI.addLabel(51, "Cooldown", 0, 122, 1, 1, 0xffffff)
 
     e.player.showCustomGui(GUI)
 }

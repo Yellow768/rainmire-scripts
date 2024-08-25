@@ -31,15 +31,6 @@ function shrink(e) {
     dropItem = true
 }
 
-function tick(e) {
-    if (e.npc.inWater()) {
-        e.npc.ai.setNavigationType(1)
-    }
-
-    if (!e.npc.inWater()) {
-        e.npc.ai.setNavigationType(0)
-    }
-}
 
 function timer(e) {
     if (e.npc.storeddata.get("hasStatusEffect") == 1) return
