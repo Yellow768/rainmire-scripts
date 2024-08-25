@@ -86,9 +86,9 @@ function timer(e) {
         e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.wither.break_block", .2, .2)
         e.npc.world.playSoundAt(e.npc.pos, "minecraft:block.shroomlight.break", 1, 1)
         e.npc.timers.forceStart(id("beginBurrow"), getRandomInt(40, 80), false)
-        var entities = e.npc.world.getNearbyEntities(e.npc.pos, 2, 5)
+        var entities = e.npc.world.getNearbyEntities(e.npc.pos, 1, 5)
         for (var i = 0; i < entities.length; i++) {
-            if (entities[i] != e.npc) {
+            if (entities[i] != e.npc && entities[i].name != "Burrower") {
                 entities[i].damage(5)
                 entities[i].addPotionEffect(2, 4, 2, false)
                 entities[i].setMotionY(.8)

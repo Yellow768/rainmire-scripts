@@ -57,7 +57,7 @@ function moveBlock(e, direction, offset) {
     if (e.block.storeddata.has("inSource")) {
         e.block.world.setBlock(e.block.pos, "water")
     }
-    e.block.world.setBlock(place_pos, "customnpcs:npcscripted")
+    e.block.executeCommand("setblock " + place_pos.x + " " + place_pos.y + " " + place_pos.z + " customnpcs:npcscripted")
     try {
         var nbt = e.block.world.getBlock(place_pos).getBlockEntityNBT()
         var s1 = e.API.stringToNbt('{}');

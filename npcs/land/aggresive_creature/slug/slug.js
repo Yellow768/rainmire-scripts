@@ -104,11 +104,11 @@ function timer(e) {
     e.npc.clearPotionEffects()
 }
 
-function FrontVectors(entity, dr, dp, distance, mode) {
+function FrontVectors(entity, dr, dp, distance, entityRotationRelative) {
 
-    if (mode == 1) { var angle = dr + entity.getRotation(); var pitch = (-entity.getPitch() + dp) * Math.PI / 180 }
+    if (entityRotationRelative) { var angle = dr + entity.getRotation(); var pitch = (-entity.getPitch() + dp) * Math.PI / 180 }
 
-    if (mode == 0) { var angle = dr; var pitch = (dp) * Math.PI / 180 }
+    if (entityRotationRelative) { var angle = dr; var pitch = (dp) * Math.PI / 180 }
 
     var dx = -Math.sin(angle * Math.PI / 180) * (distance * Math.cos(pitch))
 

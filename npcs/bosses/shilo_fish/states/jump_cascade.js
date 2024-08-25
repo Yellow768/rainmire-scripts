@@ -23,11 +23,11 @@ state_jump_cascade.timer = function (e) {
         louderPlaySoundAt(e.npc.pos, 50, "customnpcs:misc.old_explode", 1, .2)
         louderPlaySoundAt(e.npc.pos, 50, "minecraft:entity.slime.attack", 1, .2)
         e.npc.executeCommand("/particle block stone " + attackTarget.x + " 55 " + attackTarget.z + " 7 0 7 1 1000 force")
-        for (var i = 0; i < 7; i++) {
+        for (var i = 0; i < 6; i++) {
             var pos = {
-                x: attackTarget.x + getRandomInt(-10, 10),
+                x: attackTarget.x + getRandomInt(-7, 7),
                 y: 56,
-                z: attackTarget.z + getRandomInt(-10, 10)
+                z: attackTarget.z + getRandomInt(-7, 7)
             }
             summonFallingBlockCircle(e.npc.world, pos)
         }

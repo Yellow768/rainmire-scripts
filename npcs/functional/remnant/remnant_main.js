@@ -1,3 +1,10 @@
+var api = Java.type('noppes.npcs.api.NpcAPI').Instance();
+load(api.getLevelDir() + '/scripts/ecmascript/boiler/commonFunctions.js')
+load(api.getLevelDir() + '/scripts/ecmascript/player/attributes/perks/perks.js')
+load(api.getLevelDir() + '/scripts/ecmascript/npcs/functional/remnant/perk_purchasing_functions.js')
+load(api.getLevelDir() + '/scripts/ecmascript/npcs/functional/remnant/respawn_point_functions.js')
+load(api.getLevelDir() + '/scripts/ecmascript/boiler/id_generator.js')
+
 var npc, player, API
 function init(e) {
     initializeRespawnPointData(e)
@@ -47,7 +54,7 @@ function dialogOption(e) {
             e.npc.timers.start(1, 1, false)
             break;
         case 1:
-            e.player.trigger(5, [e])
+            e.player.trigger(id("force_open_stats_screen"), [e])
             break;
         case 2:
             toggleRespawnAnchor(e)

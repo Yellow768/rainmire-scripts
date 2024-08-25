@@ -4,6 +4,7 @@ load(api.getLevelDir() + "/scripts/ecmascript/boiler/commonFunctions.js");
 load(api.getLevelDir() + "/scripts/ecmascript/boiler/scoreboard.js");
 
 function init(e) {
+
 	registerScoreboardPlayer(e)
 	respawn(e)
 
@@ -81,6 +82,8 @@ function respawn(e) {
 	e.player.playSound("iob:ui.breath", 1, 1)
 	e.player.playSound("minecraft:block.beacon.ambient", 1, 1)
 	setScore("perk_power", getScore("max_perk_power"))
+	executeCommand('/attribute ' + e.player.name + ' forge:step_height_addition base set 1')
+
 }
 
 

@@ -1,4 +1,7 @@
-var animationEngine
+var api = Java.type('noppes.npcs.api.NpcAPI').Instance();
+load(api.getLevelDir() + '/scripts/ecmascript/boiler/commonFunctions.js')
+load(api.getLevelDir() + '/scripts/ecmascript/boiler/proper_damage.js')
+
 var isWalking = false
 var isAttacking = false
 var justLanded = false
@@ -12,9 +15,12 @@ var WALKING_SOUND_TIMER = 8
 
 
 function init(e) {
-    animationEngine = e.API.createAnimBuilder()
+
     disableRegularAttacks
     e.npc.timers.forceStart(1, 2, true)
+}
+function meleeAttack(e) {
+    e.setCanceled(true)
 }
 
 function disableRegularAttacks(e) {
@@ -48,9 +54,8 @@ function died(e) {
 }
 
 function doHopAttack(e) {
-
-    animationEngine.clearAnimations()
-    animationEngine.addAnimation("animation.mushroom_hopper.attack")
+    var animationEngine = e.API.createAnimBuilder()
+    animationEngine.thenPlay("animation.mushroom_hopper.attack")
     isAttacking = true
     isWalking = false
     e.npc.timers.stop(WALKING_SOUND_TIMER)
@@ -83,15 +88,15 @@ function timer(e) {
 
             if (!isAttacking && !isWalking && (e.npc.getMotionX() != 0 || e.npc.getMotionZ() != 0)) {
                 isWalking = true
-                animationEngine.clearAnimations()
-                animationEngine.loop("animation.mushroom_hopper.walk")
+                var animationEngine = e.API.createAnimBuilder()
+                animationEngine.thenLoop("animation.mushroom_hopper.walk")
                 e.npc.syncAnimationsForAll(animationEngine)
                 e.npc.timers.forceStart(WALKING_SOUND_TIMER, 10, true)
             }
             if (!isAttacking && isWalking && e.npc.getMotionX() == 0 && e.npc.getMotionZ() == 0) {
                 isWalking = false
-                animationEngine.clearAnimations()
-                animationEngine.addAnimation("animation.mushroom_hopper.idle")
+                var animationEngine = e.API.createAnimBuilder()
+                animationEngine.thenLoop("animation.mushroom_hopper.idle")
                 e.npc.syncAnimationsForAll(animationEngine)
                 e.npc.timers.stop(WALKING_SOUND_TIMER)
             }
@@ -139,7 +144,7 @@ function timer(e) {
 function collide(e) {
     if ((isAttacking && !e.npc.getMCEntity().m_20096_()) || justLanded) {
         if (e.entity.pos.distanceTo(e.npc.pos) > 1) return
-        e.entity.damage(2)
-        DoKnockback(e.npc, e.entity, 1, 0)
+        damageFrom(e.entity, e.npc, e.npc.getStats().getMelee().getStrength())
+        DoKnockback(e.npc, e.entity, 2, 0)
     }
 }

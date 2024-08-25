@@ -64,4 +64,24 @@
         "description": "Load proper damage script",
         "scope": "javascript,typescript"
     },
+    "ThreadTemplate": {
+        "prefix": "rainmire:thread_templdate",
+        "body": [
+            "var Thread_Name = Java.extend(Thread, {",
+            "run: function () {",
+            "",
+            "}",
+            "}); var T = new Thread_Name(); T.start();"
+        ],
+        "description": "Load a thread template",
+        "scope": "javascript,typescript"
+    },
+    "LoadThread": {
+        "prefix": "rainmire:thread",
+        "body": [
+            "var Thread = Java.type('java.lang.Thread');"
+        ],
+        "description": "Load the thread class",
+        "scope": "javascript,typescript"
+    }
 }

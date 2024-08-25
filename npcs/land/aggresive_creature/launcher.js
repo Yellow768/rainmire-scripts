@@ -41,19 +41,19 @@ function timer(e) {
         var projectile = entityShoot({
             x: e.npc.x, y: e.npc.y + 1, z: e.npc.z
         }, {
-            speed: .4,
-            itemid: "minecraft:orange_dye",
+            speed: .9,
+            itemid: "minecraft:redstone",
             isArrow: 0,
             canBePickedUp: 0,
             deviation: 1,
             spins: 0,
-            size: 15,
+            size: 10,
             trailenum: 1,
             pitch: -90,
-            render3d: 1,
+            render3d: 0,
             glows: 1,
             rotation: GetAngleTowardsEntity(e.npc, current_target),
-            damage: 0
+            damage: 0,
         })
         try {
             projectile.enableEvents()
@@ -88,7 +88,7 @@ function projectileImpact(e) {
         if (nE[i] == npc) continue
         nE[i].knockback(3, GetAngleTowardsEntity(e.projectile, nE[i]))
         nE[i].setMotionY(.5)
-        nE[i].damage(calculateDamage(3, nE[i], e.projectile))
+        damageFrom(nE[i], npc, 3)
     }
     spawnCircularParticles(e.projectile.world, "falling_honey", 3, 1, 1, e.projectile.x, e.projectile.y - 1, e.projectile.z)
     spawnCircularParticles(e.projectile.world, "crit", 3, 1, 1, e.projectile.x, e.projectile.y - 1, e.projectile.z)

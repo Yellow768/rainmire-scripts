@@ -100,7 +100,7 @@ function timer(e) {
     if (e.id == 15) {
         var nE = e.npc.world.getNearbyEntities(e.npc.pos, 20, 5)
         for (var i = 0; i < nE.length; i++) {
-            if (nE[i] != e.npc && nE[i].getPotionEffect(17) != -1) {
+            if (nE[i] != e.npc && nE[i].getPotionEffect(17) != -1 && nE[i].name != "Fire Slug") {
                 nE[i].setBurning(40)
             }
         }

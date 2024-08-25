@@ -10,11 +10,14 @@ var xSpeed
 var zSpeed
 var xModifier = 1
 var zModifier = 1
-var xWidth = 6.5
-var zWidth = 6.5
+var xWidth = 6
+var zWidth = 6
 
 
 state_rolling.enter = function (e) {
+    var animationBuilder = e.API.createAnimBuilder()
+    animationBuilder.thenLoop("animation.big_fish.rolling")
+    e.npc.syncAnimationsForAll(animationBuilder)
     var dirs = [-1, 1]
     xSpeed = getRandomElement(dirs)
     zSpeed = getRandomElement(dirs)
@@ -27,6 +30,9 @@ state_rolling.enter = function (e) {
 }
 
 state_rolling.exit = function (e) {
+    var animationBuilder = e.API.createAnimBuilder()
+    animationBuilder.thenPlay("animation.big_fish.idle")
+    e.npc.syncAnimationsForAll(animationBuilder)
     e.npc.timers.stop(1)
     e.npc.timers.stop(2)
     e.npc.timers.stop(3)
@@ -55,7 +61,15 @@ state_rolling.timer = function (e) {
         e.npc.setMotionX(xSpeed * xModifier)
         e.npc.setMotionZ(zSpeed * zModifier)
         var angle = Math.atan2((zSpeed * zModifier), (xSpeed * xModifier)) * (-180 / Math.PI)
-        e.npc.rotation = angle + 90
+
+        if (Math.abs(xSpeed + zSpeed) == 2) {
+            e.npc.rotation = angle + 90
+        }
+        else {
+
+            e.npc.rotation = angle - 90
+        }
+
     }
     if (e.id == 2) {
         StateMachine.transitionToState(StateMachine.current_state.name, "idle", e)

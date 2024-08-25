@@ -20,7 +20,7 @@ function getRandomInt(min, max) {
 }
 
 function getRandomFloat(min, max) {
-    return Math.random() * (max - min + 1) + min;
+    return Math.random() * (max - min) + min;
 }
 
 function getRandomElement(array) {
