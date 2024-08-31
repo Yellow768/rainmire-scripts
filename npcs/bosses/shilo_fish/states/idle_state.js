@@ -7,7 +7,7 @@ state_idle.init = function (e) {
 }
 
 state_idle.target = function (e) {
-    StateMachine.transitionToState("idle", "shooting_target", e)
+    StateMachine.transitionToState("shooting_target", e)
 }
 
 

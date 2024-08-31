@@ -34,7 +34,7 @@ state_crush_jumping.timer = function (e) {
                 nE[i].damage(16 - e.npc.pos.distanceTo(nE[i].pos))
             }
             if (!e.npc.timers.has(2)) {
-                StateMachine.transitionToState(StateMachine.current_state.name, "idle", e)
+                StateMachine.transitionToState("idle", e)
             }
             e.npc.timers.stop(3)
         }

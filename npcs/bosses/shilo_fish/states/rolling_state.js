@@ -72,7 +72,7 @@ state_rolling.timer = function (e) {
 
     }
     if (e.id == 2) {
-        StateMachine.transitionToState(StateMachine.current_state.name, "idle", e)
+        StateMachine.transitionToState("idle", e)
     }
 }
 

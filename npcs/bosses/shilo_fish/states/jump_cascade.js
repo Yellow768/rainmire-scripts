@@ -10,7 +10,7 @@ state_jump_cascade.timer = function (e) {
     if (e.id == 1) {
         e.npc.timers.stop(2)
         e.npc.timers.stop(3)
-        StateMachine.transitionToState(StateMachine.current_state.name, "idle", e)
+        StateMachine.transitionToState("idle", e)
     }
     if (e.id == 2) {
         //Slam Down

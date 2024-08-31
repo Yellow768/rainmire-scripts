@@ -34,11 +34,11 @@ state_shooting_target.timer = function (e) {
     }
     if (e.id == 3) {
         if (attackTarget.pos.distanceTo(e.npc.pos) > 50 || !attackTarget.isAlive() || (attackTarget.type == 1 && attackTarget.gamemode == 1)) {
-            StateMachine.transitionToState(StateMachine.current_state.name, "idle", e)
+            StateMachine.transitionToState("idle", e)
         }
     }
     if (e.id == 4) {
-        StateMachine.transitionToState("shooting_target", "choose_new_attack", e)
+        StateMachine.transitionToState("choose_new_attack", e)
     }
     if (e.id == 6) {
         var target_rotation = GetAngleTowardsEntity(e.npc, attackTarget)

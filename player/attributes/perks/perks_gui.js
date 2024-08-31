@@ -90,7 +90,7 @@ function createPerkGui(e, editable, init) {
             if (player.tempdata.get("canEditPerks")) { item.addEnchantment("infinity", 1) }
         }
         GUI_STATS.addItemSlot(selected_good_base_x, selected_good_base_y + (i * 20), item).setGuiType(0)
-        GUI_STATS.addTexturedRect(id("empty_good_slot" + i), "iob:textures/customgui/perks/empty_slot.png", selected_good_base_x - 1, selected_good_base_y + (i * 20) - 1, 256, 256).setScale(0.07)
+        //GUI_STATS.addTexturedRect(id("empty_good_slot" + i), "iob:textures/customgui/perks/empty_slot.png", selected_good_base_x - 1, selected_good_base_y + (i * 20) - 1, 256, 256).setScale(0.07)
     }
     for (var b = 0; b < 20; b++) {
         if (b > 1 && b % 5 == 0) {
@@ -114,7 +114,7 @@ function createPerkGui(e, editable, init) {
             if (player.tempdata.get("canEditPerks")) { item.addEnchantment("infinity", 1) }
         }
         GUI_STATS.addItemSlot(selected_bad_base_x, selected_good_base_y + (b * 20), item).setGuiType(0)
-        GUI_STATS.addTexturedRect(id("empty_bad_slot" + b), "iob:textures/customgui/perks/empty_slot.png", selected_bad_base_x - 1, selected_good_base_y + (b * 20) - 1, 256, 256).setScale(0.07)
+        //GUI_STATS.addTexturedRect(id("empty_bad_slot" + b), "iob:textures/customgui/perks/empty_slot.png", selected_bad_base_x - 1, selected_good_base_y + (b * 20) - 1, 256, 256).setScale(0.07)
     }
 
     GUI_STATS.addTexturedRect(id("comparator"), "iob:textures/customgui/comparators.png", selected_good_base_x + 17, 233, 32, 32, 0, 0).setScale(0.4).setHoverText("§6Dampening§f total must be higher than §bpower §ftotal")
@@ -126,6 +126,7 @@ function createPerkGui(e, editable, init) {
 var currentlyHeldPerk = null
 
 function customGuiSlotClicked(e) {
+    e.player.message(e.player.tempdata.get("canEditPerks"))
     if (!e.player.tempdata.get("canEditPerks")) { e.setCanceled(true); return }
     if (e.clickType == "CLONE") { e.setCanceled(true) }
     if (e.slotId >= 0 && e.slotId <= 19) {

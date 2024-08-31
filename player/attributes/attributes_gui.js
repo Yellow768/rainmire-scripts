@@ -26,8 +26,8 @@ function createStatsScreen(e, withSound) {
     }
     GUI_STATS = e.API.createCustomGui(id("STATS_GUI"), 256, 256, false, e.player)
     GUI_STATS.setBackgroundTexture("iob:textures/customgui/statsscreen.png")
-    createScores(e)
-    createValues()
+    //createScores(e)
+    //createValues()
     if (getScore("AttrPoints") > 0 || unsavedChangesMode) {
         if (!unsavedChangesMode) {
             for (var i = 0; i < statsStringArray.length; i++) {

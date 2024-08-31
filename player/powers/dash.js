@@ -52,12 +52,12 @@ function dash(e) {
         player.getMount().setMotionZ(d[2])
     }
     if (!player.getMCEntity().m_20096_()) {
-        player.setMotionY(d[1] / 1.55)
-        player.setMotionX(d[0] / 1.55)
-        player.setMotionZ(d[2] / 1.55)
+        player.setMotionY(d[1] * 1.7)
+        player.setMotionX(d[0] / 2)
+        player.setMotionZ(d[2] / 2)
     }
     else {
-        player.setMotionY(d[1])
+        player.setMotionY(d[1] * 1.3)
         player.setMotionX(d[0])
         player.setMotionZ(d[2])
     }

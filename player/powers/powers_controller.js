@@ -154,7 +154,7 @@ function replenishHydrationIfInWater(e) {
     var perkReplenishingThreshold
 
     if (!e.player.getMCEntity().m_20070_() /* Obf Method, isInRainOrWater*/) {
-        perkReplenishingThreshold = 60
+        perkReplenishingThreshold = 90
     }
     else {
         if (e.player.world.getBiomeName(e.player.x, e.player.z) == "minecraft:ocean") {

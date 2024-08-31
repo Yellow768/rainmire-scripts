@@ -6,19 +6,20 @@ function State(name) {
 
 
 var StateMachine = {
-    states: {},
-    current_state: "",
+    states: [],
+    current_state: undefined,
+    default_state: undefined,
     setState: function (state) {
-        StateMachine.current_state = StateMachine.states[state]
+        StateMachine.current_state = state
     },
-    transitionToState: function (from, to, e) {
-        StateMachine.current_state = StateMachine.states[to]
-        StateMachine.states[from].exit(e)
-        StateMachine.states[to].enter(e)
+    transitionToState: function (to, e) {
+        StateMachine.current_state.exit(e)
+        StateMachine.current_state = to
+        to.enter(e)
 
     },
     addState: function (state) {
-        StateMachine.states[state.name] = state
+        StateMachine.states.push(state)
     }
 
 }
