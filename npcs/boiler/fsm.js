@@ -16,6 +16,7 @@ var StateMachine = {
         StateMachine.current_state.exit(e)
         StateMachine.current_state = to
         to.enter(e)
+        npc.storeddata.put("current_state", to.name)
 
     },
     addState: function (state) {

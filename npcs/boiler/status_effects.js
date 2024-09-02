@@ -42,7 +42,6 @@ function trigger(e) {
     }
     if (e.id == PANICKED_ID) {
         npc.storeddata.put("panicked", 1)
-        npc.executeCommand("/particle upgrade_aquatic:purple_jelly_blob ~ ~1 ~ .5 .5 .5 .02 30 force")
         if (npc.name != "Water Summon") {
             npc.timers.forceStart(PANICKED_JUMP, Math.random() * (40 - 1) + 1, false)
             npc.timers.forceStart(PANICKED_SWING, Math.random() * (40 - 1) + 1, false)
