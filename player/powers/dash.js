@@ -40,8 +40,11 @@ function dash(e) {
         d = FrontVectors(player, player.getMount().getRotation(), 0, 1.6, false)
     }
     else if (player.getMCEntity().m_5842_()) {
-        d = FrontVectors(player, direction, -player.pitch, .8 * getScore("swmspd"), false)
+        d = FrontVectors(player, direction, -player.pitch * .4, (.8 * getScore("swmspd")) * Math.max(((90 - Math.abs(e.player.pitch)) / 90), .6), false)
         e.player.timers.forceStart(id("is_player_underwater"), 0, true)
+    }
+    else if (e.player.isSneaking() && isOnGround(e.player)) {
+        d = FrontVectors(player, 0, 60, 1.3, true)
     }
     else {
         d = FrontVectors(player, direction, 7, 1.6, false)
@@ -69,11 +72,14 @@ function dash(e) {
     player.world.playSoundAt(player.pos, "minecraft:item.bucket.empty", 1, 1)
     player.world.playSoundAt(player.pos, "variedcommodities:magic.shot", 1, 1)
     player.world.playSoundAt(player.pos, "minecraft:ambient.underwater.exit", 1, 1)
+    player.timers.forceStart(id("start_dash_glide"), 7 + (Number(e.player.isSneaking()) * 8), false)
 
 
 }
 
 var delay = 0
+var glide_power_consumption_iteration = 0
+var max_glide_power_consumption_number = 10
 
 function dash_timers(e) {
     switch (e.id) {
@@ -93,14 +99,47 @@ function dash_timers(e) {
             player.world.spawnParticle("bubble_pop", player.x - dx, player.y + 1, player.z - dz, 0.1, .1, 0.1, .01, 50)
             player.world.spawnParticle("falling_water", player.x - dx, player.y + 1, player.z - dz, 0.1, .2, 0.1, 1, 5)
             break
-        case id("is_player_underwater"):
-            if (!e.player.inWater()) {
-                e.player.setMotionY(0)
-                e.player.timers.stop(id("is_player_underwater"))
+        case id("start_dash_glide"):
+            e.player.addTag("dashGliding")
+            e.player.timers.forceStart(id("dash_glide"), 0, true)
+            e.API.executeCommand(e.player.world, "/attribute " + e.player.name + " forge:entity_gravity base set 0.002")
+            e.player.tempdata.put("initial_angle", e.player.rotation)
+            e.player.tempdata.put("dash_glide_motion", d)
+            break;
+        case id("dash_glide"):
+            var initial_angle = e.player.tempdata.get("initial_angle")
+            if (isMovingLeft) initial_angle -= 1.3
+            if (isMovingRight) initial_angle += 1.3
+
+            e.player.tempdata.put("initial_angle", initial_angle)
+            var d = FrontVectors(e.player, initial_angle, 0, .60, false)
+            e.player.setMotionX(d[0])
+            e.player.setMotionZ(d[2])
+            player.world.spawnParticle("falling_water", player.x, player.y - 2, player.z, 0.1, .7, 0.1, 1, 50)
+            player.world.spawnParticle("bubble_pop", player.x, player.y, player.z, 0.3, .2, 0.3, .01, 100)
+            glide_power_consumption_iteration++
+            if (glide_power_consumption_iteration > max_glide_power_consumption_number) {
+                if (!attemptToUseHydration(1)) deactivateDashGlide(e)
+                glide_power_consumption_iteration = 0
+                executeCommand("/playsound minecraft:weather.rain voice @a " + player.x + " " + player.y + " " + player.z + " 1")
             }
+            if (isOnGround(e.player) || e.player.inWater()) {
+                deactivateDashGlide(e)
+            }
+            player.getMCEntity().f_19789_ = 0
+            break;
+
 
     }
 }
 
+
+function deactivateDashGlide(e) {
+    e.player.timers.stop(id("dash_glide"))
+    e.player.timers.stop(id("start_dash_glide"))
+    e.API.executeCommand(e.player.world, "/attribute " + e.player.name + " forge:entity_gravity base set 0.08")
+    glide_power_consumption_iteration = 0
+    executeCommand("stopsound " + player.name + " voice minecraft:weather.rain")
+}
 
 

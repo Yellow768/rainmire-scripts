@@ -60,11 +60,13 @@ function applyJellyLore(e, item, type, amount) {
     var newLore = []
     var nbt = item.getNbt()
     if (amount == 0) {
+        e.player.message("test")
         var newI = 0
         for (var i = 0; i < currentLore.length; i++) {
             if (currentLore[i].indexOf(type) == -1) {
                 newLore[newI] = currentLore[i]
                 newI++
+
             }
         }
         currentLore = newLore
@@ -112,18 +114,27 @@ function applyJelly(e, item) {
         return
     }
     if (isItemValidForJelly(e, item)) {
-        var amount = 5
+        var amount = 1
         if (e.player.hasTag("dilution")) {
-            amount = 2
+            amount = 0
         }
         var offItem = e.player.getOffhandItem().getDisplayName()
         var index = offItem.indexOf("Jelly")
         var type = e.player.getOffhandItem().getDisplayName().substr(0, index)
         if (item.displayName.indexOf("Bomb") == -1) {
-            applyJellyLore(e, item, type, amount)
-            item.nbt.setInteger(type, amount)
+            applyJellyLore(e, item, type, item.nbt.getInteger(type) + amount)
+            item.nbt.setInteger(type, item.nbt.getInteger(type) + amount)
             e.player.message("&" + colorCode(type) + type + "Jelly &rapplied to your weapon")
-
+            if (type == "Panicking " && item.nbt.getInteger("Paralyzing ") > 0) {
+                item.nbt.setInteger("Paralyzing ", 0)
+                e.player.message("&dThe panicking jelly dissolves the &eparalyzing jelly")
+                applyJellyLore(e, item, "Paralyzing ", 0)
+            }
+            if (type == "Paralyzing " && item.nbt.getInteger("Panicking ") > 0) {
+                item.nbt.setInteger("Panicking ", 0)
+                e.player.message("&eThe paralyzing jelly dissolves the &dpanicking jelly")
+                applyJellyLore(e, item, "Panicking ", 0)
+            }
             item.setDamage(item.getDamage() + 1)
 
             e.player.world.playSoundAt(e.player.pos, "minecraft:block.honey_block.fall", 1, 1)

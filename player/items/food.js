@@ -13,25 +13,13 @@ function eatFood(e) {
         e.player.world.spawnParticle("heart", e.player.x, e.player.y + 1, e.player.z, .2, .5, .2, 0, 10)
 
     }
-    else addToScore("perk_power", Math.floor(foodLevel / 2))
 
-    setScore("restore_hydrate", 1)
-    e.player.timers.forceStart(id("REHYDRATE_TIMER"), 4, false)
-    if (getScore("perk_power") > getScore("max_perk_power")) {
-        setScore("perk_power", getScore("max_perk_power"))
-    }
-    if (getScore("perk_power") < 0) {
-        setScore("perk_power", 0)
-    }
     produceFoodParticles(e)
     e.player.playSound("minecraft:entity.generic.eat", 1, 1)
     e.player.playSound("minecraft:entity.player.burp", 1, 1)
     e.player.playSound("minecraft:entity.witch.drink", 1, 1)
     if (e.player.gamemode != 1) { e.player.removeItem(food, 1) }
-    e.player.setHealth(e.player.getHealth() + foodLevel)
-    if (e.player.getHealth() > e.player.getMaxHealth()) {
-        e.player.setHealth(e.player.getMaxHealth())
-    }
+    e.player.addPotionEffect(10, foodLevel, 0, false)
 }
 
 function isFoodValid(e, food) {

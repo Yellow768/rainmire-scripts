@@ -10,6 +10,7 @@ function useNPCTool(e) {
             moverFunctions(e)
             break;
         case "Spawner":
+            e.setCanceled(true)
             spawnerFunctions(e)
             break;
         case "Eraser":
@@ -82,6 +83,8 @@ function spawnerFunctions(e) {
     }
 }
 
+var tab_button_ids_to_tab_number = {}
+
 function openClonerGui(e, page) {
     if (!page) {
         if (e.player.storeddata.has("clone_tab")) {
@@ -95,9 +98,9 @@ function openClonerGui(e, page) {
     for (var i = 0; i < e.API.getClones().getClones(page).length; i++) {
         current_list.push(e.API.getClones().getClones(page)[i])
     }
-
+    var tab_names = ["Land Enemies", "Water Enemies", "Environment Objects", "Remnants", "5", "6", "7", "8", "9"]
     CLONER_GUI = e.API.createCustomGui(1, 256, 256, false, e.player)
-    CLONER_GUI.addLabel(id("current_tab"), "Tab " + page, -45, 0, 1, 1, 0xffffff)
+    CLONER_GUI.addLabel(id("current_tab"), tab_names[page - 1], -105, 0, 1, 1, 0xffffff)
     CLONER_GUI.addEntityDisplay(id("entity_clone"), 220, 150, e.player.world.createEntity("cow")).setScale(2)
     CLONER_GUI.addScroll(id("scroll_clones"), 0, 0, 150, 250, current_list)
         .setOnClick(function (gui, t) {
@@ -114,9 +117,9 @@ function openClonerGui(e, page) {
     }
     for (var i = 1; i <= 9; i++) {
         var current_number = i
-        CLONER_GUI.addButton(id("tab_" + i), "Tab " + i, -50, 0 + (22 * i), 45, 20).setOnPress(function (gui, t) {
+        CLONER_GUI.addButton(900 + i, tab_names[i - 1], -100, 0 + (22 * i), 100, 20).setOnPress(function (gui, t) {
             try {
-                openClonerGui(e, Number(t.getLabel().replace("Tab ", "")))
+                openClonerGui(e, t.getID() - 900)
             } catch (error) {
                 player.message(error)
             }

@@ -172,6 +172,10 @@ function trigger(e) {
     if (e.id == 123402) {
         StateMachine.transitionToState(state_panicking, e)
     }
+    if (e.id == 123403) {
+        npc.setBurning(e.arguments[1])
+        npc.executeCommand("/particle upgrade_aquatic:red_jelly_blob ~ ~1 ~ .5 .5 .5 .02 30 force")
+    }
 }
 
 

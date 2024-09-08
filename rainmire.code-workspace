@@ -11,6 +11,9 @@
 		{
 			"name": "CLIENT KubeJS",
 			"path": "../../../../../kubejs"
+		},
+		{
+			"path": "../../../../levels"
 		}
 	],
 	"settings": {

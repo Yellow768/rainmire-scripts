@@ -87,9 +87,10 @@ function keyReleased(e) {
     if (e.key == 65) { isMovingLeft = false }
     if (e.key == 83) { isMovingBackwards = false }
     if (e.key == 68) { isMovingRight = false }
-    if (e.key == keyBinds.key_levitate) {
-        deactivateLevitation(e)
+    if (e.key == keyBinds.key_dash) {
+        deactivateDashGlide(e)
     }
+
 }
 
 
@@ -154,7 +155,7 @@ function replenishHydrationIfInWater(e) {
     var perkReplenishingThreshold
 
     if (!e.player.getMCEntity().m_20070_() /* Obf Method, isInRainOrWater*/) {
-        perkReplenishingThreshold = 90
+        perkReplenishingThreshold = 200
     }
     else {
         if (e.player.world.getBiomeName(e.player.x, e.player.z) == "minecraft:ocean") {
@@ -163,6 +164,9 @@ function replenishHydrationIfInWater(e) {
         else {
             perkReplenishingThreshold = 8
         }
+    }
+    if (e.player.getPotionEffect(10) != -1) {
+        perkReplenishingThreshold = 30 / (e.player.getPotionEffect(10) + 1)
     }
     if (currentReplensihingLevel >= perkReplenishingThreshold && getScore("perk_power") < getScore("max_perk_power")) {
         addToScore("perk_power", 1)
