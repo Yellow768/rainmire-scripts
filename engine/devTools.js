@@ -814,7 +814,7 @@ function toggleNPCTools() {
         player.removeTag("npcToolMode")
         return
     }
-    var spawner = player.world.createItem("slime_spawn_egg", 1)
+    var spawner = player.world.createItem("netherite_hoe", 1)
     var eraser = player.world.createItem("copper_ingot", 1)
     var mover = player.world.createItem("recovery_compass", 1)
     spawner.getNbt().putString("Tool", "Spawner")

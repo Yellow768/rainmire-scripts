@@ -8,16 +8,16 @@ function init(e) {
         e.npc.storeddata.put("releaseDelay", 20)
         e.npc.storeddata.put("initialPosition", 1)
     }
-    e.npc.timers.forceStart(id("reinitCrusher"), e.npc.storeddata.get("crushDelay") + e.npc.storeddata.get("releaseDelay"), true)
+    e.npc.timers.forceStart(4, e.npc.storeddata.get("crushDelay") + e.npc.storeddata.get("releaseDelay"), true)
     npc = e.npc
     in_crush_position = e.npc.storeddata.get("initialPosition")
     switch (e.npc.storeddata.get("initialPosition")) {
         case 1:
-            e.npc.timers.forceStart(id("crusher"), e.npc.storeddata.get("crushDelay"), false)
+            e.npc.timers.forceStart(2, e.npc.storeddata.get("crushDelay"), false)
             e.npc.setMotionY(motion)
             break;
         case 0:
-            e.npc.timers.forceStart(id("crusher"), e.npc.storeddata.get("releaseDelay"), false)
+            e.npc.timers.forceStart(2, e.npc.storeddata.get("releaseDelay"), false)
             e.npc.setMotionY(-motion)
             break;
 
@@ -67,34 +67,35 @@ function customGuiButton(e) {
 }
 
 function timer(e) {
-    if (e.id == id("reinitCrusher")) {
+    if (e.id == 4) {
         e.npc.reset()
 
 
 
     }
-    if (e.id == id("crusher")) {
+    if (e.id == 2) {
         var motion
         switch (in_crush_position) {
             case 1:
                 motion = -e.npc.stats.getRanged().getRange()
                 e.npc.world.playSoundAt(e.npc.pos, "minecraft:block.piston.contract", .7, .2)
                 in_crush_position = 0
-                e.npc.timers.start(id("crush_sound"), 3, false)
-                e.npc.timers.forceStart(id("crusher"), e.npc.storeddata.get("releaseDelay"), false)
+                e.npc.timers.start(1, 3, false)
+                e.npc.timers.forceStart(2, e.npc.storeddata.get("releaseDelay"), false)
 
                 break;
             case 0:
                 motion = e.npc.stats.getRanged().getRange()
                 in_crush_position = 1
                 e.npc.world.playSoundAt(e.npc.pos, "minecraft:block.piston.extend", .7, .2)
-                e.npc.timers.forceStart(id("crusher"), e.npc.storeddata.get("crushDelay"), false)
+                e.npc.timers.forceStart(2, e.npc.storeddata.get("crushDelay"), false)
                 break;
         }
 
         e.npc.setMotionY(motion)
+        e.npc.rotation = 0
     }
-    if (e.id == id("crush_sound")) {
+    if (e.id == 1) {
         e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.item.break", 1, .2)
     }
 }

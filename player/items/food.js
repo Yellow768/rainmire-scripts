@@ -19,7 +19,7 @@ function eatFood(e) {
     e.player.playSound("minecraft:entity.player.burp", 1, 1)
     e.player.playSound("minecraft:entity.witch.drink", 1, 1)
     if (e.player.gamemode != 1) { e.player.removeItem(food, 1) }
-    e.player.addPotionEffect(10, foodLevel, 0, false)
+    e.player.addPotionEffect(10, 1.5 * foodLevel, (foodLevel / 2) - 1, false)
 }
 
 function isFoodValid(e, food) {
