@@ -41,7 +41,7 @@ state_aggro.timer = function (e) {
                 if (nE[i].type == 2 && !nE[i].getFaction().hostileToNpc(e.npc)) continue
             }
             damageFrom(nE[i], e.npc, 3)
-            DoKnockback(e.npc, nE[i], 4, 0)
+            DoKnockback(e.npc, nE[i], 2, 0)
         }
         for (var i = 0; i <= 8; i++) {
             for (var h = -1; h <= 1; h++) {

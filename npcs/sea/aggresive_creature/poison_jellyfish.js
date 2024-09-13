@@ -1,4 +1,8 @@
-function meleeAttack(e) {
+var api = Java.type('noppes.npcs.api.NpcAPI').Instance();
+load(api.getLevelDir() + '/scripts/ecmascript/npcs/boiler/base_npc_script.js')
+
+
+state_idle.meleeAttack = function (e) {
     e.npc.ai.setRetaliateType(3)
     e.npc.ai.setWalkingSpeed(0)
     e.npc.timers.forceStart(15, 40, false)
@@ -7,14 +11,13 @@ function meleeAttack(e) {
     e.npc.display.setSize(6)
 }
 
-function target(e) {
-    if (e.npc.storeddata.get("hasStatusEffect") == 1) return
+state_idle.target = function (e) {
     e.npc.ai.setWalkingSpeed(6)
     e.npc.ai.setRetaliateType(0)
 }
 
-function timer(e) {
-    if (e.id == 15 && e.npc.storeddata.get("hasStatusEffect") != 1) {
+state_idle.timer = function (e) {
+    if (e.id == 15) {
         e.npc.world.spawnParticle("upgrade_aquatic:green_jelly_blob", e.npc.x, e.npc.y, e.npc.z, .4, .4, .4, .4, 30)
         e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.squid.squirt", 1, 1)
         e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.slime.squish", 1, .4)
@@ -26,7 +29,7 @@ function timer(e) {
         e.npc.ai.setWalkingSpeed(6)
         e.npc.ai.setRetaliateType(2)
     }
-    if (e.id == 16 && e.npc.storeddata.get("hasStatusEffect") != 1) {
+    if (e.id == 16) {
         e.npc.ai.setWalkingSpeed(4)
         e.npc.ai.setRetaliateType(0)
     }
