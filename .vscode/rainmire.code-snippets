@@ -15,6 +15,14 @@
         "description": "Generic preface for loading a script",
         "scope": "javascript,typescript"
     },
+    "LoadBaseNPC": {
+        "prefix": "rainmire:base_npc",
+        "body": [
+            "load(api.getLevelDir() + '/scripts/ecmascript/npcs/boiler/base_npc_script.js')"
+        ],
+        "description": "Loads the base NPC script, with the FSM.",
+        "scope": "javascript,typescript"
+    },
     "LoadId": {
         "prefix": "rainmire:id",
         "body": [

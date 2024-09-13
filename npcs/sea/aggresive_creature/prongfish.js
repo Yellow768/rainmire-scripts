@@ -1,3 +1,5 @@
+var api = Java.type('noppes.npcs.api.NpcAPI').Instance();
+load(api.getLevelDir() + '/scripts/ecmascript/')
 var i = 0
 function init(e) {
 

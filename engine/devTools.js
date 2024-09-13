@@ -567,7 +567,7 @@ function timer(e) {
 
             var scripts = nbt.getList("Scripts", nbt.getListType("Scripts"))[0];
             var sl = [];
-            var requiredScripts = ["npcs/boiler/status_effects.js"]; // scripts from your folder
+            var requiredScripts = ["npcs/boiler/base_npc_script.js"]; // scripts from your folder
 
             for (var i = 0; i < requiredScripts.length; i++) {
                 var test = e.API.stringToNbt('{}');
