@@ -15,10 +15,10 @@ StateMachine.default_state = state_idle
 var state_paralyzed = new State("state_paralyzed")
 
 state_paralyzed.enter = function (e) {
-    state_paralyzed.applyParalyzedEffects()
+    state_paralyzed.applyParalyzedEffects(e)
 }
 
-state_paralyzed.applyParalyzedEffects = function () {
+state_paralyzed.applyParalyzedEffects = function (e) {
 
     npc.world.playSoundAt(npc.pos, "upgrade_aquatic:entity.jellyfish.death", 1, 1)
     npc.world.playSoundAt(npc.pos, "minecraft:entity.turtle.egg_break", 1, 1)
@@ -32,7 +32,11 @@ state_paralyzed.applyParalyzedEffects = function () {
 }
 
 state_paralyzed.timer = function (e) {
-    if (e.id == 1) {
+    state_paralyzed.defaultParalyzedTimer(e)
+}
+
+state_paralyzed.defaultParalyzedTimer = function (e) {
+    if (e.id == 768001) {
         StateMachine.transitionToState(StateMachine.default_state, e)
     }
 
@@ -65,9 +69,9 @@ state_panicking.applyPanickingEffects = function (e) {
     npc.world.playSoundAt(npc.pos, "minecraft:entity.turtle.egg_break", 1, 1)
 
     npc.executeCommand("/particle upgrade_aquatic:purple_jelly_blob ~ ~1 ~ .5 .5 .5 .02 30 force")
-    npc.timers.forceStart(1, e.arguments[1], false)
-    npc.timers.forceStart(2, getRandomInt(90, 120), false)
-    npc.timers.forceStart(3, getRandomInt(20, 40), false)
+    npc.timers.forceStart(768001, e.arguments[1], false)
+    npc.timers.forceStart(768002, getRandomInt(90, 120), false)
+    npc.timers.forceStart(768003, getRandomInt(20, 40), false)
     state_panicking.chooseNewTarget()
     npc.ai.setRetaliateType(1)
     npc.getDisplay().setTint(0xff55ff)
@@ -75,10 +79,14 @@ state_panicking.applyPanickingEffects = function (e) {
 }
 
 state_panicking.timer = function (e) {
-    if (e.id == 1) {
+    state_panicking.defaultPanickingTimer(e)
+}
+
+state_panicking.defaultPanickingTimer = function (e) {
+    if (e.id == 768001) {
         StateMachine.transitionToState(StateMachine.default_state, e)
     }
-    if (e.id == 2) {
+    if (e.id == 76002) {
         switch (e.npc.ai.getRetaliateType()) {
 
             case 1:
@@ -89,11 +97,11 @@ state_panicking.timer = function (e) {
                 e.npc.ai.setRetaliateType(1)
                 break;
         }
-        e.npc.timers.forceStart(2, getRandomInt(90, 200), false)
+        e.npc.timers.forceStart(768002, getRandomInt(90, 200), false)
     }
-    if (e.id == 3) {
+    if (e.id == 768003) {
         e.npc.jump()
-        e.npc.timers.start(3, getRandomInt(20, 40), false)
+        e.npc.timers.start(768003, getRandomInt(20, 40), false)
     }
 }
 
@@ -108,7 +116,7 @@ state_panicking.revertToDefault = function () {
     var default_settings = JSON.parse(npc.storeddata.get("default_settings"))
     npc.display.setTint(default_settings.Tint)
     npc.ai.setRetaliateType(default_settings.Retaliate)
-    npc.timers.stop(2)
+    npc.timers.stop(768002)
     npc.updateClient()
 }
 state_panicking.exit = function (e) {
@@ -120,7 +128,6 @@ StateMachine.addState(state_paralyzed)
 StateMachine.addState(state_panicking)
 StateMachine.addState(state_dead)
 function init(e) {
-
     npc = e.npc
     if (!e.npc.storeddata.has("current_state")) {
         StateMachine.setState(StateMachine.default_state)
@@ -133,9 +140,6 @@ function init(e) {
                 StateMachine.setState(StateMachine.states[i])
             }
         }
-    }
-    if (!e.npc.storeddata.has("default_settings")) {
-        saveDefaultSettings()
     }
     if (StateMachine.current_state.init != undefined) StateMachine.current_state.init(e)
 }
@@ -166,6 +170,9 @@ function died(e) {
 }
 
 function trigger(e) {
+    if (!npc.storeddata.has("default_settings")) {
+        saveDefaultSettings()
+    }
     if (e.id == 123401) {
         StateMachine.transitionToState(state_paralyzed, e)
     }
