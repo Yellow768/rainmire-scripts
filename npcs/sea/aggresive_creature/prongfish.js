@@ -1,7 +1,6 @@
 var api = Java.type('noppes.npcs.api.NpcAPI').Instance();
 load(api.getLevelDir() + '/scripts/ecmascript/npcs/boiler/base_npc_script.js')
 load(api.getLevelDir() + '/scripts/ecmascript/boiler/commonFunctions.js')
-load(api.getLevelDir() + '/scripts/ecmascript/boiler/entity_shoot.js')
 load(api.getLevelDir() + '/scripts/ecmascript/boiler/proper_damage.js')
 
 var state_aggro = new State("state_aggro")
@@ -38,7 +37,7 @@ state_aggro.timer = function (e) {
         var nE = e.npc.world.getNearbyEntities(e.npc.pos, 5, 2)
         for (var i = 0; i < nE.length; i++) {
             if (nE[i] == e.npc) continue
-            if (!StateMachine.current_state == state_panicking) {
+            if (StateMachine.current_state != state_panicking) {
                 if (nE[i].type == 2 && !nE[i].getFaction().hostileToNpc(e.npc)) continue
             }
             damageFrom(nE[i], e.npc, 3)
@@ -46,26 +45,13 @@ state_aggro.timer = function (e) {
         }
         for (var i = 0; i <= 8; i++) {
             for (var h = -1; h <= 1; h++) {
-                var proj = entityShoot(e.npc.pos, {
-                    itemid: "golden_carrot",
-                    rotation: e.npc.rotation + (45 * i),
-                    pitch: (45 * h),
-                    speed: 3,
-                    gravity: 1,
-                    x: e.npc.x,
-                    y: e.npc.y,
-                    z: e.npc.z,
-                    size: 20,
-                    power: 3,
-                    punch: 4,
-                    accelerate: 0
-
-                })
+                var d = FrontVectors(e.npc, 45 * i, 45 * h, 2, true)
+                var proj = e.npc.shootItem(e.npc.x + d[0], e.npc.y + (1.1 * d[1]) + .5, e.npc.z + d[2], e.npc.getInventory().getProjectile(), 95)
                 projectile_array.push(proj)
             }
         }
         e.npc.timers.forceStart(1, getRandomInt(30, 60), false)
-        e.npc.timers.forceStart(3, 20, false)
+        e.npc.timers.forceStart(3, 10, false)
     }
     if (e.id == 3) {
         for (var i = 0; i < projectile_array.length; i++) {

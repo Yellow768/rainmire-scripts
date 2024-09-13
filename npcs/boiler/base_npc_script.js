@@ -106,7 +106,7 @@ state_panicking.defaultPanickingTimer = function (e) {
 }
 
 state_panicking.chooseNewTarget = function () {
-    var nE = npc.world.getNearbyEntities(npc.pos, 5, npc.stats.getAggroRange())
+    var nE = npc.world.getNearbyEntities(npc.pos, npc.stats.getAggroRange(), 5)
     var newTarget = getRandomElement(nE)
     npc.setAttackTarget(newTarget)
 }
