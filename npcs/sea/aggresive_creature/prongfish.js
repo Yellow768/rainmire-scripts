@@ -1,74 +1,74 @@
 var api = Java.type('noppes.npcs.api.NpcAPI').Instance();
-load(api.getLevelDir() + '/scripts/ecmascript/')
-var i = 0
-function init(e) {
+load(api.getLevelDir() + '/scripts/ecmascript/npcs/boiler/base_npc_script.js')
+load(api.getLevelDir() + '/scripts/ecmascript/boiler/commonFunctions.js')
+load(api.getLevelDir() + '/scripts/ecmascript/boiler/entity_shoot.js')
 
-    e.npc.timers.stop(10)
-    e.npc.timers.stop(20)
-    e.npc.display.setSize(5)
-    e.npc.timers.forceStart(id("prongfish_projectile"), 0, true)
+var state_aggro = new State("state_aggro")
 
+StateMachine.addState(state_aggro)
+
+
+
+state_idle.target = function (e) {
+    StateMachine.transitionToState(state_aggro, e)
 }
 
-function target(e) {
-    e.npc.timers.forceStart(10, getRandomInt(20, 120), false)
+state_aggro.enter = function (e) {
+    e.npc.timers.start(1, getRandomInt(20, 90), false)
 }
 
-function targetLost(e) {
-    e.npc.timers.stop(10)
-    e.npc.timers.stop(20)
-    e.npc.display.setSize(5)
-}
 
-function died(e) {
-    e.npc.timers.stop(10)
-    e.npc.timers.stop(20)
-}
 var projectile_array = []
-
-function timer(e) {
-    if (e.id == 10) {
-        e.npc.timers.start(20, 40, false)
-        e.npc.display.setSize(4)
-        e.npc.updateClient()
-        e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.puffer_fish.blow_up", 1, 1)
+state_aggro.timer = function (e) {
+    if (e.id == 1) {
+        //Initiate attack
+        var animBuilder = e.API.createAnimBuilder()
+        animBuilder.thenPlay("animation.prongfish.attack").thenPlay("animation.prongfish.idle")
+        e.npc.syncAnimationsForAll(animBuilder)
+        e.npc.timers.start(2, 20, false)
     }
-    if (e.id == 20) {
-        e.npc.display.setSize(5)
-        e.npc.updateClient()
-        for (var layer = 0; layer < 3; layer++) {
-            var layer_angles = [45, 0, -45]
-            for (var i = 0; i < 4; i++) {
-                var pos = FrontVectors(e.npc, e.npc.rotation + (90 * i), layer_angles[layer], 1, 0)
-                var projectile = e.npc.shootItem(e.npc.x + pos[0], e.npc.y + pos[1], e.npc.z + pos[3], e.npc.world.createItem("golden_sword", 1), 100)
-                projectile.setHasGravity(false)
-                var nbt = projectile.getEntityNbt()
-                nbt.setBoolean("NoGravity", true)
-                projectile.setEntityNbt(nbt)
-                projectile.rotation = e.npc.rotation + (90 * i)
-                projectile.tempdata.put("direction", pos)
-                projectile.tempdata.put("time", 0)
-                projectile_array.push(projectile)
+    if (e.id == 2) {
+        //Launch projectiles
+        projectile_array = []
+        for (var i = 0; i <= 8; i++) {
+            for (var h = -1; h <= 1; h++) {
+                var proj = entityShoot(e.npc.pos, {
+                    itemid: "golden_carrot",
+                    rotation: e.npc.rotation + (45 * i),
+                    pitch: (45 * h),
+                    speed: 2,
+                    gravity: 0,
+                    x: e.npc.x,
+                    y: e.npc.y,
+                    z: e.npc.z,
+                    size: 20,
+                    power: 3,
+                    punch: 4,
+                    accelerate: 1
 
+                })
+                projectile_array.push(proj)
             }
         }
-        e.npc.timers.forceStart(10, getRandomInt(20, 120), false)
-        e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.puffer_fish.blow_out", 1, 1)
-        e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.bee.sting", 1, 1)
+        e.npc.timers.forceStart(1, getRandomInt(30, 90), false)
+        e.npc.timers.forceStart(3, 40, false)
     }
-    if (e.id == id("prongfish_projectile")) {
+    if (e.id == 3) {
         for (var i = 0; i < projectile_array.length; i++) {
-            var p = projectile_array[i]
-            p.setMotionX(p.tempdata.get("direction")[0])
-            p.setMotionY(p.tempdata.get("direction")[1])
-            p.setMotionZ(p.tempdata.get("direction")[2])
-            if (p.tempdata.get("time") >= 30 || !p.inWater()) {
-                p.kill()
-                projectile_array.splice(i, 1)
-                return
-            }
-            p.tempdata.put("time", p.tempdata.get("time") + 1)
+            projectile_array[i].despawn()
         }
+    }
+    if (e.id == 4) {
+        StateMachine.transitionToState(state_idle, e)
     }
 }
 
+
+state_aggro.targetLost = function (e) {
+    e.npc.timers.start(4, 40, false)
+}
+
+state_aggro.exit = function (e) {
+    e.npc.timers.stop(1)
+    e.npc.timers.stop(2)
+}
