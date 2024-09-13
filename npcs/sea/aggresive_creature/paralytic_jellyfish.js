@@ -13,8 +13,12 @@ state_idle.target = function (e) {
     StateMachine.transitionToState(state_aggro, e)
 }
 
+state_aggro.targetLost = function (e) {
+    e.npc.timers.forceStart(LOST_TARGET_DELAY, 40, false)
+}
+
 state_aggro.enter = function (e) {
-    npc.timers.start(CHECK_IF_ENEMY_NEAR_TID, 0, true)
+    npc.timers.forceStart(CHECK_IF_ENEMY_NEAR_TID, 0, true)
 }
 
 state_aggro.timer = function (e) {
@@ -30,6 +34,9 @@ state_aggro.timer = function (e) {
         if (e.npc.getAttackTarget() && e.npc.getAttackTarget().pos.distanceTo(e.npc.pos) < 2) {
             StateMachine.transitionToState(state_attacking, e)
         }
+    }
+    if (e.id == LOST_TARGET_DELAY) {
+        StateMachine.transitionToState(state_idle, e)
     }
 }
 
@@ -47,8 +54,8 @@ state_attacking.enter = function (e) {
 state_attacking.timer = function (e) {
     if (e.id == ATTACK_DELAY_TID) {
 
-        var nE = e.npc.world.getNearbyEntities(e.npc.pos, 2, 5)
-        for (var i = 0; i < nE[i].length; i++) {
+        var nE = e.npc.world.getNearbyEntities(e.npc.pos, 3, 5)
+        for (var i = 0; i < nE.length; i++) {
             if (nE[i] == e.npc) continue
             if (nE[i].type == 2) {
                 applyStatusEffect(nE[i], 123401, 120)
@@ -58,7 +65,7 @@ state_attacking.timer = function (e) {
         e.npc.world.playSoundAt(e.npc.pos, "upgrade_aquatic:entity.jellyfish.death", 1, 1)
         e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.turtle.egg_break", 1, 1)
         e.npc.world.spawnParticle("aquamirae:electric", e.npc.x, e.npc.y, e.npc.z, .4, .4, .4, .4, 95)
-        e.npc.executeCommand("/particle dust 1 1 0 1 ~ ~ ~ 0.5 0.5 0.5 0 100")
+        e.npc.executeCommand("/particle dust 1 1 0 1 ~ ~ ~ 1 1 1 0 100")
         StateMachine.transitionToState(state_cooldown, e)
 
     }
@@ -66,7 +73,6 @@ state_attacking.timer = function (e) {
 
 
 function applyStatusEffect(target, type, length) {
-    target.trigger(450, [target])
     target.trigger(type, [target, length])
 }
 
