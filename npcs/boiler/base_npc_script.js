@@ -8,7 +8,6 @@ var npc
 var state_idle = new State("state_idle")
 var state_dead = new State("state_dead")
 
-StateMachine.default_state = state_idle
 
 
 
@@ -129,6 +128,9 @@ StateMachine.addState(state_panicking)
 StateMachine.addState(state_dead)
 function init(e) {
     npc = e.npc
+    if (e.npc.isAlive() && StateMachine.current_state == state_dead) {
+        StateMachine.transitionToState(StateMachine.default_state, e)
+    }
     if (!e.npc.storeddata.has("current_state")) {
         StateMachine.setState(StateMachine.default_state)
         e.npc.storeddata.put("current_state", StateMachine.default_state.name)
@@ -167,6 +169,12 @@ function collide(e) {
 
 function died(e) {
     StateMachine.transitionToState(state_dead, e)
+}
+
+
+function rangedLaunched(e) {
+    if (StateMachine.current_state.rangedLaunched != undefined) StateMachine.current_state.rangedLaunched(e)
+
 }
 
 function trigger(e) {

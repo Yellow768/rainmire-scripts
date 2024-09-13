@@ -1,13 +1,17 @@
 
+var api = Java.type('noppes.npcs.api.NpcAPI').Instance();
+load(api.getLevelDir() + '/scripts/ecmascript/npcs/boiler/base_npc_script.js')
 var projectile_array = []
 var npc
-
-function init(e) {
-    e.npc.getTimers().forceStart(id("apply_motion_to_projectiles"), 0, true)
+var state_normal = new State("normal")
+StateMachine.addState(state_normal)
+StateMachine.default_state = state_normal
+state_normal.init = function (e) {
+    e.npc.getTimers().forceStart(1, 0, true)
     npc = e.npc
 }
 
-function rangedLaunched(e) {
+state_normal.rangedLaunched = function (e) {
     for (var i = 0; i < e.projectiles.length; i++) {
         e.projectiles[i].storeddata.put("time", 0)
         e.projectiles[i].tempdata.put("direction", [e.projectiles[i].getMotionX(), e.projectiles[i].getMotionY(), e.projectiles[i].getMotionZ()])
@@ -17,8 +21,8 @@ function rangedLaunched(e) {
 
 }
 
-function timer(e) {
-    if (e.id == id("apply_motion_to_projectiles")) {
+state_normal.timer = function (e) {
+    if (e.id == 1) {
         for (var i = 0; i < projectile_array.length; i++) {
             var p = projectile_array[i]
             p.setMotionX(p.tempdata.get("direction")[0])
@@ -32,6 +36,16 @@ function timer(e) {
             p.storeddata.put("time", p.storeddata.get("time") + 1)
         }
     }
+}
+
+
+state_panicking.timer = function (e) {
+    state_panicking.defaultPanickingTimer(e)
+    state_normal.timer(e)
+}
+state_paralyzed.timer = function (e) {
+    state_paralyzed.defaultParalyzedTimer(e)
+    state_normal.timer(e)
 }
 /**
 * @param {ProjectileEvent.UpdateEvent} e

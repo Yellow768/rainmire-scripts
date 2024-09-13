@@ -6,7 +6,7 @@ load(api.getLevelDir() + '/scripts/ecmascript/boiler/proper_damage.js')
 var state_aggro = new State("state_aggro")
 
 StateMachine.addState(state_aggro)
-
+StateMachine.default_state = state_idle
 
 
 state_idle.target = function (e) {
