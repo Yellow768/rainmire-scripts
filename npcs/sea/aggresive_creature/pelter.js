@@ -4,7 +4,6 @@ load(api.getLevelDir() + '/scripts/ecmascript/npcs/boiler/base_npc_script.js')
 var projectile_array = []
 var npc
 var state_normal = new State("normal")
-StateMachine.addState(state_normal)
 StateMachine.default_state = state_normal
 state_normal.init = function (e) {
     e.npc.getTimers().forceStart(1, 0, true)

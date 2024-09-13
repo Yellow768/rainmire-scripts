@@ -2,6 +2,7 @@ function State(name) {
     this.name = name
     this.enter = function (e) { }
     this.exit = function (e) { }
+    StateMachine.states.push(this)
 }
 
 

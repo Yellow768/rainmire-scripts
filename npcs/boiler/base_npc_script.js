@@ -123,10 +123,6 @@ state_panicking.exit = function (e) {
     state_panicking.revertToDefault()
 }
 
-StateMachine.addState(state_idle)
-StateMachine.addState(state_paralyzed)
-StateMachine.addState(state_panicking)
-StateMachine.addState(state_dead)
 function init(e) {
     npc = e.npc
     if (!StateMachine.default_state) {
