@@ -23,7 +23,7 @@ state_paralyzed.applyParalyzedEffects = function (e) {
     npc.world.playSoundAt(npc.pos, "upgrade_aquatic:entity.jellyfish.death", 1, 1)
     npc.world.playSoundAt(npc.pos, "minecraft:entity.turtle.egg_break", 1, 1)
     npc.executeCommand("/particle upgrade_aquatic:yellow_jelly_blob ~ ~1 ~ .5 .5 .5 .02 30 force")
-    npc.timers.forceStart(1, e.arguments[1], false)
+    npc.timers.forceStart(768001, e.arguments[1], false)
     npc.display.setHitboxState(2)
     npc.ai.setWalkingSpeed(0)
     npc.ai.setRetaliateType(3)
