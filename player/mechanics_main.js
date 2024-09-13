@@ -24,9 +24,6 @@ function init(e) {
 
 function timer(e) {
 	switch (e.id) {
-		case id("changeJustLoggedIn"):
-			justLoggedIn = false
-			break;
 		case 30:
 			confirm = false
 			break;

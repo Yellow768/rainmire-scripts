@@ -60,6 +60,9 @@ function attributes_timer(e) {
 		case id("perkGUIDelay"):
 			createPerkGui(e, true, true)
 			break;
+		case 1001:
+			justLoggedIn = false
+			break;
 	}
 }
 
