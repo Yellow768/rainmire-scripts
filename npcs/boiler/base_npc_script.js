@@ -11,6 +11,7 @@ var state_dead = new State("state_dead")
 
 
 
+
 var state_paralyzed = new State("state_paralyzed")
 
 state_paralyzed.enter = function (e) {
@@ -128,6 +129,9 @@ StateMachine.addState(state_panicking)
 StateMachine.addState(state_dead)
 function init(e) {
     npc = e.npc
+    if (!StateMachine.default_state) {
+        StateMachine.default_state = state_idle
+    }
     if (e.npc.isAlive() && StateMachine.current_state == state_dead) {
         StateMachine.transitionToState(StateMachine.default_state, e)
     }
