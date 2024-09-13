@@ -177,6 +177,16 @@ function rangedLaunched(e) {
 
 }
 
+function interact(e) {
+    if (StateMachine.current_state.interact != undefined) StateMachine.current_state.interact(e)
+    if (e.player.gamemode == 1 && e.player.isSneaking()) {
+        saveDefaultSettings()
+        StateMachine.setState(StateMachine.default_state)
+        e.npc.say("Set to default state and saved default settings")
+    }
+
+}
+
 function trigger(e) {
     if (!npc.storeddata.has("default_settings")) {
         saveDefaultSettings()
