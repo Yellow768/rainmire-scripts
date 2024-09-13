@@ -26,9 +26,11 @@ state_aggro.timer = function (e) {
         animBuilder.thenPlay("animation.prongfish.attack").thenPlay("animation.prongfish.idle")
         e.npc.syncAnimationsForAll(animBuilder)
         e.npc.timers.start(2, 20, false)
+        e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.puffer_fish.blow_up", 1, getRandomInt(.2, .9))
     }
     if (e.id == 2) {
         //Launch projectiles
+        e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.puffer_fish.blow_out", 1, getRandomInt(.2, .9))
         projectile_array = []
         for (var i = 0; i <= 8; i++) {
             for (var h = -1; h <= 1; h++) {
@@ -59,13 +61,14 @@ state_aggro.timer = function (e) {
         }
     }
     if (e.id == 4) {
+        if (e.npc.getAttackTarget()) return
         StateMachine.transitionToState(state_idle, e)
     }
 }
 
 
 state_aggro.targetLost = function (e) {
-    e.npc.timers.start(4, 40, false)
+    e.npc.timers.forceStart(4, 40, false)
 }
 
 state_aggro.exit = function (e) {
