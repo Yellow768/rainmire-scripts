@@ -65,7 +65,7 @@ state_attacking.timer = function (e) {
         e.npc.world.playSoundAt(e.npc.pos, "upgrade_aquatic:entity.jellyfish.death", 1, 1)
         e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.turtle.egg_break", 1, 1)
         e.npc.world.spawnParticle("aquamirae:electric", e.npc.x, e.npc.y, e.npc.z, .4, .4, .4, .4, 95)
-        e.npc.executeCommand("/particle dust 1 1 0 1 ~ ~ ~ 1 1 1 0 100")
+        e.npc.executeCommand("/particle dust 1 1 0 1 ~ ~ ~ 2 2 2 0 100 force")
         StateMachine.transitionToState(state_cooldown, e)
 
     }

@@ -177,6 +177,11 @@ function rangedLaunched(e) {
 
 }
 
+function meleeAttack(e) {
+    if (StateMachine.current_state.meleeAttack != undefined) StateMachine.current_state.meleeAttack(e)
+
+}
+
 function interact(e) {
     if (StateMachine.current_state.interact != undefined) StateMachine.current_state.interact(e)
     if (e.player.gamemode == 1 && e.player.isSneaking()) {

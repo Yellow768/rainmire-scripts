@@ -52,7 +52,7 @@ state_paralyzed.timer = function (e) {
 function projectileTick(e) {
     if (projectile_array.indexOf(e.projectile) == -1) {
         projectile_array.push(e.projectile)
-        npc.getTimers().forceStart(id("apply_motion_to_projectiles"), 0, true)
+        npc.getTimers().forceStart(1, 0, true)
     }
     /*This attempts to prevent an unlikely exploit, whereby reloading scripts can cause the projectiles to stop moving and never despawn.
     A player could theoretically, run the command OR simply quit and rejoin the world. It would be an incredibly tedious and cumbersome exploit,
