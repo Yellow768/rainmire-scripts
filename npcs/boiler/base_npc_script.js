@@ -145,31 +145,38 @@ function init(e) {
         }
     }
     if (StateMachine.current_state.init != undefined) StateMachine.current_state.init(e)
+    if (global_functions.init != undefined) global_functions.init(e)
 }
 
 function timer(e) {
     if (StateMachine.current_state.timer != undefined) StateMachine.current_state.timer(e)
+    if (global_functions.timer != undefined) global_functions.timer(e)
 }
 
 function target(e) {
     if (StateMachine.current_state.target != undefined) StateMachine.current_state.target(e)
+    if (global_functions.target != undefined) global_functions.target(e)
 }
 
 function targetLost(e) {
     if (StateMachine.current_state.targetLost != undefined) StateMachine.current_state.targetLost(e)
+    if (global_functions.targetLost != undefined) global_functions.targetLost(e)
 }
 
 function damaged(e) {
     if (StateMachine.current_state.damaged != undefined) StateMachine.current_state.damaged(e)
+    if (global_functions.damaged != undefined) global_functions.damaged(e)
 }
 
 function collide(e) {
     if (StateMachine.current_state.collide != undefined) StateMachine.current_state.collide(e)
+    if (global_functions.collide != undefined) global_functions.collide(e)
 }
 
 
 function died(e) {
     if (StateMachine.current_state.died != undefined) StateMachine.current_state.died(e)
+    if (global_functions.died != undefined) global_functions.died(e)
 
     StateMachine.transitionToState(state_dead, e)
 }
@@ -177,11 +184,13 @@ function died(e) {
 
 function rangedLaunched(e) {
     if (StateMachine.current_state.rangedLaunched != undefined) StateMachine.current_state.rangedLaunched(e)
+    if (global_functions.rangedLaunched != undefined) global_functions.rangedLaunched(e)
 
 }
 
 function meleeAttack(e) {
     if (StateMachine.current_state.meleeAttack != undefined) StateMachine.current_state.meleeAttack(e)
+    if (global_functions.meleeAttack != undefined) global_functions.meleeAttack(e)
 
 }
 
@@ -194,6 +203,7 @@ function interact(e) {
         e.npc.say("Set to default state and saved default settings")
     }
 
+    if (global_functions.interact != undefined) global_functions.interact(e)
 }
 
 function trigger(e) {
@@ -238,3 +248,7 @@ Instead of having two hold two things in your hands, maybe just right click the 
 and the next item you right click gets the jelly applied.
 
 */
+
+
+
+var global_functions = {}
