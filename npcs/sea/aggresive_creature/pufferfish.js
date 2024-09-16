@@ -1,144 +1,112 @@
-var puffed = false
-var dropItem = false
-function init(e) {
-    e.npc.display.setModel("minecraft:pufferfish")
-    e.npc.display.setVisible(0)
+var api = Java.type('noppes.npcs.api.NpcAPI').Instance();
+load(api.getLevelDir() + '/scripts/ecmascript/npcs/boiler/base_npc_script.js')
+
+
+
+var large_animation = "animation.pufferfish.large"
+var small_animation = "animation.pufferfish.small"
+var puffer_skin = "minecraft:textures/entity/fish/pufferfish.png"
+var empty_skin = "iob:textures/skins/empty.png"
+
+var state_small = new State("state_small")
+var state_large = new State("state_large")
+
+StateMachine.default_state = state_small
+
+state_small.enter = function (e) {
+    e.npc.getModelData().setWidth(.4)
+    e.npc.getModelData().setHeight(.4)
     e.npc.updateClient()
-    e.npc.timers.stop(1)
-    e.npc.timers.stop(2)
-    dropItem = true
+    e.npc.setGeckoIdleAnimation(small_animation)
+    e.npc.setGeckoWalkAnimation(small_animation)
+    if (npc.getAttackTarget()) {
+        npc.timers.start(1, getRandomInt(20, 60), false)
+    }
 }
 
-function target(e) {
-    if (e.npc.health < 1) return
-    e.npc.timers.forceStart(1, getRandomInt(40, 80), false)
-
+state_small.target = function (e) {
+    e.npc.timers.forceStart(1, getRandomInt(20, 60), false)
+}
+state_small.timer = function (e) {
+    if (e.id == 1 && e.npc.getAttackTarget()) {
+        StateMachine.transitionToState(state_large, e)
+    }
 }
 
-function targetLost(e) {
-    if (e.npc.health < 1) return
-    shrink(e)
-    e.npc.timers.stop(2)
+state_small.died = function (e) {
+    var drop = e.npc.world.createItem("minecraft:pufferfish", 1)
+    e.npc.dropItem(drop)
 }
 
-function shrink(e) {
-    e.npc.display.setModel("minecraft:pufferfish")
-    e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.puffer_fish.blow_out", 1, 1)
+state_small.exit = function (e) {
+    npc.storeddata.put("prev_health", npc.health)
+}
+
+state_large.enter = function (e) {
+    e.npc.getModelData().setWidth(1)
+    e.npc.getModelData().setHeight(1)
     e.npc.updateClient()
-    e.npc.timers.stop(1)
-    puffed = false
-    e.npc.world.spawnParticle("supplementaries:air_burst", e.npc.x, e.npc.y, e.npc.z, .4, .4, .4, .3, 6)
-    dropItem = true
+    e.npc.setGeckoIdleAnimation(large_animation)
+    e.npc.setGeckoWalkAnimation(large_animation)
+    e.npc.timers.start(1, getRandomInt(60, 90), false)
+    e.npc.setMaxHealth(1)
+    e.npc.setHealth(1)
+    e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.puffer_fish.blow_up", 1, 1)
+    e.npc.world.spawnParticle("supplementaries:air_burst", e.npc.x, e.npc.y, e.npc.z, .4, .4, .4, 0, 20)
 }
 
 
-function timer(e) {
-    if (e.npc.storeddata.get("hasStatusEffect") == 1) return
+state_large.timer = function (e) {
     if (e.id == 1) {
-        puffed = true
-        e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.puffer_fish.blow_up", 1, 1)
-        e.npc.display.setModel("customnpcs:npcslime")
-        e.npc.display.setSkinTexture("minecraft:textures/entity/fish/pufferfish.png")
-        e.npc.updateClient()
-        e.npc.world.spawnParticle("supplementaries:air_burst", e.npc.x, e.npc.y, e.npc.z, .4, .4, .4, 0, 20)
-        dropItem = false
-        e.npc.timers.forceStart(2, getRandomInt(60, 120), false)
-    }
-    if (e.id == 2) {
-        shrink(e)
-        e.npc.timers.forceStart(1, getRandomInt(40, 80), false)
+        StateMachine.transitionToState(state_small, e)
     }
 }
 
-function died(e) {
-    if (dropItem) {
-        var drop = e.npc.world.createItem("minecraft:pufferfish", 1)
-        e.npc.dropItem(drop)
-    }
-    e.npc.timers.stop(2)
-    e.npc.timers.stop(1)
+state_large.died = function (e) {
+    state_large.explode(e)
 }
 
-function meleeAttack(e) {
-    if (!puffed) return
-    blowUp(e)
-}
-
-function damaged(e) {
-    if (puffed) blowUp(e)
-}
-
-function blowUp(e) {
-    puffed = false
-    e.npc.display.setVisible(1)
-    e.npc.updateClient()
+state_large.meleeAttack = function (e) {
     e.npc.kill()
-
-    var world = e.npc.getWorld()
-    world.spawnParticle("supplementaries:air_burst", e.npc.x, e.npc.y, e.npc.z, .2, .2, .2, 1, 100)
-    world.playSoundAt(e.npc.pos, "minecraft:entity.puffer_fish.blow_out", 15, 1)
-    world.playSoundAt(e.npc.pos, "minecraft:entity.shulker.shoot", 15, 1)
-    world.playSoundAt(e.npc.pos, "minecraft:block.shroomlight.break", 15, 1)
-
-
-
-    // world.explode(e.projectile.x, e.projectile.y, e.projectile.z, 5, false, false)
-    var nearbyNPCs = e.npc.world.getNearbyEntities(e.npc.pos, 4, -1)
-    var npcs = []
-    for (var i = 0; i < nearbyNPCs.length; i++) {
-        if (nearbyNPCs[i].name != "Status NPC") {
-            if (nearbyNPCs[i].type == 2) {
-                npcs.push(nearbyNPCs[i])
-            }
-            if (nearbyNPCs[i].type == 7) {
-                knockbackEntity(nearbyNPCs[i], e.npc, 1)
-            }
-            else {
-                knockbackEntity(nearbyNPCs[i], e.npc, 2)
-            }
-        }
-    }
-    findValidBlocks(e)
 }
 
-function knockbackEntity(npc, player, power) {
-    var x1 = player.x;
-    var z1 = player.z;
-
-    var x2 = npc.x;
-    var z2 = npc.z;
-
-    var xdir = x2 - x1;
-    var zdir = z2 - z1;
-    var angle = Math.atan(xdir / zdir); // x and z distance triangle
-    var pi = Math.PI;
-    var degrees = (angle * (180 / pi)); // Convert Radians => Degrees
-    if (xdir < 0 && zdir > 0) { // Quad I
-        degrees = Math.abs(degrees);
+state_large.explode = function (e) {
+    e.npc.world.spawnParticle("supplementaries:air_burst", e.npc.x, e.npc.y, e.npc.z, .2, .2, .2, 1, 100)
+    e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.puffer_fish.blow_out", 15, 1)
+    e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.shulker.shoot", 15, 1)
+    e.npc.world.playSoundAt(e.npc.pos, "minecraft:block.shroomlight.break", 15, 1)
+    e.npc.display.setSkinTexture(empty_skin)
+    e.npc.updateClient()
+    var nE = e.npc.world.getNearbyEntities(e.npc.pos, 7, 5)
+    for (var i = 0; i < nE.length; i++) {
+        DoKnockback(e.npc, nE[i], 5, (e.npc.y - nE[i].y))
     }
-    if (xdir < 0 && zdir < 0) { // Quad II
-        angle = Math.atan((xdir * -1) / zdir);
-        degrees = (angle * (180 / pi)) + 180;
-    }
-    if (xdir > 0 && zdir < 0) { // Quad III
-        angle = Math.atan((xdir * -1) / zdir);
-        degrees = (angle * (180 / pi)) + 180;
-    }
-    if (xdir > 0 && zdir > 0) { // Quad IV
-        degrees = 360 - degrees;
-    }
+    breakBreakableWalls(e)
+}
 
-    var d = Math.sqrt(Math.pow(xdir, 2) + Math.pow(zdir, 2));
-    // Farther distance, more knockback
-
-    npc.setMotionY((Math.random() / 2) + (power / 10))
-    npc.knockback(power / 2, degrees);
-    //event.player.knockback(-d, degrees); Negative pulls in
+state_large.exit = function (e) {
+    if (e.npc.isAlive()) {
+        e.npc.setMaxHealth(10)
+        e.npc.setHealth(e.npc.storeddata.get("prev_health"))
+        e.npc.world.spawnParticle("supplementaries:air_burst", e.npc.x, e.npc.y, e.npc.z, .4, .4, .4, .3, 6)
+        e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.puffer_fish.blow_out", 1, 1)
+    }
 }
 
 
 
-function findValidBlocks(e) {
+state_dead.exit = function (e) {
+    e.npc.display.setSkinTexture(puffer_skin)
+    e.npc.updateClient()
+    e.npc.setMaxHealth(10)
+    e.npc.setHealth(10)
+}
+
+
+
+
+
+function breakBreakableWalls(e) {
     var valid_breakable_blocks = []
     for (var ix = -3; ix < 3; ix++) {
         for (var iy = -3; iy < 3; iy++) {
@@ -153,5 +121,28 @@ function findValidBlocks(e) {
             }
         }
     }
-    return valid_breakable_blocks
+}
+
+
+
+state_panicking.enter = function (e) {
+    state_panicking.applyPanickingEffects(e)
+    npc.getModelData().setWidth(1)
+    npc.getModelData().setHeight(1)
+    npc.updateClient()
+    npc.setGeckoIdleAnimation(large_animation)
+    npc.setGeckoWalkAnimation(large_animation)
+
+}
+
+state_panicking.collide = function (e) {
+    e.npc.kill()
+}
+
+state_panicking.died = function (e) {
+    state_large.explode(e)
+}
+
+state_panicking.exit = function (e) {
+    state_large.exit(e)
 }

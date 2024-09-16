@@ -325,6 +325,7 @@ declare class NpcAPI {
 	hasPermissionNode(permission: String): boolean;
 	executeCommand(world: IWorld, command: String): String;
 	getRandomName(dictionary: Number, gender: Number): String;
+	createAnimBuilder(): AnimationBuilder;
 }
 
 declare class IBlock {
@@ -635,7 +636,24 @@ declare class ICustomNpc extends IEntityLiving {
 	 *  For permission plugins the commands are run under uuid:c9c843f8-4cb1-4c82-aa61-e264291b7bd6 and name:[customnpcs]
 	 */
 	executeCommand(command: String): String;
+	syncAnimationsFor(player: IPlayer, animationBuilder: AnimationBuilder): void;
+	syncAnimationsForAll(animationBuilder: Object): void;
+	setGeckoModel(model: String): void;
+	setGeckoTexture(texture: String): void;
+	setGeckoAnimationFile(animation: String): void;
+	setGeckoIdleAnimation(animation: String): void;
+	setGeckoWalkAnimation(animation: String): void;
+
 }
+
+declare class AnimationBuilder {
+	thenPlay(animation: String): AnimationBuilder;
+	thenLoop(animation: String): AnimationBuilder;
+	thenPlayAndHold(animation: String): AnimationBuilder;
+	thenPlayXTimes(animation: String, playCount: int): AnimationBuilder;
+	thenWait(ticks: int): AnimationBuilder;
+}
+
 
 declare class IEntity {
 	getX(): Number;

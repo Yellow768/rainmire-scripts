@@ -140,6 +140,7 @@ function init(e) {
 
             if (StateMachine.states[i].name == e.npc.storeddata.get("current_state")) {
                 StateMachine.setState(StateMachine.states[i])
+
             }
         }
     }
@@ -168,6 +169,8 @@ function collide(e) {
 
 
 function died(e) {
+    if (StateMachine.current_state.died != undefined) StateMachine.current_state.died(e)
+
     StateMachine.transitionToState(state_dead, e)
 }
 
@@ -187,6 +190,7 @@ function interact(e) {
     if (e.player.gamemode == 1 && e.player.isSneaking()) {
         saveDefaultSettings()
         StateMachine.setState(StateMachine.default_state)
+        e.npc.storeddata.put("current_state", StateMachine.default_state.name)
         e.npc.say("Set to default state and saved default settings")
     }
 
