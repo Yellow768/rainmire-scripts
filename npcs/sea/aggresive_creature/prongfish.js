@@ -13,7 +13,7 @@ state_idle.target = function (e) {
 }
 
 state_aggro.enter = function (e) {
-    e.npc.timers.forceStart(1, getRandomInt(20, 90), false)
+    e.npc.timers.forceStart(1, getRandomInt(20, 30), false)
 }
 
 
@@ -49,7 +49,7 @@ state_aggro.timer = function (e) {
                 projectile_array.push(proj)
             }
         }
-        e.npc.timers.forceStart(1, getRandomInt(30, 60), false)
+        e.npc.timers.forceStart(1, getRandomInt(30, 40), false)
         e.npc.timers.forceStart(3, 10, false)
     }
     if (e.id == 3) {
