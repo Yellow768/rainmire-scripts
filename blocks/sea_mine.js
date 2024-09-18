@@ -21,11 +21,16 @@ function explode(e) {
     e.npc.timers.stop(1)
     e.npc.setHealth(0)
     e.npc.timers.stop(2)
-    e.npc.executeCommand("/setblock ~ " + Math.round(e.npc.storeddata.get("y_value")) + " ~ water")
+    e.npc.executeCommand("/setblock " + Math.round(e.npc.x) + " " + Math.round(e.npc.storeddata.get("y_value")) + " " + Math.round(e.npc.z) + " water")
 }
 
 function interact(e) {
     if (e.player.gamemode == 1) {
+        if (e.player.isSneaking()) {
+            e.npc.storeddata.remove("y_value")
+            e.npc.say("Y_Value removed")
+            return
+        }
         e.npc.storeddata.put("y_value", e.npc.y)
         e.npc.say("Y Value set")
     }
@@ -50,7 +55,7 @@ function timer(e) {
 
     if (e.id == 2) {
 
-        if (!detectIfEntitiesInRange(e, e.npc.stats.getAggroRange() + 1)) {
+        if (!detectIfEntitiesInRange(e, e.npc.stats.getAggroRange() + 2)) {
             resetMine(e)
             e.npc.world.playSoundAt(e.npc.pos, "alexsmobs:void_portal_open", 1, 2)
             e.npc.timers.stop(2)
@@ -66,7 +71,7 @@ function timer(e) {
             e.npc.syncAnimationsForAll(builder)
             e.npc.world.playSoundAt(e.npc.pos, "alexsmobs:void_portal_close", 1, .6)
             e.npc.world.playSoundAt(e.npc.pos, "minecraft:block.beacon.deactivate", 1, .6)
-            e.npc.executeCommand("/setblock ~ " + Math.round(e.npc.storeddata.get("y_value")) + " ~ minecraft:light[level=10,waterlogged=true]")
+            e.npc.executeCommand("/setblock " + Math.round(e.npc.x) + " " + Math.round(e.npc.storeddata.get("y_value")) + " " + Math.round(e.npc.z) + " minecraft:light[level=10,waterlogged=true]")
         }
     }
 }
@@ -75,8 +80,8 @@ function resetMine(e) {
     builder.thenLoop("animation.sea_mine.idle")
     e.npc.syncAnimationsForAll(builder)
     e.npc.timers.stop(1)
-    if (e.npc.world.getBlock(e.npc.x, e.npc.y, e.npc.z).name == "minecraft:water" || (e.npc.world.getBlock(e.npc.x, e.npc.y, e.npc.z).name == "minecraft:light" && e.npc.world.getBlock(e.npc.x, e.npc.y, e.npc.z).getProperty("level") != 5)) {
-        e.npc.executeCommand("/setblock ~ " + Math.round(e.npc.storeddata.get("y_value")) + " ~ minecraft:light[level=5,waterlogged=true]")
+    if (e.npc.world.getBlock(Math.round(e.npc.x), Math.round(e.npc.storeddata.get("y_value")), Math.round(e.npc.z)).name == "minecraft:water" || (e.npc.world.getBlock(Math.round(e.npc.x), Math.round(e.npc.storeddata.get("y_value")), Math.round(e.npc.z)).name == "minecraft:light" && e.npc.world.getBlock(Math.round(e.npc.x), Math.round(e.npc.storeddata.get("y_value")), Math.round(e.npc.z)).getProperty("level") != 5)) {
+        e.npc.executeCommand("/setblock " + Math.round(e.npc.x) + " " + Math.round(e.npc.storeddata.get("y_value")) + " " + Math.round(e.npc.z) + " minecraft:light[level=5,waterlogged=true]")
     }
     e.npc.y = e.npc.storeddata.get("y_value")
 
