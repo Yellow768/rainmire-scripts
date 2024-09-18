@@ -1,150 +1,125 @@
 var api = Java.type('noppes.npcs.api.NpcAPI').Instance();
-load(api.getLevelDir() + '/scripts/ecmascript/boiler/commonFunctions.js')
+load(api.getLevelDir() + '/scripts/ecmascript/npcs/boiler/base_npc_script.js')
 load(api.getLevelDir() + '/scripts/ecmascript/boiler/proper_damage.js')
 
-var isWalking = false
-var isAttacking = false
-var justLanded = false
-var ANIMATE_WALKING_TIMER = 1
-var APPLY_JUMP_FORCE_TIMER = 2
-var CHECK_IF_LANDED_TIMER = 3
-var CHECK_IF_CAN_ATTACK_TIMER = 5
-var COOLDOWN_TIMER = 6
-var JUST_LANDED_TIMER = 7
-var WALKING_SOUND_TIMER = 8
 
 
-function init(e) {
+var state_aggro = new State("state_aggro")
+var state_preparing_jump = new State("preparing_jump")
+var state_jumping = new State("state_jumping")
 
-    disableRegularAttacks
-    e.npc.timers.forceStart(1, 2, true)
-}
-function meleeAttack(e) {
+
+global_functions.meleeAttack = function (e) {
     e.setCanceled(true)
 }
-
-function disableRegularAttacks(e) {
-    e.npc.stats.getMelee().setDelay(72000)
-    e.npc.stats.ranged.setDelay(72000, 72000)
-    e.npc.stats.ranged.setAccuracy(0)
-    e.npc.stats.ranged.setRange(0)
-    e.npc.inventory.setProjectile(e.npc.world.createItem("minecraft:scute", 1))
-}
-
-
-function target(e) {
-    e.npc.timers.forceStart(CHECK_IF_CAN_ATTACK_TIMER, 0, true)
-}
-
-function targetLost(e) {
-    e.npc.timers.stop(CHECK_IF_CAN_ATTACK_TIMER)
-    e.npc.timers.stop(COOLDOWN_TIMER)
-}
-
-function damaged(e) {
+global_functions.damaged = function (e) {
     e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.bat.hurt", .2, .2)
     e.npc.executeCommand("/particle dust 1 .2 .2 1 ~ ~ ~ 0.15 0.15 0.15 2 20 force")
 }
 
-function died(e) {
-    e.npc.timers.stop(CHECK_IF_CAN_ATTACK_TIMER)
-    e.npc.timers.stop(APPLY_JUMP_FORCE_TIMER)
-    e.npc.timers.stop(CHECK_IF_LANDED_TIMER)
-    e.npc.timers.stop(WALKING_SOUND_TIMER)
+function animateWalking(e) {
+    if (!e.npc.tempdata.has("walking") && Math.abs(e.npc.getMotionX()) + Math.abs(e.npc.getMotionZ()) > 0) {
+        var animBuilder = e.API.createAnimBuilder()
+        animBuilder.thenLoop("animation.mushroom_hopper.walk")
+        e.npc.syncAnimationsForAll(animBuilder)
+        e.npc.tempdata.put("walking", 1)
+        e.npc.timers.start(11, 10, true)
+    }
+    if (e.npc.tempdata.has("walking") && Math.abs(e.npc.getMotionX()) + Math.abs(e.npc.getMotionZ()) == 0) {
+        var animBuilder = e.API.createAnimBuilder()
+        animBuilder.thenLoop("animation.mushroom_hopper.idle")
+        e.npc.syncAnimationsForAll(animBuilder)
+        e.npc.tempdata.remove("walking")
+
+        e.npc.timers.stop(11)
+    }
 }
 
-function doHopAttack(e) {
-    var animationEngine = e.API.createAnimBuilder()
-    animationEngine.thenPlay("animation.mushroom_hopper.attack")
-    isAttacking = true
-    isWalking = false
-    e.npc.timers.stop(WALKING_SOUND_TIMER)
-    e.npc.syncAnimationsForAll(animationEngine)
-    e.npc.timers.start(APPLY_JUMP_FORCE_TIMER, 15, false)
+state_idle.enter = function (e) {
+    e.npc.timers.forceStart(10, 0, true)
+}
+
+state_idle.timer = function (e) {
+    if (e.id == 10) {
+        animateWalking(e)
+    }
+    if (e.id == 11) {
+        e.npc.world.playSoundAt(e.npc.pos, "minecraft:block.fungus.step", .1, getRandomFloat(.2, .6))
+    }
+}
+
+state_idle.target = function (e) {
+    StateMachine.transitionToState(state_aggro, e)
+}
+
+state_aggro.enter = function (e) {
+    e.npc.timers.forceStart(10, 0, true)
+}
+
+state_aggro.meleeAttack = function (e) {
+    StateMachine.transitionToState(state_preparing_jump, e)
+}
+
+state_aggro.timer = function (e) {
+    if (e.id == 10) {
+        animateWalking(e)
+    }
+    if (e.id == 11) {
+        e.npc.world.playSoundAt(e.npc.pos, "minecraft:block.fungus.step", .1, getRandomFloat(.2, .6))
+    }
+}
+
+state_preparing_jump.enter = function (e) {
+    var animBuilder = e.API.createAnimBuilder()
+    animBuilder.thenPlay("animation.mushroom_hopper.attack")
     e.npc.ai.setWalkingSpeed(0)
+    e.npc.syncAnimationsForAll(animBuilder)
+    e.npc.timers.forceStart(1, 15, false)
 
 }
 
-function timer(e) {
-    switch (e.id) {
-        case CHECK_IF_CAN_ATTACK_TIMER:
-            if (e.npc.timers.has(COOLDOWN_TIMER) || isAttacking) return
-            if (e.npc.getAttackTarget() == null) {
-                e.npc.timers.stop(CHECK_IF_CAN_ATTACK_TIMER)
-                return
-            }
-            var minimumDistance = 8
-            if (e.npc.getAttackTarget().type != 1) {
-                minimumDistance = 3
-            }
-            if (e.npc.getAttackTarget().pos.distanceTo(e.npc.pos) <= minimumDistance) {
-                doHopAttack(e)
-                e.npc.timers.stop(WALKING_SOUND_TIMER)
-            }
-            break;
+state_preparing_jump.timer = function (e) {
+    if (e.id == 1) {
+        var direction = FrontVectors(e.npc, GetAngleTowardsEntity(e.npc, e.npc.getAttackTarget()), 10, 1.8, false)
+        e.npc.setMotionX(direction[0])
+        e.npc.setMotionY(direction[1])
+        e.npc.setMotionZ(direction[2])
+        StateMachine.transitionToState(state_jumping, e)
+        e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.goat.long_jump", 1, getRandomFloat(0.2, 0.9))
+        e.npc.world.playSoundAt(e.npc.pos, "minecraft:block.beehive.exit", 1, getRandomFloat(0.2, 0.9))
+        e.npc.executeCommand("/particle block " + e.npc.world.getBlock(e.npc.pos.down(1)).getName() + " ~ ~-.5 ~ .2 .2 .2 0 4 force")
+    }
+}
 
+state_jumping.enter = function (e) {
+    e.npc.timers.forceStart(1, 0, true)
+    e.npc.timers.forceStart(2, 0, true)
+}
 
-        case ANIMATE_WALKING_TIMER:
-
-            if (!isAttacking && !isWalking && (e.npc.getMotionX() != 0 || e.npc.getMotionZ() != 0)) {
-                isWalking = true
-                var animationEngine = e.API.createAnimBuilder()
-                animationEngine.thenLoop("animation.mushroom_hopper.walk")
-                e.npc.syncAnimationsForAll(animationEngine)
-                e.npc.timers.forceStart(WALKING_SOUND_TIMER, 10, true)
-            }
-            if (!isAttacking && isWalking && e.npc.getMotionX() == 0 && e.npc.getMotionZ() == 0) {
-                isWalking = false
-                var animationEngine = e.API.createAnimBuilder()
-                animationEngine.thenLoop("animation.mushroom_hopper.idle")
-                e.npc.syncAnimationsForAll(animationEngine)
-                e.npc.timers.stop(WALKING_SOUND_TIMER)
-            }
-            break;
-        case WALKING_SOUND_TIMER:
-            e.npc.world.playSoundAt(e.npc.pos, "minecraft:block.fungus.step", .1, getRandomFloat(.2, .6))
-            break;
-        case APPLY_JUMP_FORCE_TIMER:
-            var distanceToJump = 1.5
-            var angle = e.npc.rotation
-            if (e.npc.getAttackTarget() != null) {
-                distanceToJump = e.npc.pos.distanceTo(e.npc.getAttackTarget().pos) / 4.5
-                angle = GetAngleTowardsEntity(e.npc, e.npc.getAttackTarget())
-            }
-
-            var d = FrontVectors(e.npc, angle, 0, distanceToJump, 0)
-            e.npc.setMotionX(d[0])
-            e.npc.setMotionZ(d[2])
-            e.npc.setMotionY(.4)
-            e.npc.timers.forceStart(CHECK_IF_LANDED_TIMER, 0, true)
-            e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.goat.long_jump", 1, getRandomFloat(0.2, 0.9))
-            e.npc.world.playSoundAt(e.npc.pos, "minecraft:block.beehive.exit", 1, getRandomFloat(0.2, 0.9))
-            e.npc.executeCommand("/particle block " + e.npc.world.getBlock(e.npc.pos.down(1)).getName() + " ~ ~-.5 ~ .2 .2 .2 0 4 force")
-
-            break;
-        case CHECK_IF_LANDED_TIMER:
-            if (e.npc.getMCEntity().m_20096_()) {
-                e.npc.timers.stop(CHECK_IF_LANDED_TIMER)
-                isAttacking = false
-                justLanded = true
-                e.npc.timers.forceStart(JUST_LANDED_TIMER, 2, false)
-                e.npc.ai.setWalkingSpeed(2)
-                e.npc.world.playSoundAt(e.npc.pos, "upgrade_aquatic:entity.perch.hurt", 1, getRandomFloat(0.2, 0.9))
-                e.npc.executeCommand("/particle block " + e.npc.world.getBlock(e.npc.pos.down(1)).getName() + " ~ ~-.5 ~ .2 .2 .2 0 10 force")
-                e.npc.timers.forceStart(COOLDOWN_TIMER, getRandomInt(10, 30), false)
-            }
-            break;
-        case JUST_LANDED_TIMER:
-            justLanded = false
-            break;
+state_jumping.timer = function (e) {
+    if (e.id == 1) {
+        if (isOnGround(e.npc)) {
+            StateMachine.transitionToState(state_idle, e)
+            e.npc.world.playSoundAt(e.npc.pos, "upgrade_aquatic:entity.perch.hurt", 1, getRandomFloat(0.2, 0.9))
+            e.npc.executeCommand("/particle block " + e.npc.world.getBlock(e.npc.pos.down(1)).getName() + " ~ ~-.5 ~ .2 .2 .2 0 10 force")
+        }
+    }
+    if (e.id == 2) {
+        if (!e.npc.getAttackTarget()) return
+        if (TrueDistanceCoord(e.npc.x, e.npc.y, e.npc.z, e.npc.getAttackTarget().x, e.npc.getAttackTarget().y, e.npc.getAttackTarget().z) > 1) return
+        damageFrom(e.npc.getAttackTarget(), e.npc, 2)
+        DoKnockback(e.npc, e.npc.getAttackTarget(), 1, 0)
+        e.npc.setMotionX(0)
+        e.npc.setMotionZ(0)
 
     }
 }
 
-function collide(e) {
-    if ((isAttacking && !e.npc.getMCEntity().m_20096_()) || justLanded) {
-        if (e.entity.pos.distanceTo(e.npc.pos) > 1) return
-        damageFrom(e.entity, e.npc, e.npc.getStats().getMelee().getStrength())
-        DoKnockback(e.npc, e.entity, 2, 0)
-    }
+state_jumping.collide = function (e) {
+
+}
+
+state_jumping.exit = function (e) {
+    e.npc.setAttackTarget(null)
+    e.npc.ai.setWalkingSpeed(2)
 }

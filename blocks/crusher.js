@@ -9,6 +9,7 @@ function init(e) {
         e.npc.storeddata.put("initialPosition", 1)
     }
     e.npc.timers.forceStart(4, e.npc.storeddata.get("crushDelay") + e.npc.storeddata.get("releaseDelay"), true)
+    e.npc.timers.forceStart(10, 40, true)
     npc = e.npc
     in_crush_position = e.npc.storeddata.get("initialPosition")
     switch (e.npc.storeddata.get("initialPosition")) {
@@ -67,6 +68,11 @@ function customGuiButton(e) {
 }
 
 function timer(e) {
+    if (e.id == 10) {
+        if (!e.npc.world.getClosestEntity(e.npc.pos, 10, 1)) {
+            e.npc.reset()
+        }
+    }
     if (e.id == 4) {
         e.npc.reset()
 

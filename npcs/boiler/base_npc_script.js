@@ -10,6 +10,7 @@ var state_dead = new State("state_dead")
 
 
 
+var global_functions = {}
 
 
 var state_paralyzed = new State("state_paralyzed")
@@ -50,6 +51,7 @@ state_paralyzed.revertToDefault = function (e) {
     npc.display.setHitboxState(default_settings.Hitbox)
     npc.ai.setWalkingSpeed(default_settings.Speed)
     npc.updateClient()
+    npc.setAttackTarget(null)
 }
 
 state_paralyzed.exit = function (e) {
@@ -70,7 +72,7 @@ state_panicking.applyPanickingEffects = function (e) {
 
     npc.executeCommand("/particle upgrade_aquatic:purple_jelly_blob ~ ~1 ~ .5 .5 .5 .02 30 force")
     npc.timers.forceStart(768001, e.arguments[1], false)
-    npc.timers.forceStart(768002, getRandomInt(90, 120), false)
+    npc.timers.forceStart(768002, getRandomInt(20, 120), false)
     npc.timers.forceStart(768003, getRandomInt(20, 40), false)
     state_panicking.chooseNewTarget()
     npc.ai.setRetaliateType(1)
@@ -118,6 +120,7 @@ state_panicking.revertToDefault = function () {
     npc.ai.setRetaliateType(default_settings.Retaliate)
     npc.timers.stop(768002)
     npc.updateClient()
+    npc.setAttackTarget(null)
 }
 state_panicking.exit = function (e) {
     state_panicking.revertToDefault()
@@ -250,5 +253,3 @@ and the next item you right click gets the jelly applied.
 */
 
 
-
-var global_functions = {}

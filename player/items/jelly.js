@@ -60,7 +60,6 @@ function applyJellyLore(e, item, type, amount) {
     var newLore = []
     var nbt = item.getNbt()
     if (amount == 0) {
-        e.player.message("test")
         var newI = 0
         for (var i = 0; i < currentLore.length; i++) {
             if (currentLore[i].indexOf(type) == -1) {
