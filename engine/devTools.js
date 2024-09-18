@@ -549,7 +549,7 @@ function markImportant() {
 
 
 function copyCoordinates() {
-    executeCommand('/tellraw ' + player.name + ' ["",{"text":"Coordinates are","color":"gold"},{"text":" "},{"text":"' + Math.round(player.x) + ' ' + Math.round(player.y) + ' ' + Math.round(player.z) + '","color":"aqua","clickEvent":{"action":"copy_to_clipboard","value":"' + Math.round(player.x) + ' ' + Math.round(player.y) + ' ' + Math.round(player.z) + '"}},{"text":" || "},{"text":"' + Math.round(player.x) + ', ' + Math.round(player.y) + ', ' + Math.round(player.z) + '","color":"aqua","clickEvent":{"action":"copy_to_clipboard","value":"' + Math.round(player.x) + ', ' + Math.round(player.y) + ', ' + Math.round(player.z) + '"}},{"text":" . "},{"text":"Click either to copy","color":"gold"}]')
+    executeCommand('/tellraw ' + player.name + ' ["",{"text":"Coordinates are","color":"gold"},{"text":" "},{"text":"' + player.pos.x + ' ' + player.pos.y + ' ' + player.pos.z + '","color":"aqua","clickEvent":{"action":"copy_to_clipboard","value":"' + player.pos.x + ' ' + player.pos.y + ' ' + player.pos.z + '"}},{"text":" || "},{"text":"' + player.pos.x + ', ' + player.pos.y + ', ' + player.pos.z + '","color":"aqua","clickEvent":{"action":"copy_to_clipboard","value":"' + player.pos.x + ', ' + player.pos.y + ', ' + player.pos.z + '"}},{"text":" . "},{"text":"Click either to copy","color":"gold"}]')
 
 }
 

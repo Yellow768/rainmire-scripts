@@ -124,5 +124,11 @@ function projectileImpact(e) {
     e.projectile.world.playSoundAt(e.projectile.pos, "minecraft:entity.slime.jump", 1, .6)
 }
 
+/**
+ * @param {ProjectileEvent.UpdateEvent} e
+ */
+function projectileTick(e) {
+    e.API.executeCommand(e.projectile.world, "particle dust 1 .5 .2 1 " + e.projectile.x + " " + e.projectile.y + " " + e.projectile.z + " 0.1 0.1 0.1 .2 100 force")
+}
 
 

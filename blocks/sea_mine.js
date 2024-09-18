@@ -1,6 +1,8 @@
 var api = Java.type('noppes.npcs.api.NpcAPI').Instance();
 load(api.getLevelDir() + '/scripts/ecmascript/boiler/commonFunctions.js')
 function init(e) {
+    e.npc.ai.setRetaliateType(3)
+    e.npc.setFaction(19)
     if (!e.npc.storeddata.has("y_value")) {
         e.npc.storeddata.put("y_value", e.npc.y)
     }

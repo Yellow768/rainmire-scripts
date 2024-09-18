@@ -9,14 +9,14 @@ StateMachine.default_state = state_normal
 
 
 state_normal.init = function (e) {
-    e.npc.timers.forceStart(2, 1, true)
+    e.npc.timers.forceStart(2, 10, true)
     e.npc.timers.forceStart(3, 1, true)
 }
 
 state_normal.enter = function (e) {
     npc.ai.setWalkingSpeed(5)
     npc.ai.setRetaliateType(0)
-    e.npc.timers.forceStart(2, 1, true)
+    e.npc.timers.forceStart(2, 10, true)
     e.npc.timers.forceStart(3, 1, true)
     if (e.npc.getAttackTarget()) {
         e.npc.timers.forceStart(4, getRandomInt(120, 200), false)
