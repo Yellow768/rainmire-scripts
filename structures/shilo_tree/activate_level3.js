@@ -1,10 +1,15 @@
-var api = Java.type('noppes.npcs.api.NpcAPI').Instance();
-load(api.getLevelDir() + '/scripts/ecmascript/boiler/id_generator.js')
+function redstone(e) {
+    if (e.power == 0) return
+    e.block.timers.forceStart(1, 60, false)
+}
 
-var floodLevelBlockPos = { x: 1631, y: 10, z: 2679 }
-/**
- * @param {BlockEvent.RedstoneEvent} e
- */
-function interact(e) {
-    e.block.executeCommand("/fill 1545 54 2554 1653 32 2659 water replace air")
+function timer(e) {
+    if (e.id == 1) {
+        e.block.executeCommand("/fill 1544 23 2552 1653 23 2659 water replace air")
+        e.block.timers.start(2, 40, false)
+    }
+    if (e.id == 2) {
+        e.block.executeCommand("/fill 1544 23 2552 1653 10 2659 water replace air")
+        e.block.executeCommand("/fill 1544 23 2552 1653 10 2659 water replace water")
+    }
 }

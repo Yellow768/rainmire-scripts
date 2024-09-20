@@ -7,6 +7,9 @@ var state_aggro = new State("state_aggro")
 
 StateMachine.default_state = state_idle
 
+global_functions.init = function (e) {
+    e.npc.timers.forceStart(10, 0, true)
+}
 
 state_idle.target = function (e) {
     StateMachine.transitionToState(state_aggro, e)
@@ -44,8 +47,11 @@ state_aggro.timer = function (e) {
         }
         for (var i = 0; i <= 8; i++) {
             for (var h = -1; h <= 1; h++) {
-                var d = FrontVectors(e.npc, 45 * i, 45 * h, 2, true)
+                var d = FrontVectors(e.npc, 47 * i, 46 * h, .8, false)
                 var proj = e.npc.shootItem(e.npc.x + d[0], e.npc.y + (1.1 * d[1]) + .5, e.npc.z + d[2], e.npc.getInventory().getProjectile(), 95)
+                proj.storeddata.put("x", d[0])
+                proj.storeddata.put("y", d[1])
+                proj.storeddata.put("z", d[2])
                 projectile_array.push(proj)
             }
         }
@@ -87,4 +93,15 @@ state_panicking.timer = function (e) {
 state_panicking.exit = function (e) {
     state_panicking.revertToDefault(e)
     npc.setAttackTarget(null)
+}
+
+global_functions.timer = function (e) {
+    if (e.id == 10) {
+        for (var i = 0; i < projectile_array.length; i++) {
+            var p = projectile_array[i]
+            p.setMotionX(p.storeddata.get("x"))
+            p.setMotionY(p.storeddata.get("y"))
+            p.setMotionZ(p.storeddata.get("z"))
+        }
+    }
 }

@@ -16,41 +16,53 @@ function registerScoreboardPlayer(e) {
     playerName = e.player.name
 }
 
-function getScore(scoreBoardName) {
-    if (!player) {
+function getScore(scoreBoardName, name) {
+    if (!name && player) {
+        name = player.name
+    }
+    if (!player && !name) {
         world.broadcast("Scoreboard player not defined, getScore() cannot work")
         return
     }
-    if (scoreboard.hasPlayerObjective(playerName, scoreBoardName)) {
-        return scoreboard.getPlayerScore(playerName, scoreBoardName)
+    if (scoreboard.hasPlayerObjective(name, scoreBoardName)) {
+        return scoreboard.getPlayerScore(name, scoreBoardName)
     }
     return 0
 }
 
-function setScore(scoreBoardName, val) {
-    if (!player) {
+function setScore(scoreBoardName, val, name) {
+    if (!name && player) {
+        name = player.name
+    }
+    if (!player && !name) {
         world.broadcast("Scoreboard player not defined, setScore() cannot work")
         return
     }
 
-    scoreboard.setPlayerScore(playerName, scoreBoardName, val)
+    scoreboard.setPlayerScore(name, scoreBoardName, val)
 
 }
 
-function addToScore(scoreBoardName, val) {
-    if (!player) {
+function addToScore(scoreBoardName, val, name) {
+    if (!name && player) {
+        name = player.name
+    }
+    if (!player && !name) {
         world.broadcast("Scoreboard player not defined, addToScore() cannot work")
         return
     }
-    if (scoreboard.hasPlayerObjective(playerName, scoreBoardName)) {
-        scoreboard.setPlayerScore(playerName, scoreBoardName, getScore(scoreBoardName) + val)
+    if (scoreboard.hasPlayerObjective(name, scoreBoardName)) {
+        scoreboard.setPlayerScore(name, scoreBoardName, getScore(scoreBoardName, name) + val)
     }
 }
 
-function hasScore(scoreboardName) {
-    if (!player) {
+function hasScore(scoreboardName, name) {
+    if (!name && player) {
+        name = player.name
+    }
+    if (!player && !name) {
         world.broadcast("Scoreboard player not defined, hasScore() cannot work")
         return
     }
-    return scoreboard.hasPlayerObjective(playerName, scoreboardName)
+    return scoreboard.hasPlayerObjective(name, scoreboardName)
 }

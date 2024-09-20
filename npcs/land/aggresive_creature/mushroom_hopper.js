@@ -7,7 +7,9 @@ load(api.getLevelDir() + '/scripts/ecmascript/boiler/proper_damage.js')
 var state_aggro = new State("state_aggro")
 var state_preparing_jump = new State("preparing_jump")
 var state_jumping = new State("state_jumping")
-
+global_functions.init = function (e) {
+    e.npc.stats.getMelee().setDelay(20)
+}
 
 global_functions.meleeAttack = function (e) {
     e.setCanceled(true)
@@ -23,7 +25,7 @@ function animateWalking(e) {
         animBuilder.thenLoop("animation.mushroom_hopper.walk")
         e.npc.syncAnimationsForAll(animBuilder)
         e.npc.tempdata.put("walking", 1)
-        e.npc.timers.start(11, 10, true)
+        e.npc.timers.forceStart(11, 10, true)
     }
     if (e.npc.tempdata.has("walking") && Math.abs(e.npc.getMotionX()) + Math.abs(e.npc.getMotionZ()) == 0) {
         var animBuilder = e.API.createAnimBuilder()
@@ -36,6 +38,7 @@ function animateWalking(e) {
 }
 
 state_idle.enter = function (e) {
+    e.npc.ai.setWalkingSpeed(3)
     e.npc.timers.forceStart(10, 0, true)
 }
 
@@ -80,7 +83,10 @@ state_preparing_jump.enter = function (e) {
 
 state_preparing_jump.timer = function (e) {
     if (e.id == 1) {
-        var direction = FrontVectors(e.npc, GetAngleTowardsEntity(e.npc, e.npc.getAttackTarget()), 10, 1.8, false)
+        if (!e.npc.getAttackTarget()) return
+        var pitch = 10
+        if (e.npc.y < e.npc.getAttackTarget().y) pitch = 15
+        var direction = FrontVectors(e.npc, GetAngleTowardsEntity(e.npc, e.npc.getAttackTarget()), pitch, 2, false)
         e.npc.setMotionX(direction[0])
         e.npc.setMotionY(direction[1])
         e.npc.setMotionZ(direction[2])
@@ -89,6 +95,10 @@ state_preparing_jump.timer = function (e) {
         e.npc.world.playSoundAt(e.npc.pos, "minecraft:block.beehive.exit", 1, getRandomFloat(0.2, 0.9))
         e.npc.executeCommand("/particle block " + e.npc.world.getBlock(e.npc.pos.down(1)).getName() + " ~ ~-.5 ~ .2 .2 .2 0 4 force")
     }
+}
+
+state_preparing_jump.targetLost = function (e) {
+    StateMachine.transitionToState(state_idle, e)
 }
 
 state_jumping.enter = function (e) {
@@ -121,5 +131,4 @@ state_jumping.collide = function (e) {
 
 state_jumping.exit = function (e) {
     e.npc.setAttackTarget(null)
-    e.npc.ai.setWalkingSpeed(2)
 }

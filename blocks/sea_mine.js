@@ -5,6 +5,8 @@ function init(e) {
     e.npc.setFaction(19)
     if (!e.npc.storeddata.has("y_value")) {
         e.npc.storeddata.put("y_value", e.npc.y)
+        e.npc.storeddata.put("x_value", e.npc.x)
+        e.npc.storeddata.put("z_value", e.npc.z)
     }
     if (e.npc.isAlive()) {
         resetMine(e)
@@ -34,10 +36,18 @@ function interact(e) {
             return
         }
         e.npc.storeddata.put("y_value", e.npc.y)
+        e.npc.storeddata.put("x_value", e.npc.x)
+        e.npc.storeddata.put("z_value", e.npc.z)
         e.npc.say("Y Value set")
     }
 }
 
+function tick(e) {
+    if (!e.npc.storeddata.has("y_value")) return
+    e.npc.x = e.npc.storeddata.get("x_value")
+    e.npc.y = e.npc.storeddata.get("y_value")
+    e.npc.z = e.npc.storeddata.get("z_value")
+}
 
 function died(e) {
     explode(e)

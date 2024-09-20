@@ -65,10 +65,10 @@ function createPerkGui(e, editable, init) {
     collected_powers = JSON.parse(e.player.storeddata.get("collected_powers"))
     selected_dampeners = JSON.parse(e.player.storeddata.get("selected_dampeners"))
     collected_dampeners = JSON.parse(e.player.storeddata.get("collected_dampeners"))
-    GUI_STATS.addTexturedRect(id("powers_total_1"), "iob:textures/customgui/numbers.png", selected_good_base_x - 2, cost_total_y, 25, 25, 0, 0).setScale(.5)
-    GUI_STATS.addTexturedRect(id("powers_total_2"), "iob:textures/customgui/numbers.png", selected_good_base_x + 7, cost_total_y, 25, 25, 0, 0).setScale(.5)
-    GUI_STATS.addTexturedRect(id("dampeners_total_1"), "iob:textures/customgui/numbers.png", selected_bad_base_x - 2, cost_total_y, 25, 25, 0, 0).setScale(.5)
-    GUI_STATS.addTexturedRect(id("dampeners_total_2"), "iob:textures/customgui/numbers.png", selected_bad_base_x + 7, cost_total_y, 25, 25, 0, 0).setScale(.5)
+    // GUI_STATS.addTexturedRect(id("powers_total_1"), "iob:textures/customgui/numbers.png", selected_good_base_x - 2, cost_total_y, 25, 25, 0, 0).setScale(.5)
+    // GUI_STATS.addTexturedRect(id("powers_total_2"), "iob:textures/customgui/numbers.png", selected_good_base_x + 7, cost_total_y, 25, 25, 0, 0).setScale(.5)
+    //  GUI_STATS.addTexturedRect(id("dampeners_total_1"), "iob:textures/customgui/numbers.png", selected_bad_base_x - 2, cost_total_y, 25, 25, 0, 0).setScale(.5)
+    // GUI_STATS.addTexturedRect(id("dampeners_total_2"), "iob:textures/customgui/numbers.png", selected_bad_base_x + 7, cost_total_y, 25, 25, 0, 0).setScale(.5)
     for (var i = 0; i < 20; i++) {
         if (i > 1 && i % 5 == 0) {
             good_base_x += 20
@@ -114,10 +114,10 @@ function createPerkGui(e, editable, init) {
             if (player.tempdata.get("canEditPerks")) { item.addEnchantment("infinity", 1) }
         }
         GUI_STATS.addItemSlot(selected_bad_base_x, selected_good_base_y + (b * 20), item).setGuiType(0)
-        //GUI_STATS.addTexturedRect(id("empty_bad_slot" + b), "iob:textures/customgui/perks/empty_slot.png", selected_bad_base_x - 1, selected_good_base_y + (b * 20) - 1, 256, 256).setScale(0.07)
+        // GUI_STATS.addTexturedRect(id("empty_bad_slot" + b), "iob:textures/customgui/perks/empty_slot.png", selected_bad_base_x - 1, selected_good_base_y + (b * 20) - 1, 256, 256).setScale(0.07)
     }
 
-    GUI_STATS.addTexturedRect(id("comparator"), "iob:textures/customgui/comparators.png", selected_good_base_x + 17, 233, 32, 32, 0, 0).setScale(0.4).setHoverText("§6Dampening§f total must be higher than §bpower §ftotal")
+    // GUI_STATS.addTexturedRect(id("comparator"), "iob:textures/customgui/comparators.png", selected_good_base_x + 17, 233, 32, 32, 0, 0).setScale(0.4).setHoverText("§6Dampening§f total must be higher than §bpower §ftotal")
     GUI_STATS.update()
 
     updateSelectedPerks()
@@ -211,30 +211,30 @@ function updateSelectedPerks() {
     setScore("bad_perk_debt", dampeners_cost)
     var dampener_offset, power_offset
     if (getScore("bad_perk_debt") < getScore("good_perk_debt")) {
-        GUI_STATS.getComponent(id("comparator")).setTextureOffset(32, 0)
+        //GUI_STATS.getComponent(id("comparator")).setTextureOffset(32, 0)
         dampener_offset = 100
         power_offset = 100
     }
     else {
-        GUI_STATS.getComponent(id("comparator")).setTextureOffset(0, 0)
+        //GUI_STATS.getComponent(id("comparator")).setTextureOffset(0, 0)
         power_offset = 25
         dampener_offset = 50
     }
     if (powers_cost < 10) {
-        GUI_STATS.getComponent(id("powers_total_2")).setScale(0)
-        GUI_STATS.getComponent(id("powers_total_1")).setTextureOffset(25 * powers_cost, power_offset).setPos(selected_good_base_x + 2, cost_total_y)
+        // GUI_STATS.getComponent(id("powers_total_2")).setScale(0)
+        // GUI_STATS.getComponent(id("powers_total_1")).setTextureOffset(25 * powers_cost, power_offset).setPos(selected_good_base_x + 2, cost_total_y)
     }
     else {
-        GUI_STATS.getComponent(id("powers_total_2")).setScale(.5).setTextureOffset(25 * parseInt(powers_cost.toString()[1]), power_offset).setPos(selected_good_base_x + 7, cost_total_y)
-        GUI_STATS.getComponent(id("powers_total_1")).setTextureOffset(25 * parseInt(powers_cost.toString()[0]), power_offset).setPos(selected_good_base_x - 2, cost_total_y)
+        // GUI_STATS.getComponent(id("powers_total_2")).setScale(.5).setTextureOffset(25 * parseInt(powers_cost.toString()[1]), power_offset).setPos(selected_good_base_x + 7, cost_total_y)
+        //GUI_STATS.getComponent(id("powers_total_1")).setTextureOffset(25 * parseInt(powers_cost.toString()[0]), power_offset).setPos(selected_good_base_x - 2, cost_total_y)
     }
     if (dampeners_cost < 10) {
-        GUI_STATS.getComponent(id("dampeners_total_2")).setScale(0)
-        GUI_STATS.getComponent(id("dampeners_total_1")).setTextureOffset(25 * dampeners_cost, dampener_offset).setPos(selected_bad_base_x + 2, cost_total_y)
+        //  GUI_STATS.getComponent(id("dampeners_total_2")).setScale(0)
+        // GUI_STATS.getComponent(id("dampeners_total_1")).setTextureOffset(25 * dampeners_cost, dampener_offset).setPos(selected_bad_base_x + 2, cost_total_y)
     }
     else {
-        GUI_STATS.getComponent(id("dampeners_total_2")).setScale(.5).setTextureOffset(25 * parseInt(dampeners_cost.toString()[1]), dampener_offset).setPos(selected_bad_base_x + 7, cost_total_y)
-        GUI_STATS.getComponent(id("dampeners_total_1")).setTextureOffset(25 * parseInt(dampeners_cost.toString()[0]), dampener_offset).setPos(selected_bad_base_x - 2, cost_total_y)
+        //  GUI_STATS.getComponent(id("dampeners_total_2")).setScale(.5).setTextureOffset(25 * parseInt(dampeners_cost.toString()[1]), dampener_offset).setPos(selected_bad_base_x + 7, cost_total_y)
+        //  GUI_STATS.getComponent(id("dampeners_total_1")).setTextureOffset(25 * parseInt(dampeners_cost.toString()[0]), dampener_offset).setPos(selected_bad_base_x - 2, cost_total_y)
     }
 
 
