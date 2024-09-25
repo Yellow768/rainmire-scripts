@@ -169,6 +169,7 @@ function openEditingGui(e) {
         e.block.setLight(10)
         e.block.storeddata.put("on", 1)
         setPowerLineState(true)
+        e.block.executeCommand(e.block.storeddata.get("onCommand"))
     }
     function setOff() {
 
@@ -176,6 +177,7 @@ function openEditingGui(e) {
         e.block.setLight(5)
         setPowerLineState(false)
         e.block.storeddata.put("on", 0)
+        e.block.executeCommand(e.block.storeddata.get("offCommand"))
     }
     if (e.block.storeddata.get("on")) {
         setOn()
