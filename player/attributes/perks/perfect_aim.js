@@ -4,6 +4,7 @@ var shotArrows = []
 
 function perfect_aim_timers(e) {
     if (e.id == id("findArrowForPerfectAim")) {
+        return
         var arrows = e.player.world.getNearbyEntities(e.player.pos, 8, 10)
         for (var arrow = 0; arrow < arrows.length; arrow++) {
             if (arrows[arrow].getEntityNbt().getInteger("life") == 0) {

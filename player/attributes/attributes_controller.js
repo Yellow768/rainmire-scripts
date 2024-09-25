@@ -20,6 +20,7 @@ function init(e) {
     registerScoreboardPlayer(e)
     attributes_init(e)
     perks_init(e)
+    if (!e.player.storeddata.has("checked_dialogs")) e.player.storeddata.put("checked_dialogs", '{"0": "[]"}')
 }
 
 function login(e) {
@@ -30,6 +31,7 @@ function login(e) {
 function timer(e) {
     perks_timer(e)
     attributes_timer(e)
+    attributeCheck_timer(e)
 }
 function damagedEntity(e) {
     perks_damagedEntity(e)

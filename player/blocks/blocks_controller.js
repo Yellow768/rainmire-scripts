@@ -9,8 +9,14 @@ load(api.getLevelDir() + "/scripts/ecmascript/boiler/title_generator.js");
 
 
 
-load(api.getLevelDir() + "/scripts/ecmascript/player/blocks/ancient_interfaces.js");
+load(api.getLevelDir() + '/scripts/ecmascript/boiler/proper_damage.js')
 
 function interact(e) {
-    ancientInterface_interact(e)
+}
+
+
+function tick(e) {
+    if (e.player.world.getBlock(e.player.pos).name == "kubejs:thorny_kelp") {
+        damageFrom(e.player, e.player, 3)
+    }
 }

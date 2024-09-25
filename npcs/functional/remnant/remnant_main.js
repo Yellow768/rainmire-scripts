@@ -48,6 +48,7 @@ function dialog(e) {
 }
 
 function dialogOption(e) {
+    if (!(e.dialog.id == 12 || e.dialog.id == 174)) return
     switch (e.option.slot) {
         case 0:
             player = e.player

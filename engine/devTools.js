@@ -191,11 +191,12 @@ function chat(e) {
             e.player.message("Respawns cleared")
             break;
         case "!resetChecks":
-            e.player.storeddata.put("checked_dialogs", '{"0":"[]"}')
+            e.player.storeddata.remove("prev_failed_dialogs")
+            e.player.storeddata.remove("prev_passed_dialogs")
             e.player.message("Checks cleared")
             break;
         case "!resetObservations":
-            e.player.storeddata.put("foundObservationBlocks", "[]")
+            e.player.storeddata.put("foundObservationNPCS", "[]")
             break;
         case "!resetTraps":
             e.player.storeddata.put("encounteredTrapBlocks", "[]")
@@ -554,7 +555,7 @@ function copyCoordinates() {
 }
 
 function timer(e) {
-    musicTimer(e)
+    //musicTimer(e)
     if (e.id == 451) {
         var place_pos = e.player.tempdata.get("npc_placed").up(1)
         var npc = e.player.world.getNearbyEntities(place_pos, 1, 2)[0]
@@ -590,8 +591,21 @@ function timer(e) {
     }
 }
 
+function broken(e) {
+    if (e.player.tempdata.has("setting_powerline_interface")) {
+        e.setCanceled(true)
+        e.player.message("&bRemoved Block From Array")
+        e.player.tempdata.get("setting_powerline_interface").trigger(2, [e.block.pos])
+    }
+}
+
 function interact(e) {
     useNPCTool(e)
+    if (e.type == 0) {
+        if (e.player.tempdata.has("setting_powerline_interface")) {
+            e.player.tempdata.remove("setting_powerline_interface")
+        }
+    }
     if (e.type == 1) {
 
         if (e.player.getMainhandItem().name == "customnpcs:npcwand") {
@@ -606,6 +620,10 @@ function interact(e) {
         }
     }
     if (e.type == 2) {
+        if (e.player.tempdata.has("setting_powerline_interface") && e.target.name != "customnpcs:npcscripted") {
+            e.player.tempdata.get("setting_powerline_interface").trigger(1, [e.target.pos])
+            e.player.message("&b[" + e.target.x + " " + e.target.y + " " + e.target.z + " ] added to interface's pos array")
+        }
         if (e.player.getMainhandItem().name == "customnpcs:npcwand") {
             e.player.tempdata.put("npc_placed", e.target.pos)
             e.player.timers.start(451, 2, false)
@@ -776,7 +794,13 @@ function tick(e) {
     if (e.player.hasTag("displayMode")) {
         executeCommand('/title ' + e.player.name + ' actionbar {"text":"Display Mode Active. type !display to disable.","color":"yellow"}')
     }
+    if (e.player.tempdata.has("setting_powerline_interface")) {
+
+        displayTitle(e, "Interface Power Line: Right/left click to add/remove block from interface's pos array. Edit interface to set it", "aqua")
+    }
 }
+
+
 
 function toggleInfiniteHydration() {
     if (!player.storeddata.has("infiniteHydration")) player.storeddata.put("infiniteHydration", 0)

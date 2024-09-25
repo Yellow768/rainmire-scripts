@@ -20,9 +20,6 @@ var attributeColorsDict = {
 }
 var roll_locked = false
 
-function init(e) {
-    if (!e.player.storeddata.has("checked_dialogs")) e.player.storeddata.put("checked_dialogs", '{"0": "[]"}')
-}
 
 function dialog(e) {
     attributeCheck_Dialog(e)
@@ -99,6 +96,15 @@ function attributeCheck_Dialog(e) {
         if (chance <= 25) { color = "&c" }
         if (chance <= 15) { color = "&8" }
 
+        if (!e.player.storeddata.has("prev_passed_dialogs")) { e.player.storeddata.put("prev_passed_dialogs", JSON.stringify([0])) }
+        var previously_passed_dialogs = JSON.parse(e.player.storeddata.get("prev_passed_dialogs"))
+        if (previously_passed_dialogs.indexOf(e.dialog.id) != -1) {
+            attribute_paramaters.target = 0
+            chance = "(Previously Passed) 100"
+            color = "&a"
+            attribute_paramaters.pass_xp = 0
+        }
+
         check_chance_string = check_chance_string.replace("&d&lChance : 00%", "&d&lChance : " + color + chance + "%")
         if (!e.player.storeddata.has("prev_failed_dialogs")) { e.player.storeddata.put("prev_failed_dialogs", JSON.stringify([{ id: 0, bonuses: 0 }])) }
         var previously_failed_dialogs = JSON.parse(e.player.storeddata.get("prev_failed_dialogs"))
@@ -107,10 +113,12 @@ function attributeCheck_Dialog(e) {
                 if (previously_failed_dialogs[i].bonuses >= all_bonuses) {
                     roll_locked = true
                     check_chance_string = check_chance_string.replace("&d&lChance : " + color + chance + "%", "&c&lLOCKED! Chance : 0% \n&rLevel up attribute(s) or discover a modifier!")
+                    attribute_paramaters.fail_xp = 0
                 }
                 else {
                     previously_failed_dialogs.splice(i, 1)
                     e.player.storeddata.put("prev_failed_dialogs", JSON.stringify(previously_failed_dialogs))
+                    attribute_paramaters.fail_xp = Math.floor(attribute_paramaters.fail_xp / 2)
                 }
             }
         }
@@ -185,8 +193,8 @@ function dialogClose(e) {
 
 function roll(e) {
     var result = 0
-    var roll1 = getRandomInt(1, 7)
-    var roll2 = getRandomInt(1, 7)
+    var roll1 = getRandomInt(1, 6)
+    var roll2 = getRandomInt(1, 6)
     var dice = ['☍', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅']
     var text
     result = roll1 + roll2 + all_bonuses
@@ -197,24 +205,33 @@ function roll(e) {
     }
     if (roll1 + roll2 == 12) {
         text = "&a&lCRITICAL SUCCESS!\n &a" + dice[roll1] + " + " + dice[roll2]
+        addXpText(attribute_paramaters.pass_xp)
         passCheck()
         return
     }
     if (roll1 + roll2 == 2) {
         text = "&c&lCRITICAL FAILURE!\n &a" + dice[roll1] + " + " + dice[roll2]
+        addXpText(attribute_paramaters.fail_xp)
         addDialogToFailedChecks()
         return
     }
     if (result >= attribute_paramaters.target) {
         text = "&a&lSUCCESS!\n &a" + dice[roll1] + " + " + dice[roll2] + " + " + all_bonuses + " vs " + attribute_paramaters.target
+        addXpText(attribute_paramaters.pass_xp)
         passCheck()
         return
     }
     if (result < attribute_paramaters.target) {
         text = "&c&lFAILURE!\n &c" + dice[roll1] + " + " + dice[roll2] + " + " + all_bonuses + " vs " + attribute_paramaters.target
+        addXpText(attribute_paramaters.fail_xp)
         failCheck()
         addDialogToFailedChecks()
         return
+    }
+    function addXpText(xp) {
+        if (xp != undefined && xp != 0) {
+            text += "\n&a+" + xp + " experience!"
+        }
     }
     function passCheck() {
         e.dialog.setText(text)
@@ -224,6 +241,8 @@ function roll(e) {
         e.player.timers.start(768999, 10, false)
         e.API.executeCommand(e.player.world, '/title ' + e.player.name + ' times 2 6 5')
         e.API.executeCommand(e.player.world, '/title ' + e.player.name + ' title {"text":"♙"}')
+        addDialogToPassedChecks()
+        if (attribute_paramaters.pass_xp != undefined) { e.API.executeCommand(e.player.world, "xp add " + e.player.name + " " + attribute_paramaters.pass_xp) }
     }
     function failCheck() {
         e.dialog.setText(text)
@@ -237,16 +256,22 @@ function roll(e) {
             e.player.damage(attribute_paramaters.target / 2)
             e.player.message("&dYour &6social anxiety &dcauses you pain")
         }
+        if (attribute_paramaters.fail_xp != undefined) { e.API.executeCommand(e.player.world, "xp add " + e.player.name + " " + attribute_paramaters.fail_xp) }
     }
     function addDialogToFailedChecks() {
         var previously_failed_dialogs = JSON.parse(e.player.storeddata.get("prev_failed_dialogs"))
-        previously_failed_dialogs.push({ id: original_roll_id, bonuses: all_bonuses })
+        if (previously_failed_dialogs.indexOf({ id: original_roll_id, bonuses: all_bonuses }) == -1) previously_failed_dialogs.push({ id: original_roll_id, bonuses: all_bonuses })
         e.player.storeddata.put("prev_failed_dialogs", JSON.stringify(previously_failed_dialogs))
+    }
+    function addDialogToPassedChecks() {
+        var previously_passed_dialogs = JSON.parse(e.player.storeddata.get("prev_passed_dialogs"))
+        if (previously_passed_dialogs.indexOf(original_roll_id) == -1) previously_passed_dialogs.push(original_roll_id)
+        e.player.storeddata.put("prev_passed_dialogs", JSON.stringify(previously_passed_dialogs))
     }
 }
 var dialogToShow
 
-function attrbiuteCheck_timer(e) {
+function attributeCheck_timer(e) {
     if (e.id == 768999) {
         e.API.getDialogs().get(check_dialog_id).setText(original_text)
         e.API.getDialogs().get(check_dialog_id).save()
@@ -254,7 +279,7 @@ function attrbiuteCheck_timer(e) {
     }
 }
 
-function timer(e) {
+function dialogTimer(e) {
     if (e.id == id("reenable_attack_after_dialog")) {
         cantAttack = false
     }

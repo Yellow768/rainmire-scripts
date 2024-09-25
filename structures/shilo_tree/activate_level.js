@@ -8,6 +8,19 @@ function redstone(e) {
 function timer(e) {
     var level_ys = commands_array[getScore("shilo_level", "shilo_dungeon")]
     if (e.id == 1) {
+        if (getScore("shilo_level", "shilo_dungeon") == 0) {
+            var nP = e.block.world.getNearbyEntities(e.block.pos, 60, 1)
+            for (var i = 0; i < nP.length; i++) {
+                nP[i].startQuest(12)
+                e.API.getQuests().get(12).getObjectives(nP[i])[0].setProgress(1)
+            }
+        }
+        else {
+            var nP = e.block.world.getNearbyEntities(e.block.pos, 60, 1)
+            for (var i = 0; i < nP.length; i++) {
+                e.API.getQuests().get(12).getObjectives(nP[i])[0].setProgress(getScore("shilo_level", "shilo_dungeon"))
+            }
+        }
         e.block.executeCommand("/fill 1544 " + level_ys.top + " 2552 1653 " + level_ys.top + " 2659 water replace air")
         e.block.timers.start(2, 40, false)
     }

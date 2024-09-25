@@ -1,26 +1,19 @@
-var radius, attribute, current_target, storeddata_string, command, GUI, block, storeddata_array
+var radius, attribute, current_target, tags, command, GUI, npc
 
 
 function init(e) {
-    e.block.setIsPassible(true)
-    block = e.block
-
-    if (!e.block.storeddata.has("uuid")) {
-        e.block.storeddata.put("uuid", e.API.clones.get(1, "Fish", e.block.world).generateNewUUID())
+    npc = e.npc
+    if (!e.npc.storeddata.has("radius")) {
+        e.npc.storeddata.put("radius", 0)
+        e.npc.storeddata.put("attribute", "Charm")
+        e.npc.storeddata.put("target", 0)
+        e.npc.storeddata.put("command", "")
     }
-    if (!e.block.storeddata.has("radius")) {
-        e.block.storeddata.put("radius", 0)
-        e.block.storeddata.put("attribute", "Charm")
-        e.block.storeddata.put("target", 0)
-        e.block.storeddata.put("storeddata", "[]")
-        e.block.storeddata.put("command", "")
-    }
-    radius = e.block.storeddata.get("radius")
-    attribute = e.block.storeddata.get("attribute")
-    current_target = e.block.storeddata.get("target")
-    storeddata_string = e.block.storeddata.get("storeddata")
-    command = e.block.storeddata.get("command")
-    storeddata_array = JSON.parse('[' + storeddata_string + ' ]')
+    radius = e.npc.storeddata.get("radius")
+    attribute = e.npc.storeddata.get("attribute")
+    current_target = e.npc.storeddata.get("target")
+    tags = e.npc.getTags()
+    command = e.npc.storeddata.get("command")
 }
 
 function interact(e) {
@@ -28,12 +21,11 @@ function interact(e) {
     GUI.addTextField(1, 100, 0, 50, 20).setCharacterType(1).setText(radius)
     GUI.addTextField(2, 100, 40, 150, 20).setText(attribute)
     GUI.addTextField(3, 100, 80, 50, 20).setCharacterType(1).setText(current_target)
-    GUI.addTextField(4, 100, 120, 150, 20).setText(storeddata_string)
     GUI.addTextField(5, 100, 160, 300, 20).setText(command)
     GUI.addLabel(6, "Radius", 0, 0, 155, 20, 0xffffff)
     GUI.addLabel(7, "Attribute", 0, 45, 150, 20, 0xffffff)
     GUI.addLabel(8, "Target", 0, 80, 155, 20, 0xffffff)
-    GUI.addLabel(9, "Storeddata", 0, 125, 150, 20, 0xffffff)
+    GUI.addLabel(9, "Tags", 0, 125, 150, 20, 0xffffff)
     GUI.addLabel(10, "Command", 0, 165, 150, 20, 0xffffff)
     GUI.addButton(11, "Save", 0, 200, 150, 20)
     GUI.addButton(12, "New UUID", 220, -5, 60, 20)
@@ -42,41 +34,30 @@ function interact(e) {
 }
 
 function tick(e) {
-    if (e.block.world.storeddata.get("observationBlocksVisible") == 1) {
-        e.block.setModel("supplementaries:end_stone_lamp")
-        e.block.setLight(10)
-    }
-    else {
-        e.block.setModel("minecraft:barrier")
-        e.block.setLight(0)
-    }
-    var scoreboard = e.block.world.scoreboard
-    var nE = e.block.world.getNearbyEntities(e.block.pos, radius, 1)
+    var scoreboard = e.npc.world.scoreboard
+    var nE = e.npc.world.getNearbyEntities(e.npc.pos, radius, 1)
     for (var i = 0; i < nE.length; i++) {
+
         var validPlayer = true
-        if (!nE[i].storeddata.has("foundObservationBlocks")) nE[i].storeddata.put("foundObservationBlocks", "[]")
-        var allFoundBlocks = JSON.parse(nE[i].storeddata.get("foundObservationBlocks"))
+        if (!nE[i].storeddata.has("foundObservationNPCS")) nE[i].storeddata.put("foundObservationNPCS", "{[]}")
+        var allFoundnpcs = JSON.parse(nE[i].storeddata.get("foundObservationNPCS"))
 
-        if (allFoundBlocks.indexOf(e.block.storeddata.get("uuid")) != -1) {
+        if (allFoundnpcs.indexOf(e.npc.getUUID()) != -1) {
             validPlayer = false
-
         }
-        for (var j = 0; j < storeddata_array.length; j++) {
-            if (!nE[i].storeddata.has(storeddata_array[j]) && storeddata_string[j] != "") {
+        for (var j = 0; j < e.npc.getTags().length; j++) {
+            if (!nE[i].hasTag(e.npc.getTags()[i])) {
                 validPlayer = false
             }
         }
         if (!scoreboard.hasPlayerObjective(nE[i].name, attribute) || scoreboard.getPlayerScore(nE[i].name, attribute) < current_target) {
             validPlayer = false
-
-
         }
-
         if (validPlayer) {
-            e.block.executeCommand(command.replace(/player/g, nE[i].name))
+            e.npc.executeCommand(command.replace(/player/g, nE[i].name))
             //nE[i].message(command.replace(/player/g, nE[i].name))
-            allFoundBlocks.push(e.block.storeddata.get("uuid"))
-            nE[i].storeddata.put("foundObservationBlocks", JSON.stringify(allFoundBlocks))
+            allFoundnpcs.push(e.npc.getUUID())
+            nE[i].storeddata.put("foundObservationNPCS", JSON.stringify(allFoundnpcs))
         }
         //
     }
@@ -86,20 +67,13 @@ function tick(e) {
 
 
 function customGuiButton(e) {
-    if (e.buttonId == 12) {
-        block.storeddata.put("uuid", e.API.clones.get(1, "Fish", block.world).generateNewUUID())
-        return
-    }
-    block.storeddata.put("radius", GUI.getComponent(1).getInteger())
-    block.storeddata.put("attribute", GUI.getComponent(2).getText())
-    block.storeddata.put("target", GUI.getComponent(3).getInteger())
-    block.storeddata.put("storeddata", GUI.getComponent(4).getText())
-    block.storeddata.put("command", GUI.getComponent(5).getText())
-    radius = block.storeddata.get("radius")
-    attribute = block.storeddata.get("attribute")
-    current_target = block.storeddata.get("target")
-    storeddata_string = block.storeddata.get("storeddata")
-    command = block.storeddata.get("command")
-    storeddata_array = JSON.parse('["' + storeddata_string + ' "]')
+    npc.storeddata.put("radius", GUI.getComponent(1).getInteger())
+    npc.storeddata.put("attribute", GUI.getComponent(2).getText())
+    npc.storeddata.put("target", GUI.getComponent(3).getInteger())
+    npc.storeddata.put("command", GUI.getComponent(5).getText())
+    radius = npc.storeddata.get("radius")
+    attribute = npc.storeddata.get("attribute")
+    current_target = npc.storeddata.get("target")
+    command = npc.storeddata.get("command")
     GUI.close()
 }

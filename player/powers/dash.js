@@ -43,7 +43,7 @@ function dash(e) {
         d = FrontVectors(player, direction, -player.pitch * .4, (.8 * getScore("swmspd")) * Math.max(((90 - Math.abs(e.player.pitch)) / 90), .6), false)
         e.player.timers.forceStart(id("is_player_underwater"), 0, true)
     }
-    else if (e.player.isSneaking() && isOnGround(e.player)) {
+    else if (e.player.isSneaking() && isOnGround(e.player) && getScore("dash_c")) {
         d = FrontVectors(player, 0, 60, 1.3, true)
     }
     else {
@@ -72,8 +72,7 @@ function dash(e) {
     player.world.playSoundAt(player.pos, "minecraft:item.bucket.empty", 1, 1)
     player.world.playSoundAt(player.pos, "variedcommodities:magic.shot", 1, 1)
     player.world.playSoundAt(player.pos, "minecraft:ambient.underwater.exit", 1, 1)
-    player.timers.forceStart(id("start_dash_glide"), 7 + (Number(e.player.isSneaking()) * 8), false)
-
+    if (getScore("dash_b")) player.timers.forceStart(id("start_dash_glide"), 7 + (Number(e.player.isSneaking()) * 8), false)
 
 }
 

@@ -61,21 +61,6 @@ function keyPressed(e) {
         case keyBinds.key_dash:
             dash(e)
             break;
-        case 86:
-            if (player.gamemode == 3) return
-            groundpound(e)
-            deactivateLevitation(e)
-            break;
-        case keyBinds.key_levitate:
-            if (isOnGround(player) || e.player.inWater() || player.gamemode != 2) return
-            if (player.gamemode == 1) return
-            prevY = player.y
-            player.timers.forceStart(id("levitate_timer"), 20, true)
-            player.timers.forceStart(id("levitate_particles_timer"), 0, true)
-            player.timers.forceStart(id("levitate_float_timer"), 0, true)
-            player.timers.forceStart(id("levitate_check_invalid_timer"), 0, true)
-            levitate(e)
-            break;
     }
 
 }
