@@ -51,13 +51,14 @@ function deleteBoat(e, correctUUID) {
 
 function summonEvergrowBoat(e) {
     var rayTrace = e.player.rayTraceBlock(10, true, true)
-    var pos = e.player.pos
+    var d = FrontVectors(e.player, 0, 0, 2, true)
+    var pos = { x: d[0], y: d[1], z: d[2] }
     if (rayTrace != null) {
         pos = rayTrace.getPos()
     }
 
 
-    executeCommand('/summon boat ' + pos.x + " " + (pos.y + 2) + " " + pos.z + ' {Glowing:1b,Invulnerable:1b,CustomNameVisible:1b,Type:"dark_oak",Tags:["' + e.player.name + '"],CustomName:\'{"text":"' + e.player.name + '`s Evergrow Boat","color":"green","bold":true}\'}')
+    executeCommand('/summon quark:quark_boat ' + pos.x + " " + (pos.y + 2) + " " + pos.z + ' {Glowing:1b,Invulnerable:1b,CustomNameVisible:1b,Type:"dark_oak",Tags:["' + e.player.name + '"]}')
     var nE = e.player.world.getNearbyEntities(e.player.pos, 8, -1)
     for (var i = 0; i < nE.length; i++) {
         if (nE[i].hasTag(e.player.name) && nE[i].getUUID() != e.player.tempdata.get("BoatUUID")) {

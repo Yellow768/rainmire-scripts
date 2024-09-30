@@ -10,7 +10,7 @@ function livingEntityUseItemEventFinish(event) {
     if (esca_interval >= 4) { esca_interval = 0 }
     else { return }
     if (player.getCustomGui() && esca_interval == 0) {
-        API.executeCommand(player.world, '/summon minecraft:item ' + player.x + ' ' + player.y + ' ' + player.z + ' {Item:{id:"aquamirae:esca",Count:1b,tag:{display:{Lore:[\'{"italic":false,"color":"white","extra":[{"text":""},{"color":"dark_aqua","text":"Use at a Power or Dampening Remnant"}],"text":""}\', \'{"italic":false,"color":"white","extra":[{"text":""},{"color":"dark_aqua","text":"to obtain a perk. Or ingest it to"}],"text":""}\', \'{"italic":false,"color":"white","extra":[{"text":""},{"color":"dark_aqua","text":"enhance your aquatic abilities"}],"text":""}\'],Name:\'{"italic":false,"extra":[{"text":""},{"underlined":true,"obfuscated":true,"color":"aqua","text":"a"},{"underlined":true,"color":"aqua","text":"Remnant Vessel"},{"underlined":true,"obfuscated":true,"color":"aqua","text":"K"}],"text":""}\'}}}}')
+        API.executeCommand(player.world, '/summon minecraft:item ' + player.x + ' ' + player.y + ' ' + player.z + ' {Item:{id:cobblestone,tag:{display:{Name:\'["",{"text":"         Remnant Vessel","italic":false,"bold":true,"color":"light_purple"}]\',Lore:[\'["",{"text":"     Holds supernatural power","italic":false,"color":"yellow"}]', '[""]', '["",{"text":"Consume to enhance aquatic traits","italic":false,"color":"aqua"}]', '[""]', '["",{"text":" ","italic":false}]\']}},Count:1}}')
     }
 
     var item = API.getIItemStack(event.event.item)

@@ -1,4 +1,4 @@
-function lockpick_interact(e) {
+var lockpick_interact = function (e) {
     if (e.type == 2 && e.target.hasTileEntity()) {
         if (e.player.getMainhandItem().getDisplayName() == "Dev Locker") { changeContainerLockStrength(e) }
         if (e.target.storeddata.get("LockDifficulty") != undefined && e.target.storeddata.get("LockDifficulty") > 0) {
@@ -84,7 +84,7 @@ function pickLock(e, lockDamage, customModelData) {
         executeCommand("/playsound minecraft:entity.item_frame.rotate_item player @a[x=" + e.player.x + ",y=" + e.player.y + ",z=" + e.player.z + ",distance=..5] " + e.player.x + " " + e.player.y + " " + e.player.z)
 
 
-        var damageModifier = 5 * (getScore("Knowledge") - 1)
+        var damageModifier = 5 * (getScore("Mind") - 1)
         e.target.storeddata.put("LockDifficulty", e.target.storeddata.get("LockDifficulty") - (lockDamage + damageModifier))
 
         if (e.target.storeddata.get("LockDifficulty") > 0) {

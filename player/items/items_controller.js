@@ -17,6 +17,7 @@ load(api.getLevelDir() + "/scripts/ecmascript/player/items/throwable_bomb.js");
 
 function init(e) {
     registerScoreboardPlayer(e)
+    e.player.tempdata.put("lockpick_function", lockpick_interact)
 }
 
 function interact(e) {

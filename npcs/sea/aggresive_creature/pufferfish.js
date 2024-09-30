@@ -14,11 +14,11 @@ var state_large = new State("state_large")
 StateMachine.default_state = state_small
 
 state_small.enter = function (e) {
-    e.npc.getModelData().setWidth(.4)
-    e.npc.getModelData().setHeight(.4)
-    e.npc.updateClient()
-    e.npc.setGeckoIdleAnimation(small_animation)
-    e.npc.setGeckoWalkAnimation(small_animation)
+    npc.getModelData().setWidth(.4)
+    npc.getModelData().setHeight(.4)
+    npc.updateClient()
+    npc.setGeckoIdleAnimation(small_animation)
+    npc.setGeckoWalkAnimation(small_animation)
     if (npc.getAttackTarget()) {
         npc.timers.start(1, getRandomInt(20, 60), false)
     }
@@ -43,16 +43,16 @@ state_small.exit = function (e) {
 }
 
 state_large.enter = function (e) {
-    e.npc.getModelData().setWidth(1)
-    e.npc.getModelData().setHeight(1)
-    e.npc.updateClient()
-    e.npc.setGeckoIdleAnimation(large_animation)
-    e.npc.setGeckoWalkAnimation(large_animation)
-    e.npc.timers.start(1, getRandomInt(60, 90), false)
-    e.npc.setMaxHealth(1)
-    e.npc.setHealth(1)
-    e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.puffer_fish.blow_up", 1, 1)
-    e.npc.world.spawnParticle("supplementaries:air_burst", e.npc.x, e.npc.y, e.npc.z, .4, .4, .4, 0, 20)
+    npc.getModelData().setWidth(1)
+    npc.getModelData().setHeight(1)
+    npc.updateClient()
+    npc.setGeckoIdleAnimation(large_animation)
+    npc.setGeckoWalkAnimation(large_animation)
+    npc.timers.start(1, getRandomInt(60, 90), false)
+    npc.setMaxHealth(1)
+    npc.setHealth(1)
+    npc.world.playSoundAt(e.npc.pos, "minecraft:entity.puffer_fish.blow_up", 1, 1)
+    npc.world.spawnParticle("supplementaries:air_burst", npc.x, npc.y, npc.z, .4, .4, .4, 0, 20)
 }
 
 
@@ -85,21 +85,21 @@ state_large.explode = function (e) {
 }
 
 state_large.exit = function (e) {
-    if (e.npc.isAlive()) {
-        e.npc.setMaxHealth(10)
-        e.npc.setHealth(e.npc.storeddata.get("prev_health"))
-        e.npc.world.spawnParticle("supplementaries:air_burst", e.npc.x, e.npc.y, e.npc.z, .4, .4, .4, .3, 6)
-        e.npc.world.playSoundAt(e.npc.pos, "minecraft:entity.puffer_fish.blow_out", 1, 1)
+    if (npc.isAlive()) {
+        npc.setMaxHealth(10)
+        npc.setHealth(e.npc.storeddata.get("prev_health"))
+        npc.world.spawnParticle("supplementaries:air_burst", npc.x, npc.y, npc.z, .4, .4, .4, .3, 6)
+        npc.world.playSoundAt(e.npc.pos, "minecraft:entity.puffer_fish.blow_out", 1, 1)
     }
 }
 
 
 
 state_dead.exit = function (e) {
-    e.npc.display.setSkinTexture(puffer_skin)
-    e.npc.updateClient()
-    e.npc.setMaxHealth(10)
-    e.npc.setHealth(10)
+    npc.display.setSkinTexture(puffer_skin)
+    npc.updateClient()
+    npc.setMaxHealth(10)
+    npc.setHealth(10)
 }
 
 
@@ -122,6 +122,7 @@ function breakBreakableWalls(e) {
         }
     }
 }
+
 
 
 

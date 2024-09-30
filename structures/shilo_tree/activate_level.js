@@ -19,6 +19,7 @@ function timer(e) {
             var nP = e.block.world.getNearbyEntities(e.block.pos, 60, 1)
             for (var i = 0; i < nP.length; i++) {
                 e.API.getQuests().get(12).getObjectives(nP[i])[0].setProgress(getScore("shilo_level", "shilo_dungeon"))
+                nP[i].sendNotification("Evergrow Pipe Opened", 3 - getScore("shilo_level", "shilo_dungeon") + " pipes left", 0)
             }
         }
         e.block.executeCommand("/fill 1544 " + level_ys.top + " 2552 1653 " + level_ys.top + " 2659 water replace air")
