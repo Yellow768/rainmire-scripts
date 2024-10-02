@@ -651,6 +651,7 @@ function interact(e) {
             }
             return
         }
+
         if (e.player.tempdata.has("clamNPCConfig")) {
             e.player.tempdata.get("clamNPCConfig").trigger(1, [e.target.pos])
             e.player.message("Clam Redstone Set")

@@ -1,4 +1,5 @@
 function lockpick_interact(e) {
+    if (e.type != 2) return
     var item = e.player.getMainhandItem()
     if (item.getDisplayName() == "Dev Locker") {
         openDevLockGUI(e)
@@ -40,6 +41,8 @@ function lockpick_interact(e) {
 
 
 function openDevLockGUI(e) {
+    setPropertyOnBlock(e.target, "first_failure", 0)
+    setPropertyOnBlock(e.target, "first_success", 0)
     setPropertyOnBlock(e.target, "unlocked", 0)
     var GUI = e.API.createCustomGui(1, 256, 256, false, e.player)
     GUI.addLabel(2, "Block Lock Config", 128, 0, 1, 1, 0xffffff)
@@ -90,11 +93,21 @@ function attemptToPickLock(e, item) {
     if (result >= e.target.storeddata.get("lock_strength")) {
         displayTitle(e, "§a§lLock Picked!: §r§a" + result + " §dvs §e" + e.target.storeddata.get("lock_strength"), "white")
         setPropertyOnBlock(e.target, "unlocked", 1)
-        e.player.playSound("iob:ui.trap_disabled", 1, getRandomFloat(.4, 1.2))
+        e.player.playSound("iob:ui.trap_disabled", 1, 1)
+        if (e.target.storeddata.get("first_success") == 0) {
+            e.API.executeCommand(e.player.world, "xp add " + e.player.name + " " + e.target.storeddata.get("lock_strength") + " points")
+            e.API.executeCommand(e.player.world, "/particle minecraft:totem_of_undying " + e.target.x + " " + e.target.y + " " + e.target.z + " .4 .2 .4 0 20")
+            setPropertyOnBlock(e.target, "first_success", 1)
+        }
     }
     else {
         displayTitle(e, "§c§lLockpick Failure: §r§c" + result + " §dvs §e" + e.target.storeddata.get("lock_strength"), "white")
         e.player.playSound("iob:ui.lockpick", 1, getRandomFloat(.2, 1.2))
+        if (e.target.storeddata.get("first_failure") == 0) {
+            e.API.executeCommand(e.player.world, "xp add " + e.player.name + " " + Math.floor((e.target.storeddata.get("lock_strength") / 2)) + " points")
+            setPropertyOnBlock(e.target, "first_failure", 1)
+        }
+
     }
     var result_for_destroy = getRandomInt(1, 6) + getScore("Mind")
     if (result_for_destroy < chance_to_destroy - pick_modifier) {

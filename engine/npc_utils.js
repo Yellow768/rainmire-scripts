@@ -4,16 +4,16 @@ var player
  * @param {PlayerEvent.InteractEvent} e
  */
 function useNPCTool(e) {
-    var tool = e.player.getMainhandItem().getNbt().getString("Tool")
+    var tool = e.player.getMainhandItem().getDisplayName()
     switch (tool) {
-        case "Mover":
+        case "§bMover":
             moverFunctions(e)
             break;
-        case "Spawner":
+        case "§aSpawner":
             e.setCanceled(true)
             spawnerFunctions(e)
             break;
-        case "Eraser":
+        case "§cEraser":
             eraserFunctions(e)
             break;
     }
