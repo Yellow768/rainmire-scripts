@@ -51,11 +51,12 @@ function attributeCheck_Dialog(e) {
         check_dialog_id = e.dialog.id
         original_roll_id = e.dialog.id
         attribute_paramaters = JSON.parse(e.dialog.getText().substr(11))
-        var check_chance_string = "&6&lAttribute Roll"
+        var check_chance_string = "&6&lAttribute Roll &r&l|"
         for (var i = 0; i < attribute_paramaters.attributes.length; i++) {
-            check_chance_string += " &r&l| " + attributeColorsDict[attribute_paramaters.attributes[i]] + "&l" + attribute_paramaters.attributes[i] + " " + getScore(attribute_paramaters.attributes[i])
+            check_chance_string += " " + attributeColorsDict[attribute_paramaters.attributes[i]] + "&l" + attribute_paramaters.attributes[i] + " " + getScore(attribute_paramaters.attributes[i])
             all_bonuses += getScore(attribute_paramaters.attributes[i])
         }
+        check_chance_string += " &r&lvs &d&l" + attribute_paramaters.target
         check_chance_string += "\n&d&lChance : 00%"
 
         if (attribute_paramaters.tag_modifiers != undefined) {

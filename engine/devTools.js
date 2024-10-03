@@ -245,7 +245,19 @@ function chat(e) {
             break;
         case "!npctools":
             toggleNPCTools()
+            break;
+        case "!resetDialogData":
+            resetDialogData()
+            break;
+        case "!resetQuestData":
+            resetQuestData()
+            break;
+        case "!resetDQ":
+            resetDialogData()
+            resetQuestData()
+            break;
         default:
+
             e.setCanceled(false)
     }
     if (e.message.indexOf("!devHelp") != -1) {
@@ -883,4 +895,19 @@ function died(e) {
         player.removeTag("npcToolMode")
         return
     }
+}
+
+function resetQuestData() {
+    for (var i = 0; i < 1000; i++) {
+        player.removeQuest(i)
+    }
+    player.message("&eQuest Data Cleared")
+}
+function resetDialogData() {
+    for (var i = 0; i < 1000; i++) {
+        player.removeDialog(i)
+    }
+    player.message("&eDialog Data Cleared")
+    player.storeddata.remove("prev_failed_dialogs")
+    player.storeddata.remove("prev_passed_dialogs")
 }
