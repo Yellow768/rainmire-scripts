@@ -9,13 +9,13 @@ function useNPCTool(e) {
         case "§bMover":
             moverFunctions(e)
             break;
-        case "§aSpawner":
-            e.setCanceled(true)
-            spawnerFunctions(e)
-            break;
         case "§cEraser":
             eraserFunctions(e)
             break;
+    }
+    if (tool.indexOf("Spawner") != -1) {
+        e.setCanceled(true)
+        spawnerFunctions(e)
     }
 }
 

@@ -19,6 +19,17 @@ function jelly_timer(e) {
     if (e.id == id("apply_jelly_to_arrow")) {
         applyEffectToArrow(e)
     }
+    if (e.player.getPotionEffect(46) != -1) {
+        if (!e.player.storeddata.has("y_value")) {
+            e.player.storeddata.put("y_value", e.player.y)
+        }
+        if (e.player.y > e.player.storeddata.get("y_value")) {
+            e.player.setPosition(e.player.x, e.player.storeddata.get("y_value"), e.player.z)
+        }
+        if (e.player.y < e.player.storeddata.get("y_value")) { e.player.storeddata.put("y_value", e.player.y) }
+        executeCommand("attribute " + e.player.name + " forge:swim_speed base set 0")
+        executeCommand("attribute " + e.player.name + " minecraft:generic.movement_speed base set 0")
+    }
 }
 
 function damagedEntity(e) {
@@ -166,19 +177,6 @@ function applyJellyToBomb(e, type) {
     e.player.world.playSoundAt(e.player.pos, "minecraft:block.honey_block.fall", 1, 1)
 }
 
-function applyJellyToWaterSummon(e) {
-    var jelly = e.player.getMainhandItem().getDisplayName()
-    var index = jelly.indexOf("Jelly")
-    var type = e.player.getMainhandItem().getDisplayName().substr(0, index)
-    e.player.message(type)
-    if (type == "Paralyzing ") {
-        applyStatusEffect(e, e.target, 1)
-    }
-    if (type == "Panicking ") {
-        applyStatusEffect(e, e.target, 2)
-    }
-
-}
 
 function checkForJellyEffect(e, target, type, removeDurability) {
 
@@ -237,9 +235,6 @@ function applyEffectToArrow(e) {
 function applyStatusToTarget(e) {
     var nbt
     var doDurability = false
-    if (e.target.type != 2) {
-        return
-    }
     if (e.damageSource.isProjectile()) {
         var arrow = e.damageSource.getImmediateSource()
         nbt = arrow.nbt
@@ -268,17 +263,36 @@ function applyStatusToTarget(e) {
 }
 
 
-function craftingTriggers(e) {
-    if (e.id == 10) {
-        applyStatusEffect(e.arguments[0], e.arguments[1], e.arguments[2], e.arguments[3])
-    }
-    if (e.id == 510105) {
-        applyEffectToPlayer(e.arguments[0], e.arguments[1])
+function status_trigger(e) {
+    switch (e.id) {
+        case 123401:
+            player.addPotionEffect(46, e.arguments[1] / 20, 2, true)
+            player.addPotionEffect(18, e.arguments[1] / 20, 2, true)
+            player.storeddata.put("y_value", player.y)
+            break;
+        case 123402:
+            player.addPotionEffect(50, e.arguments[1] / 20, 2, true)
+            player.addPotionEffect(15, e.arguments[1] / 20, 2, true)
+            break;
+        case 123403:
+            player.setBurning(e.arguments[i])
     }
 }
 
 
 function applyStatusEffect(e, target, type, length) {
+    if (target.type != 2) {
+        if ((target.type == 3 || target.type == 5 || target.type == 4) && target.type != 1) {
+            if (type == 123403) {
+                target.setBurning(length)
+                e.API.executeCommand(player.world, "/particle upgrade_aquatic:red_jelly_blob " + target.x + " " + target.y + " " + target.z + " .5 .5 .5 .02 30 force")
+                return
+            }
+            var parent_mob_controller = e.target.tempdata.get("parent")
+            if (!parent_mob_controller) return
+            target = parent_mob_controller
+        }
+    }
     target.trigger(450, [target])
     target.trigger(type, [target, length])
     player.getMainhandItem().setDamage(player.getMainhandItem().getDamage() + 2)

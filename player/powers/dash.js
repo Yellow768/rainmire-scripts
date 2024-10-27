@@ -40,7 +40,7 @@ function dash(e) {
         d = FrontVectors(player, player.getMount().getRotation(), 0, 1.6, false)
     }
     else if (player.getMCEntity().m_5842_()) {
-        d = FrontVectors(player, direction, -player.pitch * .4, (.8 * getScore("swmspd")) * Math.max(((90 - Math.abs(e.player.pitch)) / 90), .6), false)
+        d = FrontVectors(player, direction, -player.pitch * .4, (.8 * (getScore("swmspd") + 1)) * Math.max(((90 - Math.abs(e.player.pitch)) / 90), .6), false)
         e.player.timers.forceStart(id("is_player_underwater"), 0, true)
     }
     else if (e.player.isSneaking() && isOnGround(e.player) && getScore("dash_c")) {

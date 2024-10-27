@@ -90,8 +90,9 @@ function attemptToPickLock(e, item) {
 
     }
     var result = roll1 + roll2 + pick_modifier + getScore("Mind")
+    var dice = ['☍', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅']
     if (result >= e.target.storeddata.get("lock_strength")) {
-        displayTitle(e, "§a§lLock Picked!: §r§a" + result + " §dvs §e" + e.target.storeddata.get("lock_strength"), "white")
+        displayTitle(e, "§a§lLock Picked!: §r§a" + result + " §dvs §e" + e.target.storeddata.get("lock_strength") + " §r| §a(" + dice[roll1] + " + " + dice[roll2] + " + §bMind " + getScore("Mind") + " §a+ " + pick_modifier + ")", "white")
         setPropertyOnBlock(e.target, "unlocked", 1)
         e.player.playSound("iob:ui.trap_disabled", 1, 1)
         if (e.target.storeddata.get("first_success") == 0) {
@@ -101,7 +102,7 @@ function attemptToPickLock(e, item) {
         }
     }
     else {
-        displayTitle(e, "§c§lLockpick Failure: §r§c" + result + " §dvs §e" + e.target.storeddata.get("lock_strength"), "white")
+        displayTitle(e, "§c§lLockpick Failure: §r§c" + result + " §dvs §e" + e.target.storeddata.get("lock_strength") + " §r| §c(" + dice[roll1] + " + " + dice[roll2] + " + §bMind " + getScore("Mind") + " §c+ " + pick_modifier + ")", "white")
         e.player.playSound("iob:ui.lockpick", 1, getRandomFloat(.2, 1.2))
         if (e.target.storeddata.get("first_failure") == 0) {
             e.API.executeCommand(e.player.world, "xp add " + e.player.name + " " + Math.floor((e.target.storeddata.get("lock_strength") / 2)) + " points")

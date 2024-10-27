@@ -72,7 +72,7 @@ function timer(e) {
 
         }
         var bd = FrontVectors(e.block, rotation, pitch, power * bubble_line_iteration)
-        e.block.executeCommand("particle bubble_pop " + (source_block.x + bd[0]) + " " + (source_block.y - bd[1]) + " " + (source_block.z + bd[2]) + " .6 1 .6 0 30 force")
+        //e.block.executeCommand("particle bubble_pop " + (source_block.x + bd[0]) + " " + (source_block.y - bd[1]) + " " + (source_block.z + bd[2]) + " .6 1 .6 0 30 force")
         if (bubble_line_iteration < 6) {
             bubble_line_iteration += 1
         }
@@ -100,28 +100,12 @@ function timer(e) {
 
             if (bubbled_player == nE[i] || nE[i].gamemode == 1 || Math.abs(distance) > 0.7) { return }
 
+            player.addPotionEffect(30, 5, 9, false)
             //
             //e.block.executeCommand("tp " + player.name + " " + source_block.x + " " + source_block.y + " " + source_block.z)
-            var Thread = Java.type("java.lang.Thread"); var HankThread = Java.extend(Thread, {
-                run: function () {
-                    for (var j = 0; j < duration; j++) {
-                        e.block.world.playSoundAt(player.pos, "minecraft:ambient.underwater.exit", 1, .2)
-                        player.setMotionX(d[0])
-                        player.setMotionY(-d[1] * 2)
-                        player.setMotionZ(d[2])
-                        player.world.spawnParticle("bubble", player.x + d[0] * 2, player.y - d[1] * 2, player.z + d[2] * 2, .5, .5, .5, 0, 100)
-                        Thread.sleep(100)
-
-                    }
-
-
-                }
-            }); var H = new HankThread(); H.start();
-            e.block.executeCommand("effect give " + player.name + " dolphins_grace 1 1 true")
             e.block.world.playSoundAt(nE[i].pos, "minecraft:ambient.underwater.exit", 1, .2)
             e.block.world.playSoundAt(nE[i].pos, "customnpcs:magic.shot", 1, .2)
             nE[i].timers.forceStart(768090, 15, false)
-            nE[i].addTag("isDashing")
             nE[i].world.spawnParticle("cloud", source_block.x, source_block.y, source_block.z, .7, .7, .7, 0, 100)
             bubbled_player = nE[i]
             e.block.timers.forceStart(3, 20, false)

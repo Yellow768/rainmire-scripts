@@ -121,7 +121,10 @@ function addPerksFunctionToArray(current_perk) {
 }
 
 function perks_trigger(e) {
-    if (e.id == id("grant_new_perk")) /*Grant New Perk*/ {
+    if (e.id == 200) {
+        registerPerks(e)
+    }
+    if (e.id == 210) /*Grant New Perk*/ {
         if (good_perks[e.arguments[0]] != undefined) {
             if (collected_powers.indexOf(e.arguments[0]) != -1) {
                 player.message("&eYou have already found this power")
@@ -135,7 +138,7 @@ function perks_trigger(e) {
     }
 
 
-    if (e.id == id("grant_new_dampener")) /*Grant New Bad Perk*/ {
+    if (e.id == 220) /*Grant New Bad Perk*/ {
         if (dampening_perks[e.arguments[0]] != undefined) {
             if (collected_dampeners.indexOf(e.arguments[0]) != -1) {
                 player.message("&5You have already found this dampening perk")

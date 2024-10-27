@@ -93,17 +93,19 @@ function projectileImpact(e) {
     var nearbyNPCs = world.getNearbyEntities(e.projectile.pos, 4, -1)
     var npcs = []
     for (var i = 0; i < nearbyNPCs.length; i++) {
-        if (nearbyNPCs[i].name != "Status NPC") {
-            if (nearbyNPCs[i].type == 2) {
-                npcs.push(nearbyNPCs[i])
-            }
-            if (nearbyNPCs[i].type == 7) {
-                knockbackEntity(nearbyNPCs[i], e.projectile, 1)
-            }
-            else {
-                knockbackEntity(nearbyNPCs[i], e.projectile, 4)
-            }
+        if (nearbyNPCs[i].type == 2 && nearbyNPCs[i].getFaction().getId() == 4) {
+            continue
         }
+        if (nearbyNPCs[i].type == 2) {
+            npcs.push(nearbyNPCs[i])
+        }
+        if (nearbyNPCs[i].type == 7) {
+            knockbackEntity(nearbyNPCs[i], e.projectile, 1)
+        }
+        else {
+            knockbackEntity(nearbyNPCs[i], e.projectile, 4)
+        }
+
     }
     var jellied = false
     if (e.projectile.hasTag("Flammable")) {

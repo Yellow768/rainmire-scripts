@@ -31,7 +31,6 @@ function dialog(e) {
     if (skillCheck == "&c(") {
         e.player.playSound("minecraft:entity.elder_guardian.hurt", 1, 1)
     }
-
 }
 
 
@@ -65,22 +64,13 @@ function attributeCheck_Dialog(e) {
 
                 var ptag = JSON.parse(attribute_paramaters.tag_modifiers[i])
                 if (e.player.hasTag(ptag.id)) {
-                    if (check_chance_string.indexOf("&lBonuses: ") == -1) check_chance_string += "\n\n&7Bonuses:\n"
+                    if (check_chance_string.indexOf("&7Bonuses:") == -1) check_chance_string += "\n\n&7Bonuses:\n"
                     check_chance_string += "\n+ " + ptag.display + " (" + ptag.value + ")"
                     all_bonuses += ptag.value
                 }
             }
         }
-        if (attribute_paramaters.score_modifiers != undefined) {
-            for (var i = 0; i < attribute_paramaters.score_modifiers.length; i++) {
-                var pscore = JSON.parse(attribute_paramaters.score_modifiers[i])
-                if (getScore(attribute_paramaters.score_modifiers[i].id) != 0) {
-                    if (check_chance_string.indexOf("&lBonuses: ") == -1) check_chance_string += "\n\n&7Bonuses:\n"
-                    check_chance_string += "\n+ " + pscore.display + " (" + pscore.value + ")"
-                    all_bonuses += pscore.value
-                }
-            }
-        }
+
 
         var target_chance = attribute_paramaters.target - all_bonuses
         var chance, color
@@ -280,19 +270,12 @@ function attributeCheck_timer(e) {
     }
 }
 
-function dialogTimer(e) {
-    if (e.id == id("reenable_attack_after_dialog")) {
-        cantAttack = false
-    }
+function dialogClose(e) {
+    e.player.addPotionEffect(18, 1, 0, false)
 }
 
-function damagedEntity(e) {
-    if (cantAttack) {
-        e.setCanceled(true)
-        if (e.target.type == 2) {
-            e.target.setAttackTarget(null)
-        }
-    }
-}
+
+
+
 
 ////////////

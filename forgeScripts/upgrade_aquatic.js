@@ -14,7 +14,6 @@ function livingEntityUseItemEventFinish(event) {
     }
 
     var item = API.getIItemStack(event.event.item)
-    if (item.name.indexOf("esca") != -1) player.trigger(id("upgrade_aquatic_gui"), [])
     if (item.name == "minecraft:potion") {
         var nbt = item.getItemNbt()
         var potion_type = nbt.getCompound("tag").getString("Potion")

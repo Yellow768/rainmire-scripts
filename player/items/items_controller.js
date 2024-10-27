@@ -30,4 +30,15 @@ function interact(e) {
     else if (e.player.getMainhandItem().getFoodLevel() > 0) {
         eatFood(e)
     }
+    if (e.player.getMainhandItem().name.indexOf("esca") != -1) e.player.trigger(id("upgrade_aquatic_gui"), [])
 }
+
+function timer(e) {
+    jelly_timer(e)
+}
+
+function trigger(e) {
+    status_trigger(e)
+}
+
+

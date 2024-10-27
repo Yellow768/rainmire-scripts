@@ -57,7 +57,7 @@ state_attacking.timer = function (e) {
         var nE = e.npc.world.getNearbyEntities(e.npc.pos, 3, 5)
         for (var i = 0; i < nE.length; i++) {
             if (nE[i] == e.npc) continue
-            if (nE[i].type == 2) {
+            if (nE[i].typeOf(5) == true) {
                 applyStatusEffect(nE[i], 123401, 120)
             }
         }
@@ -85,6 +85,7 @@ state_cooldown.enter = function (e) {
 
 state_cooldown.timer = function (e) {
     if (e.id == COOLDOWN_TID) {
+        e.npc.setAttackTarget(null)
         StateMachine.transitionToState(state_idle, e)
     }
 }

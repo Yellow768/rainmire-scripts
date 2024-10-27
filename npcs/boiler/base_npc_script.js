@@ -152,7 +152,8 @@ function init(e) {
 }
 
 function timer(e) {
-    if (StateMachine.current_state.timer != undefined) StateMachine.current_state.timer(e)
+    if (StateMachine.current_state != undefined && StateMachine.current_state.timer != undefined) StateMachine.current_state.timer(e)
+
     if (global_functions.timer != undefined) global_functions.timer(e)
 }
 
@@ -198,6 +199,10 @@ function meleeAttack(e) {
 }
 
 function interact(e) {
+    if (!StateMachine.current_state) {
+        StateMachine.setState(StateMachine.default_state)
+        e.npc.say(StateMachine.default_state)
+    }
     if (StateMachine.current_state.interact != undefined) StateMachine.current_state.interact(e)
     if (e.player.gamemode == 1 && e.player.isSneaking()) {
         saveDefaultSettings()
@@ -236,6 +241,24 @@ function saveDefaultSettings() {
     }
     npc.storeddata.put("default_settings", JSON.stringify(default_settings))
 }
+
+
+
+function dialog(e) {
+    if (e.npc.storeddata.has("in_dialog")) return
+    e.npc.storeddata.put("moving_type", e.npc.ai.getMovingType())
+    e.npc.storeddata.put("hx", e.npc.getHomeX())
+    e.npc.storeddata.put("hy", e.npc.getHomeY())
+    e.npc.storeddata.put("hz", e.npc.getHomeZ())
+    e.npc.storeddata.put("rot_type", e.npc.ai.getStandingType())
+    e.npc.ai.setMovingType(0)
+    e.npc.setHome(e.npc.x, e.npc.y, e.npc.z)
+    e.npc.ai.setStandingType(2)
+    e.npc.storeddata.put("in_dialog", 1)
+    e.player.tempdata.put("npc_in_dialog", e.npc)
+}
+
+
 /*
 How should Jellies work.
 There should be more restrictionis on them, both to make it easier to code but also to make their interactions make a little more sense.

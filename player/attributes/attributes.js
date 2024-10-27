@@ -176,7 +176,7 @@ function handlePlayerMovementSpeed(e) {
 var modifier_interval = 0
 function applyArmorAttributeModifiers(e) {
 
-	if (modifier_interval % 3 != 0) { modifier_interval += 1; return }
+	if (modifier_interval % 2 != 0) { modifier_interval += 1; return }
 	modifier_interval += 1
 	var player = e.arguments[0]
 	var fromItem = e.arguments[1]
@@ -209,7 +209,7 @@ function applyArmorAttributeModifiers(e) {
 
 	if (fromItem.isWearable()) {
 		if (toItem.isEmpty()) {
-			player.message(player.getOpenContainer().getSize())
+			//player.message(player.getOpenContainer().getSize())
 		}
 	}
 	updateStats(e)
@@ -218,7 +218,6 @@ function applyArmorAttributeModifiers(e) {
 
 function attributes_trigger(e) {
 	if (e.id == 1 && !justLoggedIn) {
-
 		applyArmorAttributeModifiers(e)
 	}
 	if (e.id == id("force_open_stats_screen")) {

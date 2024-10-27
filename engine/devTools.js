@@ -196,7 +196,7 @@ function chat(e) {
             e.player.message("Checks cleared")
             break;
         case "!resetObservations":
-            e.player.storeddata.put("foundObservationNPCS", "[]")
+            e.player.storeddata.put("seen_observations", "[]")
             break;
         case "!resetTraps":
             e.player.storeddata.put("encounteredTrapBlocks", "[]")
@@ -796,11 +796,11 @@ function toggleInitMessage(e) {
 }
 
 function givePerk(message) {
-    player.trigger(id("grant_new_perk"), [message])
+    player.trigger(210, [message])
 }
 
 function giveDampener(message) {
-    player.trigger(id("grant_new_dampener"), [message])
+    player.trigger(220, [message])
 }
 
 function tick(e) {

@@ -1,177 +1,225 @@
 var api = Java.type('noppes.npcs.api.NpcAPI').Instance();
-load(api.getLevelDir() + '/scripts/ecmascript/boiler/commonFunctions.js')
-load(api.getLevelDir() + '/scripts/ecmascript/boiler/id_generator.js')
+load(api.getLevelDir() + '/scripts/ecmascript/npcs/boiler/base_npc_script.js')
 
-var real_mob, npc
+/*
+NPC
+applies attributes to the entity
 
-function init(e) {
-    if (!e.npc.storeddata.has("editing_mode")) {
-        e.npc.storeddata.put("editing_mode", 1)
+
+*/
+
+state_idle.enter = function (e) {
+
+    if (e.npc.storeddata.get("passive_mob")) {
+        hideNPC(e)
+        createMob(e, null)
+        e.npc.timers.forceStart(1, 0, true)
     }
-    npc = e.npc
-    var nE = e.npc.world.getNearbyEntities(e.npc.pos, 50, 5)
-    for (var i = 0; i < nE.length; i++) {
-        if (nE[i].getStoreddata().get("controller_npc") == e.npc.getUUID()) {
-            real_mob = nE[i]
-            real_mob.getTempdata().put("controller_npc", e.npc)
+}
+
+state_idle.init = function (e) {
+    if (e.npc.storeddata.has("uuid")) {
+        var mob = attemptToFindMob(e)
+        if (mob) {
+            e.npc.tempdata.put("mob", mob)
             return
         }
-    }
-    if (e.npc.storeddata.get("editing_mode")) {
+        e.npc.storeddata.remove("uuid")
+        e.npc.timers.stop(1)
+        resetNPC(e)
         return
     }
-    if (!e.npc.timers.has(768005) && e.npc.storeddata.has("mob")) {
-        summonMob(e)
-    }
-
-}
-
-
-
-function damaged(e) {
-    if (e.npc.getDisplay().getVisible() == 1) {
-        e.setCanceled(true)
+    if (e.npc.isAlive()) {
+        resetNPC(e)
+        if (e.npc.storeddata.get("passive_mob")) {
+            hideNPC(e)
+            createMob(e, null)
+            e.npc.timers.forceStart(1, 0, true)
+        }
     }
 }
 
-/**
- * @param {NpcEvent.TargetEvent} e
- */
-function interact(e) {
-    if (e.player.gamemode != 1) return
+state_idle.interact = function (e) {
     if (e.player.isSneaking()) {
-        var editingMode = e.npc.getStoreddata().get("editing_mode")
-        if (editingMode) {
-            editingMode = 0
-            e.npc.say("Editing Mode Disabled")
-            e.player.message("&eMob Controller Settings Saved")
-            e.npc.getStoreddata().put("mob", e.npc.getDisplay().getModel())
-            e.npc.getStoreddata().put("faction", e.npc.getFaction().getId())
-            e.npc.getStoreddata().put("editing_mode", editingMode)
-            return
-        }
-        else {
-            editingMode = 1
-            e.npc.say("Editing Mode Enabled")
-            e.npc.getStoreddata().put("editing_mode", editingMode)
-            e.npc.timers.stop(76805)
-            e.npc.setFaction(e.npc.getStoreddata().get("faction"))
-            return
-        }
+        e.npc.tempdata.put("disabled", 1)
+        e.player.message("&eNPC will not change model. Change model and right click to set")
+        return
     }
-    if (e.npc.getStoreddata().get("editing_mode")) {
-        e.player.message("&cStill in Editing Mode. Sneak Right Click to disable.")
-    }
-    else {
-        summonMob(e)
-        e.player.message("Mob Summoned")
-        e.npc.getDisplay().setModel("armor_stand")
-        e.npc.getDisplay().setVisible(1)
-        e.npc.getDisplay().setHitboxState(1)
-        e.npc.getDisplay().setSize(1)
-        e.npc.setFaction(4)
-        e.npc.updateClient()
-        e.npc.reset()
-        e.npc.timers.forceStart(id("check_mob_range"), 20, true)
+    e.npc.storeddata.put("mob_model", e.npc.display.getModel())
+    e.npc.storeddata.put("original_skin", e.npc.display.getSkinTexture())
+    e.npc.storeddata.put("extra_model_data", e.npc.getEntityNbt().getCompound("NpcModelData").toJsonString())
+    e.player.message("&eSet the NPCs model")
+    e.npc.tempdata.remove("disabled")
+}
+
+state_idle.damaged = function (e) {
+    if (e.source && e.source.type == 1) {
+        if (e.source.isSneaking()) {
+            e.npc.storeddata.put("passive_mob", 1)
+        }
     }
 }
 
-function summonMob(e) {
-    if (real_mob) real_mob.despawn()
-    e.npc.say("Mob Summoned")
-    var mob_name = e.npc.getStoreddata().get("mob")
-    e.npc.executeCommand('summon ' + mob_name + ' ~ ~-.5 ~')
-    var nE = e.npc.getWorld().getNearbyEntities(e.npc.pos, 5, 5)
-    for (var i = 0; i < nE.length; i++) {
-        if (nE[i].getTypeName() == mob_name) {
-            real_mob = nE[i]
-        }
+state_idle.target = function (e) {
+    if (e.npc.storeddata.has("uuid")) {
+        return
     }
-    real_mob.getStoreddata().put("controller_npc", e.npc.getUUID())
+    hideNPC(e)
+    createMob(e, e.entity)
+    e.npc.timers.forceStart(1, 0, true)
+    e.npc.timers.forceStart(3, 0, true)
+}
 
-    var nbt = real_mob.getEntityNbt()
+function hideNPC(e) {
+    e.npc.storeddata.put("name", e.npc.name)
+    e.npc.storeddata.put("color", e.npc.getFaction().getColor().toString(16))
+    e.npc.display.setSkinTexture("iob:textures/skins/empty.png")
+    e.npc.display.setModel("")
+    e.npc.display.setHitboxState(1)
+    e.npc.storeddata.put("show_name", e.npc.display.getShowName())
+    e.npc.display.setShowName(1)
+    e.npc.updateClient()
+}
+
+function createMob(e, target) {
+    var mob = e.npc.world.createEntity(e.npc.storeddata.get("mob_model"))
+    e.npc.tempdata.put("mob", mob)
+    e.npc.storeddata.put("uuid", mob.getUUID())
+    mob.x = e.npc.x
+    mob.y = e.npc.y
+    mob.z = e.npc.z
+    mob.spawn()
+    mob.setMaxHealth(e.npc.getMaxHealth())
+    mob.setHealth(e.npc.health)
+    var nbt = mob.getEntityNbt()
     nbt.putString("DeathLootTable", "minecraft:empty")
-    if (e.npc.getDisplay().getShowName() != 1) {
-        nbt.putString("CustomName", '{"italic":false,"extra":[{"text":""},{"color":"#' + e.API.getFactions().getFaction(npc.getStoreddata().get("faction")).getColor().toString(16) + '","text":"' + e.npc.getDisplay().getTitle() + '"}],"text":""}')
+    if (e.npc.storeddata.get("show_name") != 1) {
+        nbt.putString("CustomName", '{"italic":false,"extra":[{"text":""},{"color":"#' + e.npc.storeddata.get("color") + '","text":"' + e.npc.storeddata.get("name") + '"}],"text":""}')
+        nbt.setByte("CustomNameVisible", 1)
     }
-    nbt.setByte("CustomNameVisible", 1)
     nbt.setByte("PersistenceRequired", 1)
     nbt.setByte("isBaby", 0)
-    real_mob.setEntityNbt(nbt)
+    mob.setEntityNbt(nbt)
+    mob.tempdata.put("parent", e.npc)
+    e.npc.executeCommand("/attribute @e[type=" + e.npc.storeddata.get("mob_model") + ",limit=1,distance=..1] minecraft:generic.knockback_resistance base set " + (e.npc.getStats().getResistance(3) - 1))
+    e.npc.executeCommand("/attribute @e[type =" + e.npc.storeddata.get("mob_model") + ",limit=1,distance=..1] minecraft:generic.movement_speed base set " + e.npc.getAi().getWalkingSpeed() / 9)
+    e.npc.executeCommand("/data modify entity @e[type=" + e.npc.storeddata.get("mob_model") + ",limit=1,distance=..1] HandDropChances set value [0f, 0f]")
+    e.npc.executeCommand("/data modify entity @e[type=" + e.npc.storeddata.get("mob_model") + ",limit=1,distance=..1] ArmorDropChances set value [0f, 0f]")
+    if (target) {
+        e.npc.executeCommand("/attribute @e[type=" + e.npc.storeddata.get("mob_model") + ",limit=1,distance=..1] minecraft:generic.attack_damage base set " + e.npc.getStats().getMelee().getStrength())
+        e.npc.executeCommand("/attribute @e[type=" + e.npc.storeddata.get("mob_model") + ",limit=1,distance=..1] minecraft:generic.attack_knockback base set " + e.npc.getStats().getMelee().getKnockback())
 
-    real_mob.setMaxHealth(e.npc.getMaxHealth())
-    real_mob.setHealth(e.npc.getHealth())
-    real_mob.getTempdata().put("controller_npc", e.npc)
-    for (var i = 0; i < 4; i++) {
-        real_mob.setArmor(i, e.npc.getArmor(i))
-    }
-
-    if (!e.npc.getMainhandItem().isEmpty()) { real_mob.setMainhandItem(e.npc.getMainhandItem().copy()) }
-    if (!e.npc.getOffhandItem().isEmpty()) real_mob.setOffhandItem(e.npc.getOffhandItem().copy())
-
-    e.npc.executeCommand("/attribute @e[type=" + mob_name + ",limit=1,distance=..1] minecraft:generic.attack_damage base set " + e.npc.getStats().getMelee().getStrength())
-    e.npc.executeCommand("/attribute @e[type=" + mob_name + ",limit=1,distance=..1] minecraft:generic.attack_knockback base set " + e.npc.getStats().getMelee().getKnockback())
-    e.npc.executeCommand("/attribute @e[type=" + mob_name + ",limit=1,distance=..1] minecraft:generic.knockback_resistance base set " + (e.npc.getStats().getResistance(3) - 1))
-    e.npc.executeCommand("/attribute @e[type=" + mob_name + ",limit=1,distance=..1] minecraft:generic.movement_speed base set " + e.npc.getAi().getWalkingSpeed() / 9)
-    e.npc.executeCommand("/data modify entity @e[type=" + mob_name + ",limit=1,distance=..1] HandDropChances set value [0f, 0f]")
-    e.npc.executeCommand("/data modify entity @e[type=" + mob_name + ",limit=1,distance=..1] ArmorDropChances set value [0f, 0f]")
-}
-
-/**
- * @param {NpcEvent.TimerEvent} e
- */
-function trigger(e) {
-    if (e.id == 76801) {
-        npc.executeCommand("/execute positioned " + real_mob.x + " " + real_mob.y + " " + real_mob.z + " run kill @e[type=minecraft:experience_orb,distance=..1]")
-
-        var experience_amt = npc.getInventory().getExpRNG()
-        if (experience_amt != 0) {
-            npc.executeCommand("/summon minecraft:experience_orb " + real_mob.x + " " + real_mob.y + " " + real_mob.z + " {Value:" + experience_amt + "}")
-        }
-        var itemsRNG = npc.getInventory().getItemsRNG()
-        for (var i = 0; i < itemsRNG.length; i++) {
-            var item = npc.world.createEntity("item")
-            item.setItem(itemsRNG[i])
-            item.x = real_mob.x
-            item.y = real_mob.y + 1
-            item.z = real_mob.z
-            item.spawn()
-            item.setMotionY(.1)
-            item.setMotionZ(getRandomFloat(-0.2, 0.2))
-            item.setMotionX(getRandomFloat(-0.2, 0.2))
-        }
-        npc.timers.forceStart(76805, npc.getStats().getRespawnTime() * 20, false)
-        npc.timers.stop(id("check_mob_range"))
-        real_mob = null
-    }
-    if (e.id == 76802) {
-        resetNpc()
-        npc.say("Editing Mode Enabled")
-        npc.getStoreddata().put("editing_mode", 1)
-        real_mob = null
+        mob.setAttackTarget(e.entity)
     }
 }
 
-function timer(e) {
-    if (e.id == 76805) {
-        summonMob(e)
-    }
-    if (e.id == id("check_mob_range")) {
-        if (!real_mob && !e.npc.getStoreddata().get("editing_mode")) {
-            summonMob(e)
+state_idle.timer = function (e) {
+    var mob = e.npc.tempdata.get("mob")
+    if (!mob) {
+        mob = attemptToFindMob(e)
+        if (!mob) {
+            e.npc.storeddata.remove("uuid")
+            e.npc.timers.stop(1)
+            e.npc.timers.stop(2)
+            e.npc.tempdata.remove("mob")
             return
         }
-        if (real_mob && real_mob.pos.distanceTo(e.npc.pos) > e.npc.stats.getAggroRange()) {
-            real_mob.navigateTo(e.npc.x, e.npc.y, e.npc.z, e.npc.ai.getWalkingSpeed())
+    }
+    if (e.id == 1) {
+
+        if (!mob.isAlive()) {
+            e.npc.executeCommand("/execute positioned " + mob.x + " " + mob.y + " " + mob.z + " run kill @e[type=minecraft:experience_orb,distance=..1]")
+            e.npc.x = mob.x
+            e.npc.y = mob.y
+            e.npc.z = mob.z
+            e.npc.kill()
+            e.npc.storeddata.remove("uuid")
+            e.npc.tempdata.remove("mob")
+            e.npc.timers.stop(1)
         }
+
+    }
+    if (e.id == 3) {
+        //check if hostile mob is idle
+        if (mob.getAttackTarget() == null && !e.npc.timers.has(2)) {
+            e.npc.timers.start(2, 200, false)
+        }
+        if (mob.getAttackTarget() && e.npc.timers.has(2)) {
+            e.npc.timers.stop(2)
+        }
+    }
+    if (e.id == 2) {
+        e.npc.timers.stop(1)
+        e.npc.x = mob.x
+        e.npc.y = mob.y
+        e.npc.z = mob.z
+        e.npc.rotation = mob.rotation
+        e.npc.health = mob.health
+        mob.despawn()
+        e.npc.storeddata.remove("uuid")
+        resetNPC(e)
+
     }
 }
 
-function resetNpc() {
-    npc.getDisplay().setModel(npc.getStoreddata().get("mob"))
-    npc.getDisplay().setVisible(0)
-    npc.getDisplay().setHitboxState(0)
-    npc.getDisplay().setSize(5)
-    npc.setFaction(npc.getStoreddata().get("faction"))
+
+function resetNPC(e) {
+    if (npc.tempdata.has('disabled')) return
+    npc.display.setModel(npc.storeddata.get("mob_model"))
+    npc.display.setSkinTexture(npc.storeddata.get("original_skin"))
+    npc.display.setHitboxState(0)
+
+    if (npc.storeddata.has("show_name")) {
+        npc.display.setShowName(npc.storeddata.get("show_name"))
+        npc.storeddata.remove("show_name")
+    }
     npc.updateClient()
+}
+
+
+
+function attemptToFindMob(e) {
+    var nE = e.npc.world.getNearbyEntities(e.npc.pos, 128, 5)
+    for (var i = 0; i < nE.length; i++) {
+        if (nE[i].getUUID() == e.npc.storeddata.get("uuid")) {
+            nE[i].tempdata.put("parent", e.npc)
+            return nE[i]
+        }
+    }
+    return null
+
+}
+
+
+state_paralyzed.enter = function (e) {
+    var mob = npc.tempdata.get("mob")
+    if (mob) {
+        resetNPC(e)
+        npc.x = mob.x
+        npc.y = mob.y
+        npc.z = mob.z
+        npc.rotation = mob.rotation
+        mob.despawn()
+        npc.timers.stop(1)
+        npc.timers.stop(2)
+        npc.tempdata.remove("mob")
+        npc.storeddata.remove("uuid")
+    }
+    state_paralyzed.applyParalyzedEffects(e)
+}
+state_panicking.enter = function (e) {
+    var mob = npc.tempdata.get("mob")
+    if (mob) {
+        resetNPC(e)
+        npc.x = mob.x
+        npc.y = mob.y
+        npc.z = mob.z
+        npc.rotation = mob.rotation
+        mob.despawn()
+        npc.timers.stop(1)
+        npc.timers.stop(2)
+        npc.tempdata.remove("mob")
+        npc.storeddata.remove("uuid")
+    }
+    state_panicking.applyPanickingEffects(e)
 }
