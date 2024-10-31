@@ -3,7 +3,7 @@ function dialog(e) {
 }
 
 function dialogOption(e) {
-    if (e.option.getType() != 0) return
+    if (e.option.getType() != 0 && e.option.getType() != 3) return
     reset_npc_in_dialog(e)
 }
 
@@ -16,7 +16,6 @@ function reset_npc_in_dialog(e) {
             npc.setHome(npc.storeddata.get("hx"), npc.storeddata.get("hy"), npc.storeddata.get("hz"))
             npc.ai.setStandingType(npc.storeddata.get("rot_type"))
             npc.storeddata.remove("in_dialog")
-            e.player.message("ended")
         }
     }
 }

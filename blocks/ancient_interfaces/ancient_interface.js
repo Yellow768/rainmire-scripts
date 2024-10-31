@@ -151,45 +151,45 @@ function openEditingGui(e) {
         e.block.storeddata.put("defaultState", 1)
         gui.getComponent(92).setText("Default State: On")
         gui.update()
-        setOn()
+        setOn(block)
 
     })
     GUI.addButton(91, "Off", 290, 130, 20, 20).setOnPress(function (gui, t) {
         e.block.storeddata.put("defaultState", 0)
         gui.getComponent(92).setText("Default State: Off")
         gui.update()
-        setOff()
+        setOff(block)
     })
     e.player.showCustomGui(GUI)
 
     e.block.storeddata.put("on", e.block.storeddata.get("defaultState"))
-    function setOn() {
-
-        e.block.setGeckoTexture("iob:textures/block/ancient_interface_on.png")
-        e.block.setLight(10)
-        e.block.storeddata.put("on", 1)
-        setPowerLineState(true)
-        e.block.executeCommand(e.block.storeddata.get("onCommand"))
-    }
-    function setOff() {
-
-        e.block.setGeckoTexture("iob:textures/block/ancient_interface_off.png")
-        e.block.setLight(5)
-        setPowerLineState(false)
-        e.block.storeddata.put("on", 0)
-        e.block.executeCommand(e.block.storeddata.get("offCommand"))
-    }
     if (e.block.storeddata.get("on")) {
-        setOn()
+        setOn(block)
     }
     else {
-        setOff()
+        setOff(block)
     }
 }
 
 var ROTATION_MODES = {
     EXACT: 0,
     CARDINAL: 1
+}
+function setOn(block) {
+
+    block.setGeckoTexture("iob:textures/block/ancient_interface_on.png")
+    block.setLight(10)
+    block.storeddata.put("on", 1)
+    setPowerLineState(true)
+    block.executeCommand(block.storeddata.get("onCommand"))
+}
+function setOff(block) {
+
+    block.setGeckoTexture("iob:textures/block/ancient_interface_off.png")
+    block.setLight(5)
+    setPowerLineState(false)
+    block.storeddata.put("on", 0)
+    block.executeCommand(block.storeddata.get("offCommand"))
 }
 
 
@@ -234,5 +234,11 @@ function trigger(e) {
         var powerline_pos_array = JSON.parse(block.storeddata.get("powerline_pos_array"))
         if (powerline_pos_array.indexOf({ x: e.arguments[0].x, y: e.arguments[0].y, z: e.arguments[0].z }) != -1) powerline_pos_array.splice(powerline_pos_array.indexOf({ x: e.arguments[0].x, y: e.arguments[0].y, z: e.arguments[0].z }), 1)
         block.storeddata.put("powerline_pos_array", JSON.stringify(powerline_pos_array))
+    }
+    if (e.id == 3) {
+        setOn(block)
+    }
+    if (e.id == 4) {
+        setOff(block)
     }
 }
